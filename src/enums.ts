@@ -1,0 +1,6 @@
+export enum STEPS {
+  NICK_NAME,
+  JOB_POSITION,
+  CHARACTER,
+  FINISH,
+}
