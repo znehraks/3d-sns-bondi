@@ -15,3 +15,5 @@ export const Content = () => {
   //   }
   //   return <Lobby />;
 };
+
+// npx gltfjsx public/models/Block\ Boy.glb -o src/componeDnts/Block.jsx -r public    

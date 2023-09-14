@@ -4,7 +4,7 @@ Command: npx gltfjsx@6.2.13 public/models/Hoodie Character.glb -o src/components
 */
 
 import * as THREE from "three";
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { useFrame, useGraph, useThree } from "@react-three/fiber";
 import { GLTF, SkeletonUtils } from "three-stdlib";
@@ -17,12 +17,12 @@ export function Man({
   bottomColor = "brown",
   ...props
 }) {
+  const group = useRef<THREE.Group>(null);
   const camera = useThree((three) => three.camera);
+
   const threeScene = useThree((three) => three.scene);
   const directionalLight = threeScene.getObjectByName("directionalLight");
   positionVec.copy(props.position);
-
-  const group = useRef<THREE.Group>(null);
 
   const { scene, materials, animations } = useGLTF(
     "/models/Hoodie Character.glb"
@@ -44,6 +44,7 @@ export function Man({
 
   useFrame(() => {
     if (!group.current) return;
+    camera.lookAt(group.current.position);
     if (group.current.position.distanceTo(props.position) > 0.1) {
       const direction = group.current.position
         .clone()
@@ -53,9 +54,9 @@ export function Man({
       group.current.position.sub(direction);
       group.current.lookAt(props.position);
       camera.position.set(
-        group.current.position.x + 1,
-        group.current.position.y + 5,
-        group.current.position.z + 5
+        group.current.position.x + 12,
+        group.current.position.y + 12,
+        group.current.position.z + 12
       );
       directionalLight?.position.set(
         group.current.position.x,
