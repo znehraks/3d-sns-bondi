@@ -6,14 +6,14 @@ import { Layout } from "./layout/Layout";
 
 export const Content = () => {
   const [isLogin] = useRecoilState(IsLoginAtom);
-  //   if (isLogin) {
-  return (
-    <Layout>
-      <MainCanvas />
-    </Layout>
-  );
-  //   }
-  //   return <Lobby />;
+  if (isLogin) {
+    return (
+      <Layout>
+        <MainCanvas />
+      </Layout>
+    );
+  }
+  return <Lobby />;
 };
 
-// npx gltfjsx public/models/Block\ Boy.glb -o src/componeDnts/Block.jsx -r public    
+// npx gltfjsx public/models/Block\ Boy.glb -o src/componeDnts/Block.jsx -r public

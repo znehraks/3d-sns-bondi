@@ -1,7 +1,7 @@
 import { useGLTF } from "@react-three/drei";
 import { useEffect } from "react";
 
-export const Slide = (props) => {
+export const Slide = () => {
   const { scene } = useGLTF("/models/Slide.glb");
   useEffect(() => {
     scene.traverse((mesh) => {

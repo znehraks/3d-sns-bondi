@@ -1,7 +1,7 @@
 import { useGLTF } from "@react-three/drei";
 import { useEffect } from "react";
 
-export const JungleGym = (props) => {
+export const JungleGym = () => {
   const { scene } = useGLTF("/models/Jungle gym.glb");
   useEffect(() => {
     scene.traverse((mesh) => {

@@ -1,10 +1,11 @@
 import { useEffect } from "react";
 import { useRecoilState } from "recoil";
-import { PlayersAtom } from "../store/PlayersAtom";
+import { MeAtom, PlayersAtom } from "../store/PlayersAtom";
 import { socket } from "../sockets/clientSocket";
 
 export const ClientSocketControls = () => {
   const [, setPlayers] = useRecoilState(PlayersAtom);
+  const [, setMe] = useRecoilState(MeAtom);
   useEffect(() => {
     const onConnect = () => {
       console.log("connected");
@@ -13,7 +14,8 @@ export const ClientSocketControls = () => {
       console.log("disconnected");
     };
 
-    const onHello = () => {
+    const initialize = (value: { id: string }) => {
+      setMe(value);
       console.log("hello");
     };
 
@@ -24,14 +26,14 @@ export const ClientSocketControls = () => {
 
     socket.on("connect", onConnect);
     socket.on("disconnect", onDisconnect);
-    socket.on("hello", onHello);
+    socket.on("initialize", initialize);
     socket.on("players", onPlayers);
     return () => {
       socket.off("connect", onConnect);
       socket.off("disconnect", onDisconnect);
-      socket.off("hello", onHello);
+      socket.off("initialize", initialize);
       socket.off("players", onPlayers);
     };
-  }, [setPlayers]);
+  }, [setMe, setPlayers]);
   return null;
 };

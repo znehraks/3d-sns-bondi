@@ -4,6 +4,7 @@ import { styled } from "styled-components";
 export const Layout = ({ children }: { children: ReactNode }) => {
   return (
     <Wrapper>
+      {/* <audio src="/bgm.mp3" autoPlay loop /> */}
       {children}
       <SideBar>
         마이룸, 저장(로컬스토리지), 내 마이룸 입장 시 기술 스택 큐브 배치 등,
@@ -22,14 +23,14 @@ const Wrapper = styled.div`
   height: 100vh;
 `;
 
-const BottomUtilBar = styled.div`
-  position: fixed;
-  bottom: 0;
-  right: 0;
-  background-color: red;
-  width: 100%;
-  height: 100px;
-`;
+// const BottomUtilBar = styled.div`
+//   position: fixed;
+//   bottom: 0;
+//   right: 0;
+//   background-color: red;
+//   width: 100%;
+//   height: 100px;
+// `;
 
 const SideBar = styled.div`
   position: fixed;

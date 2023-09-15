@@ -6,29 +6,35 @@ Command: npx gltfjsx@6.2.13 public/models/Hoodie Character.glb -o src/components
 import * as THREE from "three";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
-import { useFrame, useGraph, useThree } from "@react-three/fiber";
+import { useFrame, useGraph } from "@react-three/fiber";
 import { GLTF, SkeletonUtils } from "three-stdlib";
+import { useRecoilValue } from "recoil";
+import { MeAtom } from "../store/PlayersAtom";
 
-const MOVEMENT_SPEED = 0.03;
 const positionVec = new THREE.Vector3();
+interface IMan {
+  playerId: string;
+  hairColor: string;
+  shirtColor: string;
+  pantsColor: string;
+  position: [number, number, number];
+}
 export function Man({
-  hairColor = "green",
-  topColor = "pink",
-  bottomColor = "brown",
-  ...props
-}) {
+  playerId,
+  hairColor,
+  shirtColor,
+  pantsColor,
+  position = [0, 0, 0],
+}: IMan) {
+  const me = useRecoilValue(MeAtom);
+  positionVec.set(position[0], position[1], position[2]);
   const group = useRef<THREE.Group>(null);
-  const camera = useThree((three) => three.camera);
-
-  const threeScene = useThree((three) => three.scene);
-  const directionalLight = threeScene.getObjectByName("directionalLight");
-  positionVec.copy(props.position);
 
   const { scene, materials, animations } = useGLTF(
     "/models/Hoodie Character.glb"
   ) as GLTF & { materials: { [key: string]: THREE.MeshStandardMaterial } };
 
-  const clone = useMemo(() => SkeletonUtils.clone(scene), [scene]);
+  const clone = useMemo(() => SkeletonUtils.clone(scene), []);
   const objectMap = useGraph(clone);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const nodes = objectMap.nodes as any;
@@ -42,150 +48,167 @@ export function Man({
     };
   }, [actions, animation]);
 
-  useFrame(() => {
+  useFrame(({ camera }, delta) => {
     if (!group.current) return;
-    camera.lookAt(group.current.position);
-    if (group.current.position.distanceTo(props.position) > 0.1) {
+    if (group.current.position.distanceTo(positionVec) > 0.1) {
       const direction = group.current.position
         .clone()
-        .sub(props.position)
+        .sub(positionVec)
         .normalize()
-        .multiplyScalar(MOVEMENT_SPEED);
+        .multiplyScalar(delta * 2.5);
       group.current.position.sub(direction);
-      group.current.lookAt(props.position);
+      group.current.lookAt(positionVec);
+
+      setAnimation("CharacterArmature|Run");
+    } else {
+      setAnimation("CharacterArmature|Idle");
+    }
+
+    if (me?.id === playerId) {
       camera.position.set(
         group.current.position.x + 12,
         group.current.position.y + 12,
         group.current.position.z + 12
       );
-      directionalLight?.position.set(
-        group.current.position.x,
-        5,
-        group.current.position.z
-      );
-      directionalLight?.lookAt(group.current.position);
-      setAnimation("CharacterArmature|Run");
-    } else {
-      setAnimation("CharacterArmature|Idle");
+      camera.lookAt(group.current.position);
     }
   });
-
-  console.log(group.current);
   return (
-    <group ref={group} {...props} position={positionVec} dispose={null}>
-      <group name="Root_Scene">
-        <group name="RootNode">
-          <group
-            name="CharacterArmature"
-            rotation={[-Math.PI / 2, 0, 0]}
-            scale={100}
-          >
-            <primitive object={nodes.Root} />
-          </group>
-          <group name="Casual_Feet" rotation={[-Math.PI / 2, 0, 0]} scale={100}>
-            <skinnedMesh
-              castShadow
-              receiveShadow
-              name="Casual_Feet_1"
-              geometry={nodes.Casual_Feet_1.geometry}
-              material={materials.White}
-              skeleton={nodes.Casual_Feet_1.skeleton}
+    <>
+      <group
+        ref={group}
+        position={positionVec}
+        dispose={null}
+        name={playerId ?? ""}
+      >
+        <group name="Root_Scene">
+          <group name="RootNode">
+            <group
+              name="CharacterArmature"
+              rotation={[-Math.PI / 2, 0, 0]}
+              scale={100}
             >
-              <meshStandardMaterial color={0xff0000} />
-            </skinnedMesh>
-            <skinnedMesh
-              castShadow
-              receiveShadow
-              name="Casual_Feet_2"
-              geometry={nodes.Casual_Feet_2.geometry}
-              material={materials.Purple}
-              skeleton={nodes.Casual_Feet_2.skeleton}
-            />
-          </group>
-          <group name="Casual_Legs" rotation={[-Math.PI / 2, 0, 0]} scale={100}>
-            <skinnedMesh
-              castShadow
-              receiveShadow
-              name="Casual_Legs_1"
-              geometry={nodes.Casual_Legs_1.geometry}
-              material={materials.Skin}
-              skeleton={nodes.Casual_Legs_1.skeleton}
-            />
-            <skinnedMesh
-              castShadow
-              receiveShadow
-              name="Casual_Legs_2"
-              geometry={nodes.Casual_Legs_2.geometry}
-              material={materials.LightBlue}
-              skeleton={nodes.Casual_Legs_2.skeleton}
+              <primitive object={nodes.Root} />
+            </group>
+            <group
+              name="Casual_Feet"
+              rotation={[-Math.PI / 2, 0, 0]}
+              scale={100}
             >
-              <meshStandardMaterial color={bottomColor} />
-            </skinnedMesh>
-          </group>
-          <group name="Casual_Head" rotation={[-Math.PI / 2, 0, 0]} scale={100}>
-            <skinnedMesh
-              castShadow
-              receiveShadow
-              name="Casual_Head_1"
-              geometry={nodes.Casual_Head_1.geometry}
-              material={materials.Skin}
-              skeleton={nodes.Casual_Head_1.skeleton}
-            />
-            <skinnedMesh
-              castShadow
-              receiveShadow
-              name="Casual_Head_2"
-              geometry={nodes.Casual_Head_2.geometry}
-              material={materials.Eyebrows}
-              skeleton={nodes.Casual_Head_2.skeleton}
-            />
-            <skinnedMesh
-              castShadow
-              receiveShadow
-              name="Casual_Head_3"
-              geometry={nodes.Casual_Head_3.geometry}
-              material={materials.Eye}
-              skeleton={nodes.Casual_Head_3.skeleton}
-            />
-            <skinnedMesh
-              castShadow
-              receiveShadow
-              name="Casual_Head_4"
-              geometry={nodes.Casual_Head_4.geometry}
-              material={materials.Hair}
-              skeleton={nodes.Casual_Head_4.skeleton}
+              <skinnedMesh
+                castShadow
+                receiveShadow
+                name="Casual_Feet_1"
+                geometry={nodes.Casual_Feet_1.geometry}
+                material={materials.White}
+                skeleton={nodes.Casual_Feet_1.skeleton}
+              >
+                {/* <meshStandardMaterial color="red" /> */}
+              </skinnedMesh>
+              <skinnedMesh
+                castShadow
+                receiveShadow
+                name="Casual_Feet_2"
+                geometry={nodes.Casual_Feet_2.geometry}
+                material={materials.Purple}
+                skeleton={nodes.Casual_Feet_2.skeleton}
+              >
+                {/* <meshStandardMaterial color="red" /> */}
+              </skinnedMesh>
+            </group>
+            <group
+              name="Casual_Legs"
+              rotation={[-Math.PI / 2, 0, 0]}
+              scale={100}
             >
-              <meshStandardMaterial color={hairColor} />
-            </skinnedMesh>
-          </group>
-          <group
-            name="Casual_Body"
-            position={[0, 0.007, 0]}
-            rotation={[-Math.PI / 2, 0, 0]}
-            scale={100}
-          >
-            <skinnedMesh
-              castShadow
-              receiveShadow
-              name="Casual_Body_1"
-              geometry={nodes.Casual_Body_1.geometry}
-              material={materials.Purple}
-              skeleton={nodes.Casual_Body_1.skeleton}
+              <skinnedMesh
+                castShadow
+                receiveShadow
+                name="Casual_Legs_1"
+                geometry={nodes.Casual_Legs_1.geometry}
+                material={materials.Skin}
+                skeleton={nodes.Casual_Legs_1.skeleton}
+              />
+              <skinnedMesh
+                castShadow
+                receiveShadow
+                name="Casual_Legs_2"
+                geometry={nodes.Casual_Legs_2.geometry}
+                material={materials.LightBlue}
+                skeleton={nodes.Casual_Legs_2.skeleton}
+              >
+                <meshStandardMaterial color={pantsColor} />
+              </skinnedMesh>
+            </group>
+            <group
+              name="Casual_Head"
+              rotation={[-Math.PI / 2, 0, 0]}
+              scale={100}
             >
-              <meshStandardMaterial color={topColor} />
-            </skinnedMesh>
-            <skinnedMesh
-              castShadow
-              receiveShadow
-              name="Casual_Body_2"
-              geometry={nodes.Casual_Body_2.geometry}
-              material={materials.Skin}
-              skeleton={nodes.Casual_Body_2.skeleton}
-            />
+              <skinnedMesh
+                castShadow
+                receiveShadow
+                name="Casual_Head_1"
+                geometry={nodes.Casual_Head_1.geometry}
+                material={materials.Skin}
+                skeleton={nodes.Casual_Head_1.skeleton}
+              />
+              <skinnedMesh
+                castShadow
+                receiveShadow
+                name="Casual_Head_2"
+                geometry={nodes.Casual_Head_2.geometry}
+                material={materials.Eyebrows}
+                skeleton={nodes.Casual_Head_2.skeleton}
+              />
+              <skinnedMesh
+                castShadow
+                receiveShadow
+                name="Casual_Head_3"
+                geometry={nodes.Casual_Head_3.geometry}
+                material={materials.Eye}
+                skeleton={nodes.Casual_Head_3.skeleton}
+              />
+              <skinnedMesh
+                castShadow
+                receiveShadow
+                name="Casual_Head_4"
+                geometry={nodes.Casual_Head_4.geometry}
+                material={materials.Hair}
+                skeleton={nodes.Casual_Head_4.skeleton}
+              >
+                <meshStandardMaterial color={hairColor} />
+              </skinnedMesh>
+            </group>
+            <group
+              name="Casual_Body"
+              position={[0, 0.007, 0]}
+              rotation={[-Math.PI / 2, 0, 0]}
+              scale={100}
+            >
+              <skinnedMesh
+                castShadow
+                receiveShadow
+                name="Casual_Body_1"
+                geometry={nodes.Casual_Body_1.geometry}
+                material={materials.Purple}
+                skeleton={nodes.Casual_Body_1.skeleton}
+              >
+                <meshStandardMaterial color={shirtColor} />
+              </skinnedMesh>
+              <skinnedMesh
+                castShadow
+                receiveShadow
+                name="Casual_Body_2"
+                geometry={nodes.Casual_Body_2.geometry}
+                material={materials.Skin}
+                skeleton={nodes.Casual_Body_2.skeleton}
+              />
+            </group>
           </group>
         </group>
       </group>
-    </group>
+    </>
   );
 }
 

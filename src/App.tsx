@@ -21,3 +21,5 @@ export default App;
 // Slide by Poly by Google [CC-BY] via Poly Pizza
 
 // Jungle gym by Poly by Google [CC-BY] via Poly Pizza
+
+// Fps Rig by J-Toastie [CC-BY] via Poly Pizza

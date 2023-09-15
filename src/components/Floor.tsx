@@ -5,7 +5,8 @@ import { useLoader } from "@react-three/fiber";
 import { RepeatWrapping, Texture, TextureLoader } from "three";
 
 export const Floor = () => {
-  const sandTexture = useLoader(TextureLoader, "/sand.jpg") as Texture;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const sandTexture = useLoader(TextureLoader as any, "/sand.jpg") as Texture;
   sandTexture.wrapS = RepeatWrapping;
   sandTexture.wrapT = RepeatWrapping;
   sandTexture.repeat.x = 5;
