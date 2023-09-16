@@ -2,6 +2,7 @@ import { ReactNode } from "react";
 import { styled } from "styled-components";
 import { SideBar } from "../gameInterfaces/SideBar";
 import { ChatArea } from "../gameInterfaces/ChatArea";
+import { Footer } from "../gameInterfaces/Footer";
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   return (
@@ -11,6 +12,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
       <SideBar />
       <ChatArea />
       {/* <BottomUtilBar /> */}
+      <Footer />
     </Wrapper>
   );
 };
@@ -20,6 +22,7 @@ const Wrapper = styled.div`
   background-color: transparent;
   width: 100vw;
   height: 100vh;
+  
 `;
 
 // const BottomUtilBar = styled.div`

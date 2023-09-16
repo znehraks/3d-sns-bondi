@@ -132,9 +132,13 @@ const ChatLine = styled.div`
 
 const ChatSender = styled.div`
   font-size: 18px;
+  font-weight: 700;
+  text-shadow: 0.5px 0.5px 0.5px #ececec;
 `;
 const ChatContent = styled.div`
   font-size: 18px;
+  font-weight: 700;
+  text-shadow: 0.5px 0.5px 0.5px #ececec;
 `;
 
 const ChatInputContainer = styled.div`
@@ -147,6 +151,7 @@ const ChatInputContainer = styled.div`
   align-items: flex-start;
   position: relative;
   background-color: #b9beff50;
+  border-radius: 10px;
   input {
     padding: 10px;
     font-size: 18px;
