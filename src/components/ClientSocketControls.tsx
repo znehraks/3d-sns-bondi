@@ -6,6 +6,7 @@ import { socket } from "../sockets/clientSocket";
 export const ClientSocketControls = () => {
   const [, setPlayers] = useRecoilState(PlayersAtom);
   const [, setMe] = useRecoilState(MeAtom);
+
   useEffect(() => {
     const onConnect = () => {
       console.log("connected");

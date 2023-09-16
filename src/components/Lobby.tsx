@@ -5,8 +5,8 @@ import { isValidText } from "../utils";
 import { socket } from "../sockets/clientSocket";
 import { SetterOrUpdater, useRecoilState } from "recoil";
 import {
+  CharacterSelectFinishedAtom,
   HairColorAtom,
-  IsLoginAtom,
   PantsColorAtom,
   ShirtColorAtom,
 } from "../store/PlayersAtom";
@@ -23,7 +23,10 @@ export const Lobby = () => {
   const [pantsColor, setPantsColor] = useRecoilState(PantsColorAtom);
 
   const [isFinished, setIsFinished] = useState(false);
-  const [, setIsLogin] = useRecoilState(IsLoginAtom);
+  const [, setCharacterSelectFinished] = useRecoilState(
+    CharacterSelectFinishedAtom
+  );
+
   const colorCandidatesMemo = useMemo(() => colorCandidates, []);
 
   const handleClickColorRound = useCallback(
@@ -145,7 +148,14 @@ export const Lobby = () => {
               className={isFinished ? "valid" : "disabled"}
               onClick={() => {
                 if (!tempNickname || !tempJobPosition) return;
-                setIsLogin(true);
+                setCharacterSelectFinished(true);
+                socket.emit("initialize", {
+                  tempNickname,
+                  tempJobPosition,
+                  hairColor,
+                  shirtColor,
+                  pantsColor,
+                });
               }}
             >
               {/* 이거 누르면 애니메이션 다른것 재생 */}
@@ -188,7 +198,7 @@ const CharacterCanvasContainer = styled.div`
   justify-content: center;
   align-items: center;
   gap: 12px;
-  width: 800px;
+  width: 1200px;
   height: 80%;
 `;
 
@@ -239,7 +249,7 @@ const CharacterTuningPartsContainer = styled.div`
     height: 100%;
     overflow-y: scroll;
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     grid-column-start: initial;
     gap: 10px;
     // 파이어폭스 스크롤 스타일

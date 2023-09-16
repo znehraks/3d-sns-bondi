@@ -9,6 +9,7 @@ import { JungleGym } from "./JungleGym";
 import { useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useRef } from "react";
 import { CharacterInit } from "./CharacterInit";
+import { Loader } from "./Loader";
 
 export const Playground = () => {
   const [characterSelectFinished] = useRecoilState(CharacterSelectFinishedAtom);
@@ -25,7 +26,7 @@ export const Playground = () => {
   }, [camera, camera.position, characterSelectFinished]);
 
   return (
-    <>
+    <Suspense fallback={<Loader />}>
       {/* <Environment preset="sunset" /> */}
       <ambientLight name="ambientLight" intensity={5} />
 
@@ -77,23 +78,21 @@ export const Playground = () => {
             screenSpacePanning={false}
           />
           {players.map((player) => (
-            <Suspense>
-              <Man
-                key={player.id}
-                playerId={player.id}
-                position={[
-                  player.position[0],
-                  player.position[1],
-                  player.position[2],
-                ]}
-                hairColor={player.hairColor}
-                shirtColor={player.topColor}
-                pantsColor={player.bottomColor}
-              />
-            </Suspense>
+            <Man
+              key={player.id}
+              playerId={player.id}
+              position={[
+                player.position[0],
+                player.position[1],
+                player.position[2],
+              ]}
+              hairColor={player.hairColor}
+              shirtColor={player.shirtColor}
+              pantsColor={player.pantsColor}
+            />
           ))}
         </>
       )}
-    </>
+    </Suspense>
   );
 };
