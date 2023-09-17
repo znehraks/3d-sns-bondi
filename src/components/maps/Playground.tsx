@@ -1,15 +1,18 @@
 import { useRecoilState } from "recoil";
-import { CharacterSelectFinishedAtom, PlayersAtom } from "../store/PlayersAtom";
-import { Floor } from "./Floor";
-import { Man } from "./Man";
+import {
+  CharacterSelectFinishedAtom,
+  PlayersAtom,
+} from "../../store/PlayersAtom";
+import { Floor } from "../structures/Floor";
+import { Man } from "../players/Man";
 import { OrbitControls, Select } from "@react-three/drei";
-import { PlayStructure } from "./PlayStructure";
-import { Slide } from "./Slide";
-import { JungleGym } from "./JungleGym";
+import { PlayStructure } from "../structures/PlayStructure";
+import { Slide } from "../structures/Slide";
+import { JungleGym } from "../structures/JungleGym";
 import { useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useRef } from "react";
-import { CharacterInit } from "./CharacterInit";
-import { Loader } from "./Loader";
+import { CharacterInit } from "../CharacterInit";
+import { Loader } from "../utilComponents/Loader";
 
 export const Playground = () => {
   const [characterSelectFinished] = useRecoilState(CharacterSelectFinishedAtom);
@@ -24,7 +27,7 @@ export const Playground = () => {
     camera.position.set(8, 8, 8);
     controls.current.target.set(0, 0, 0);
   }, [camera, camera.position, characterSelectFinished]);
-
+  console.log("players", players);
   return (
     <Suspense fallback={<Loader />}>
       {/* <Environment preset="sunset" /> */}

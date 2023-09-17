@@ -1,5 +1,5 @@
 import { OrbitControls } from "@react-three/drei";
-import { Man } from "./Man";
+import { Man } from "./players/Man";
 import { useEffect, useRef } from "react";
 import { useThree } from "@react-three/fiber";
 import { useRecoilState } from "recoil";

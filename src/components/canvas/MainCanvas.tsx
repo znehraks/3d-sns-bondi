@@ -1,5 +1,5 @@
 import { Canvas } from "@react-three/fiber";
-import { Playground } from "./Playground";
+import { Playground } from "../maps/Playground";
 
 export const MainCanvas = () => {
   const aspectRatio = window.innerWidth / window.innerHeight;

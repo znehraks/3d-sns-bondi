@@ -1,5 +1,5 @@
 import { useSelect } from "@react-three/drei";
-import { socket } from "../sockets/clientSocket";
+import { socket } from "../../sockets/clientSocket";
 import { useState } from "react";
 import { useLoader } from "@react-three/fiber";
 import { RepeatWrapping, Texture, TextureLoader } from "three";

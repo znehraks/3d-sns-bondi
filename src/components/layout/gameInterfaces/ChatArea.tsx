@@ -1,10 +1,36 @@
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import { styled } from "styled-components";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import { isValidText } from "../../../utils";
+import { socket } from "../../../sockets/clientSocket";
+import { useRecoilValue } from "recoil";
+import { ChatsAtom } from "../../../store/PlayersAtom";
 
 export const ChatArea = () => {
   const [isChatContentOpen, setIsChatContentOpen] = useState(false);
+  const chats = useRecoilValue(ChatsAtom);
+  const [tempText, setTempText] = useState<string>();
+
+  const handleSubmit = useCallback(() => {
+    if (isValidText(tempText)) {
+      socket.emit("newText", tempText);
+    }
+  }, [tempText]);
+
+  console.log(chats);
+
+  const handleSubmitEnter = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (isValidText(tempText)) {
+        if (e.key === "Enter") {
+          socket.emit("newText", tempText);
+          setTempText("");
+        }
+      }
+    },
+    [tempText]
+  );
 
   return (
     <ChatAreaWrapper>
@@ -26,26 +52,13 @@ export const ChatArea = () => {
           )}
         </ChatAreaTitle>
         <ChatContentContainer>
-          <ChatLine>
-            <ChatSender>닉네임</ChatSender>
-            {" : "}
-            <ChatContent>내용</ChatContent>
-          </ChatLine>
-          <ChatLine>
-            <ChatSender>닉네임</ChatSender>
-            {" : "}
-            <ChatContent>내용</ChatContent>
-          </ChatLine>
-          <ChatLine>
-            <ChatSender>닉네임</ChatSender>
-            {" : "}
-            <ChatContent>내용</ChatContent>
-          </ChatLine>
-          <ChatLine>
-            <ChatSender>닉네임</ChatSender>
-            {" : "}
-            <ChatContent>내용</ChatContent>
-          </ChatLine>
+          {chats.map(({ senderNickname, senderJobPosition, text }) => (
+            <ChatLine>
+              <ChatSender>{`${senderNickname}[${senderJobPosition}]`}</ChatSender>
+              {" : "}
+              <ChatContent>{text}</ChatContent>
+            </ChatLine>
+          ))}
         </ChatContentContainer>
       </ChatDropdownWrapper>
       <ChatInputContainer>
@@ -53,10 +66,13 @@ export const ChatArea = () => {
           onClick={() => {
             setIsChatContentOpen(true);
           }}
+          value={tempText}
+          onChange={(e) => setTempText(e.currentTarget.value)}
+          onKeyUp={handleSubmitEnter}
           placeholder="메시지 입력"
         />
 
-        <button>보내기</button>
+        <button onClick={handleSubmit}>보내기</button>
       </ChatInputContainer>
     </ChatAreaWrapper>
   );

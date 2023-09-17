@@ -9,9 +9,8 @@ import { useGLTF, useAnimations } from "@react-three/drei";
 import { useFrame, useGraph } from "@react-three/fiber";
 import { GLTF, SkeletonUtils } from "three-stdlib";
 import { useRecoilValue } from "recoil";
-import { MeAtom } from "../store/PlayersAtom";
+import { MeAtom } from "../../store/PlayersAtom";
 
-const positionVec = new THREE.Vector3();
 interface IMan {
   playerId: string;
   hairColor: string;
@@ -24,10 +23,14 @@ export function Man({
   hairColor,
   shirtColor,
   pantsColor,
-  position = [0, 0, 0],
+  position,
 }: IMan) {
   const me = useRecoilValue(MeAtom);
-  positionVec.set(position[0], position[1], position[2]);
+  const positionVec3 = new THREE.Vector3(position[0], position[1], position[2]);
+  const memoizedPosition = useMemo(
+    () => new THREE.Vector3(position[0], position[1], position[2]),
+    []
+  );
   const group = useRef<THREE.Group>(null);
 
   const { scene, materials, animations } = useGLTF(
@@ -50,15 +53,15 @@ export function Man({
 
   useFrame(({ camera }, delta) => {
     if (!group.current) return;
-    if (group.current.position.distanceTo(positionVec) > 0.1) {
+    if (group.current.position.distanceTo(positionVec3) > 0.1) {
       const direction = group.current.position
         .clone()
-        .sub(positionVec)
+        .sub(positionVec3)
         .normalize()
         .multiplyScalar(delta * 2.5);
       group.current.position.sub(direction);
-      group.current.lookAt(positionVec);
-
+      group.current.lookAt(positionVec3);
+      console.log("hihi");
       setAnimation("CharacterArmature|Run");
     } else {
       setAnimation("CharacterArmature|Idle");
@@ -77,7 +80,7 @@ export function Man({
     <>
       <group
         ref={group}
-        position={positionVec}
+        position={memoizedPosition}
         dispose={null}
         name={playerId ?? ""}
       >

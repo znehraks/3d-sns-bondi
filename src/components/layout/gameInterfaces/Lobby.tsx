@@ -1,17 +1,17 @@
 import { styled } from "styled-components";
 import { useCallback, useMemo, useState } from "react";
-import { STEPS } from "../enums";
-import { isValidText } from "../utils";
-import { socket } from "../sockets/clientSocket";
+import { STEPS } from "../../../enums";
+import { isValidText } from "../../../utils";
+import { socket } from "../../../sockets/clientSocket";
 import { SetterOrUpdater, useRecoilState } from "recoil";
 import {
   CharacterSelectFinishedAtom,
   HairColorAtom,
   PantsColorAtom,
   ShirtColorAtom,
-} from "../store/PlayersAtom";
-import { MainCanvas } from "./MainCanvas";
-import { colorCandidates } from "../data";
+} from "../../../store/PlayersAtom";
+import { MainCanvas } from "../../canvas/MainCanvas";
+import { colorCandidates } from "../../../data";
 
 export const Lobby = () => {
   const [currentStep, setCurrentStep] = useState<STEPS>(STEPS.NICK_NAME);

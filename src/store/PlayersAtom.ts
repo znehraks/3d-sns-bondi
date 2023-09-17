@@ -23,7 +23,10 @@ export const PlayersAtom = atom<IPlayer[]>({
 // });
 
 // 내 player정보
-export const MeAtom = atom<{ id: string }>({
+export interface IMe {
+  id: string;
+}
+export const MeAtom = atom<IMe>({
   key: "MeAtom",
   default: undefined,
 });
@@ -47,4 +50,34 @@ export const ShirtColorAtom = atom<string>({
 export const PantsColorAtom = atom<string>({
   key: "PantsColorAtom",
   default: "white",
+});
+
+export const IsLoadCompletedAtom = atom({
+  key: "IsLoadCompletedAtom",
+  default: false,
+});
+
+export interface IChat {
+  senderNickname: IPlayer["nickname"];
+  senderJobPosition: IPlayer["jobPosition"];
+  text: string;
+}
+export const ChatsAtom = atom<IChat[]>({
+  key: "ChatsAtom",
+  default: [],
+});
+
+export interface INotice {
+  nickname: IPlayer["nickname"];
+  jobPosition: IPlayer["jobPosition"];
+}
+
+export const EnterNoticeAtom = atom<INotice | undefined>({
+  key: "EnterNoticeAtom",
+  default: undefined,
+});
+
+export const ExitNoticeAtom = atom<INotice | undefined>({
+  key: "ExitNoticeAtom",
+  default: undefined,
 });
