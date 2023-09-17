@@ -8,6 +8,7 @@ import {
   PantsColorAtom,
   ShirtColorAtom,
 } from "../store/PlayersAtom";
+import { Vector3 } from "three";
 
 export const CharacterInit = () => {
   const camera = useThree((three) => three.camera);
@@ -26,7 +27,7 @@ export const CharacterInit = () => {
     <>
       <Man
         playerId=""
-        position={[0, 0, 0]}
+        position={new Vector3(0, 0, 0)}
         hairColor={hairColor}
         shirtColor={shirtColor}
         pantsColor={pantsColor}

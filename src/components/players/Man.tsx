@@ -17,7 +17,7 @@ interface IMan {
   hairColor: string;
   shirtColor: string;
   pantsColor: string;
-  position: [number, number, number];
+  position: THREE.Vector3;
 }
 export function Man({
   playerId,
@@ -26,18 +26,16 @@ export function Man({
   pantsColor,
   position,
 }: IMan) {
-  const three = useThree();
-  console.log(three.gl.domElement);
-  // -810,0 => 0, 200
-  // 0,0 => 112.5,200
-  // 810,0 => 225, 200
+  const threeScene = useThree((three) => three.scene);
   const point = document.getElementById(`player-point-${playerId}`);
+  const nicknameBillboard = threeScene.getObjectByName(
+    `nickname-billboard-${playerId}`
+  );
   const me = useRecoilValue(MeAtom);
 
-  const positionVec3 = new THREE.Vector3(position[0], position[1], position[2]);
-
   const memoizedPosition = useMemo(
-    () => new THREE.Vector3(position[0], position[1], position[2]),
+    () => position,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
 
@@ -47,6 +45,7 @@ export function Man({
     "/models/Hoodie Character.glb"
   ) as GLTF & { materials: { [key: string]: THREE.MeshStandardMaterial } };
 
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   const clone = useMemo(() => SkeletonUtils.clone(scene), []);
   const objectMap = useGraph(clone);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -61,18 +60,18 @@ export function Man({
     };
   }, [actions, animation]);
 
-  useFrame(({ camera }, delta) => {
+  useFrame(({ camera }) => {
     if (!group.current) return;
-    if (group.current.position.distanceTo(positionVec3) > 0.1) {
+    if (group.current.position.distanceTo(position) > 0.1) {
       const direction = group.current.position
         .clone()
-        .sub(positionVec3)
+        .sub(position)
         .normalize()
-        .multiplyScalar(delta * 10);
+        .multiplyScalar(0.04);
       group.current.position.sub(direction);
-      group.current.lookAt(positionVec3);
+      group.current.lookAt(position);
+
       if (point) {
-        console.log("group.current.position", group.current.position);
         point.style.transform = `translate(
           ${calculateMinimapPosition(group.current.position).x}px,
           ${calculateMinimapPosition(group.current.position).y}px
@@ -83,7 +82,14 @@ export function Man({
     } else {
       setAnimation("CharacterArmature|Idle");
     }
-
+    if (nicknameBillboard) {
+      nicknameBillboard.position.set(
+        group.current.position.x,
+        group.current.position.y + 2,
+        group.current.position.z
+      );
+      nicknameBillboard.lookAt(10000, 10000, 10000);
+    }
     if (me?.id === playerId) {
       camera.position.set(
         group.current.position.x + 12,

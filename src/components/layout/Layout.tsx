@@ -12,7 +12,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
   const [isLoadCompleted] = useRecoilState(IsLoadCompletedAtom);
   return (
     <Wrapper>
-      <audio src="/bgm.mp3" autoPlay loop />
+      {/* <audio src="/bgm.mp3" autoPlay loop /> */}
       {children}
 
       {isLoadCompleted && (

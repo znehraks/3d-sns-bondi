@@ -106,7 +106,7 @@ const ChatDropdownWrapper = styled.div`
   background-color: #b9beff50;
   border-bottom: 1px solid grey;
   overflow-y: hidden;
-  &.opened {
+  /* &.opened {
     visibility: visible;
   }
   &.closed {
@@ -115,7 +115,7 @@ const ChatDropdownWrapper = styled.div`
     }
     visibility: hidden;
     transform: translateY(100%);
-  }
+  } */
 `;
 
 const ChatAreaTitle = styled.div`

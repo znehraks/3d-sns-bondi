@@ -3,18 +3,27 @@ import HomeIcon from "@mui/icons-material/Home";
 import CategoryIcon from "@mui/icons-material/Category";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import { useRecoilState } from "recoil";
+import { CurrentMapAtom, TMaps } from "../../../store/PlayersAtom";
 
 export const SideBar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [, setCurrentMap] = useRecoilState(CurrentMapAtom);
+  const handleClick = useCallback(
+    (mapType: TMaps) => () => {
+      setCurrentMap(mapType);
+    },
+    [setCurrentMap]
+  );
   return (
     <>
       <SideBarWrapper className={isDropdownOpen ? "opened" : "closed"}>
-        <div>
+        <div onClick={handleClick("MY_ROOM")}>
           <HomeIcon /> <span>내 방으로 가기</span>
         </div>
-        <div>
-          <CategoryIcon /> <span>소품 배치</span>
+        <div onClick={handleClick("MY_ROOM")}>
+          <CategoryIcon /> <span>게임 방으로 가기</span>
         </div>
       </SideBarWrapper>
       <DropdownController

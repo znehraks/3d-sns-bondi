@@ -24,7 +24,7 @@ export const Notice = () => {
     const timeout = setTimeout(() => {
       setVisible(false);
       setExitedPlayer(undefined);
-    }, 3000);
+    }, 5000);
     return () => {
       clearTimeout(timeout);
     };
