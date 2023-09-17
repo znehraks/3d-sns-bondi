@@ -6,10 +6,11 @@ Command: npx gltfjsx@6.2.13 public/models/Hoodie Character.glb -o src/components
 import * as THREE from "three";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
-import { useFrame, useGraph } from "@react-three/fiber";
+import { useFrame, useGraph, useThree } from "@react-three/fiber";
 import { GLTF, SkeletonUtils } from "three-stdlib";
 import { useRecoilValue } from "recoil";
 import { MeAtom } from "../../store/PlayersAtom";
+import { calculateMinimapPosition } from "../../utils";
 
 interface IMan {
   playerId: string;
@@ -25,12 +26,21 @@ export function Man({
   pantsColor,
   position,
 }: IMan) {
+  const three = useThree();
+  console.log(three.gl.domElement);
+  // -810,0 => 0, 200
+  // 0,0 => 112.5,200
+  // 810,0 => 225, 200
+  const point = document.getElementById(`player-point-${playerId}`);
   const me = useRecoilValue(MeAtom);
+
   const positionVec3 = new THREE.Vector3(position[0], position[1], position[2]);
+
   const memoizedPosition = useMemo(
     () => new THREE.Vector3(position[0], position[1], position[2]),
     []
   );
+
   const group = useRef<THREE.Group>(null);
 
   const { scene, materials, animations } = useGLTF(
@@ -58,10 +68,17 @@ export function Man({
         .clone()
         .sub(positionVec3)
         .normalize()
-        .multiplyScalar(delta * 2.5);
+        .multiplyScalar(delta * 10);
       group.current.position.sub(direction);
       group.current.lookAt(positionVec3);
-      console.log("hihi");
+      if (point) {
+        console.log("group.current.position", group.current.position);
+        point.style.transform = `translate(
+          ${calculateMinimapPosition(group.current.position).x}px,
+          ${calculateMinimapPosition(group.current.position).y}px
+          )`;
+      }
+
       setAnimation("CharacterArmature|Run");
     } else {
       setAnimation("CharacterArmature|Idle");

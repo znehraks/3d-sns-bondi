@@ -57,6 +57,11 @@ export const Lobby = () => {
             onClick={() => {
               setCurrentStep((prev) => prev + 1);
             }}
+            onKeyUp={(e) => {
+              if (e.key === "enter") {
+                setCurrentStep((prev) => prev + 1);
+              }
+            }}
           >
             이대로 진행할래요
           </NextBtn>
@@ -76,6 +81,11 @@ export const Lobby = () => {
             className={isValidText(tempJobPosition) ? "valid" : "disabled"}
             onClick={() => {
               setCurrentStep((prev) => prev + 1);
+            }}
+            onKeyUp={(e) => {
+              if (e.key === "enter") {
+                setCurrentStep((prev) => prev + 1);
+              }
             }}
           >
             이대로 진행할래요
@@ -156,6 +166,19 @@ export const Lobby = () => {
                   shirtColor,
                   pantsColor,
                 });
+              }}
+              onKeyUp={(e) => {
+                if (!tempNickname || !tempJobPosition) return;
+                if (e.key === "enter") {
+                  setCharacterSelectFinished(true);
+                  socket.emit("initialize", {
+                    tempNickname,
+                    tempJobPosition,
+                    hairColor,
+                    shirtColor,
+                    pantsColor,
+                  });
+                }
               }}
             >
               {/* 이거 누르면 애니메이션 다른것 재생 */}

@@ -94,7 +94,6 @@ const SideBarWrapper = styled.div`
 const DropdownController = styled.div`
   position: absolute;
   top: 0;
-  transform: translate();
   display: flex;
   justify-content: center;
   align-items: center;

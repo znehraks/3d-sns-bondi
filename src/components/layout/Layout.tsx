@@ -6,12 +6,13 @@ import { Footer } from "./gameInterfaces/Footer";
 import { useRecoilState } from "recoil";
 import { IsLoadCompletedAtom } from "../../store/PlayersAtom";
 import { Notice } from "./gameInterfaces/Notice";
+import { Minimap } from "./gameInterfaces/Minimap";
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   const [isLoadCompleted] = useRecoilState(IsLoadCompletedAtom);
   return (
     <Wrapper>
-      {/* <audio src="/bgm.mp3" autoPlay loop /> */}
+      <audio src="/bgm.mp3" autoPlay loop />
       {children}
 
       {isLoadCompleted && (
@@ -19,6 +20,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           <Notice />
           <SideBar />
           <ChatArea />
+          <Minimap />
         </>
       )}
       {/* <BottomUtilBar /> */}

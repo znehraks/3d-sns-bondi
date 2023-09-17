@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { styled } from "styled-components";
 import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
@@ -8,6 +8,7 @@ import { useRecoilValue } from "recoil";
 import { ChatsAtom } from "../../../store/PlayersAtom";
 
 export const ChatArea = () => {
+  const ref = useRef<HTMLDivElement>(null);
   const [isChatContentOpen, setIsChatContentOpen] = useState(false);
   const chats = useRecoilValue(ChatsAtom);
   const [tempText, setTempText] = useState<string>();
@@ -15,10 +16,11 @@ export const ChatArea = () => {
   const handleSubmit = useCallback(() => {
     if (isValidText(tempText)) {
       socket.emit("newText", tempText);
+      setTempText("");
+      if (!ref.current) return;
+      ref.current.scrollTop = ref.current.scrollHeight;
     }
   }, [tempText]);
-
-  console.log(chats);
 
   const handleSubmitEnter = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -26,6 +28,8 @@ export const ChatArea = () => {
         if (e.key === "Enter") {
           socket.emit("newText", tempText);
           setTempText("");
+          if (!ref.current) return;
+          ref.current.scrollTop = ref.current.scrollHeight;
         }
       }
     },
@@ -51,7 +55,7 @@ export const ChatArea = () => {
             />
           )}
         </ChatAreaTitle>
-        <ChatContentContainer>
+        <ChatContentContainer ref={ref}>
           {chats.map(({ senderNickname, senderJobPosition, text }) => (
             <ChatLine>
               <ChatSender>{`${senderNickname}[${senderJobPosition}]`}</ChatSender>
@@ -83,7 +87,7 @@ const ChatAreaWrapper = styled.div`
   right: 0;
   top: 0;
   width: 400px;
-  height: 100%;
+  height: 55%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -101,6 +105,7 @@ const ChatDropdownWrapper = styled.div`
   align-items: flex-start;
   background-color: #b9beff50;
   border-bottom: 1px solid grey;
+  overflow-y: hidden;
   &.opened {
     visibility: visible;
   }
@@ -130,12 +135,16 @@ const ChatAreaTitle = styled.div`
 const ChatContentContainer = styled.div`
   padding: 12px;
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
   gap: 10px;
   border-top: 1px solid grey;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 96px;
 `;
 
 const ChatLine = styled.div`
@@ -143,7 +152,7 @@ const ChatLine = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: center;
+  align-items: flex-start;
 `;
 
 const ChatSender = styled.div`
@@ -152,15 +161,16 @@ const ChatSender = styled.div`
   text-shadow: 0.5px 0.5px 0.5px #ececec;
 `;
 const ChatContent = styled.div`
+  max-width: 250px;
   font-size: 18px;
   font-weight: 700;
   text-shadow: 0.5px 0.5px 0.5px #ececec;
+  overflow-wrap: break-word;
 `;
 
 const ChatInputContainer = styled.div`
   padding: 12px;
   width: 100%;
-  flex: 2;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;

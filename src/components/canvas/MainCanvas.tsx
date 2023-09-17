@@ -5,6 +5,7 @@ export const MainCanvas = () => {
   const aspectRatio = window.innerWidth / window.innerHeight;
   return (
     <Canvas
+      id="canvas"
       gl={{ antialias: true }}
       shadows
       camera={{
