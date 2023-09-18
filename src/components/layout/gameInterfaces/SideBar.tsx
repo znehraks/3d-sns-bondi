@@ -9,20 +9,26 @@ import { CurrentMapAtom, TMaps } from "../../../store/PlayersAtom";
 
 export const SideBar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [, setCurrentMap] = useRecoilState(CurrentMapAtom);
+  const [currentMap, setCurrentMap] = useRecoilState(CurrentMapAtom);
   const handleClick = useCallback(
     (mapType: TMaps) => () => {
       setCurrentMap(mapType);
+      setIsDropdownOpen(false);
     },
     [setCurrentMap]
   );
   return (
     <>
       <SideBarWrapper className={isDropdownOpen ? "opened" : "closed"}>
-        <div onClick={handleClick("MY_ROOM")}>
-          <HomeIcon /> <span>내 방으로 가기</span>
+        <div
+          onClick={handleClick(currentMap !== "MY_ROOM" ? "MY_ROOM" : "GROUND")}
+        >
+          <HomeIcon />{" "}
+          <span>
+            {currentMap !== "MY_ROOM" ? "내 방으로 가기" : "놀이터로 가기"}
+          </span>
         </div>
-        <div onClick={handleClick("MY_ROOM")}>
+        <div onClick={handleClick("MINI_GAME")}>
           <CategoryIcon /> <span>게임 방으로 가기</span>
         </div>
       </SideBarWrapper>
@@ -42,7 +48,7 @@ const SideBarWrapper = styled.div`
   left: 0;
   top: 0;
   background-color: #b9beffdd;
-  width: 200px;
+  width: 220px;
   height: 100%;
   display: flex;
   flex-direction: column;

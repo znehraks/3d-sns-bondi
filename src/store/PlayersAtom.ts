@@ -1,4 +1,5 @@
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
+import { Vector3 } from "three";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export interface IPlayer {
@@ -97,4 +98,47 @@ export type TMaps = "GROUND" | "MY_ROOM" | "MINI_GAME";
 export const CurrentMapAtom = atom<TMaps>({
   key: "CurrentMapAtom",
   default: "GROUND",
+});
+
+interface PlayGroundStructureBoundingBoxAtom {
+  name: string;
+  box: { max: Vector3; min: Vector3 };
+  position: Vector3;
+}
+export const PlayGroundStructuresBoundingBoxAtom = atom<
+  PlayGroundStructureBoundingBoxAtom[]
+>({
+  key: "PlayGroundStructuresBoundingBoxAtom",
+  default: [],
+});
+
+export const PlayerGroundStructuresFloorPlaneCornersSelector = selector({
+  key: "PlayerGroundStructuresFloorPlaneCornersSelector",
+  get: ({ get }) => {
+    const pb = get(PlayGroundStructuresBoundingBoxAtom);
+    return pb.map((item) => {
+      return {
+        name: item.name,
+        corners: [
+          {
+            x: item.box.max.x + item.position.x,
+            z: item.box.max.z + item.position.z,
+          },
+          {
+            x: item.box.max.x + item.position.x,
+            z: item.box.min.z + item.position.z,
+          },
+          {
+            x: item.box.min.x + item.position.x,
+            z: item.box.min.z + item.position.z,
+          },
+          {
+            x: item.box.min.x + item.position.x,
+            z: item.box.max.z + item.position.z,
+          },
+        ],
+        position: item.position,
+      };
+    });
+  },
 });

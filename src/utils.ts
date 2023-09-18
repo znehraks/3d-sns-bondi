@@ -6,7 +6,7 @@ export const isValidText = (text: string | undefined) => {
 
 export const calculateMinimapPosition = (originalPosition: Vector3) => {
   return {
-    x: 2 * originalPosition.x - 5,
-    y: 2 * originalPosition.z - 5,
+    x: ((2 * 10) / 3) * originalPosition.x - 5,
+    y: ((2 * 10) / 3) * originalPosition.z - 5,
   };
 };

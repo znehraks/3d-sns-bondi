@@ -46,9 +46,16 @@ export const Lobby = () => {
         <>
           <LoginTitle>패디에서 사용할 내 이름이에요.</LoginTitle>
           <Input
+            autoFocus
             placeholder="별명을 입력해주세요."
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setTempNickname(e.currentTarget.value);
+            }}
+            onKeyUp={(e) => {
+              if (!isValidText(tempNickname)) return;
+              if (e.key === "Enter") {
+                setCurrentStep((prev) => prev + 1);
+              }
             }}
           />
           <NextBtn
@@ -56,11 +63,6 @@ export const Lobby = () => {
             className={isValidText(tempNickname) ? "valid" : "disabled"}
             onClick={() => {
               setCurrentStep((prev) => prev + 1);
-            }}
-            onKeyUp={(e) => {
-              if (e.key === "enter") {
-                setCurrentStep((prev) => prev + 1);
-              }
             }}
           >
             이대로 진행할래요
@@ -71,9 +73,16 @@ export const Lobby = () => {
         <>
           <LoginTitle>패디에서 공유할 내 직군이에요.</LoginTitle>
           <Input
+            autoFocus
             placeholder="개발 직군을 입력해주세요."
             onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
               setTempJobPosition(e.currentTarget.value);
+            }}
+            onKeyUp={(e) => {
+              if (!isValidText(tempJobPosition)) return;
+              if (e.key === "Enter") {
+                setCurrentStep((prev) => prev + 1);
+              }
             }}
           />
           <NextBtn
@@ -81,11 +90,6 @@ export const Lobby = () => {
             className={isValidText(tempJobPosition) ? "valid" : "disabled"}
             onClick={() => {
               setCurrentStep((prev) => prev + 1);
-            }}
-            onKeyUp={(e) => {
-              if (e.key === "enter") {
-                setCurrentStep((prev) => prev + 1);
-              }
             }}
           >
             이대로 진행할래요

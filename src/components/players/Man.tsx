@@ -9,7 +9,10 @@ import { useGLTF, useAnimations } from "@react-three/drei";
 import { useFrame, useGraph, useThree } from "@react-three/fiber";
 import { GLTF, SkeletonUtils } from "three-stdlib";
 import { useRecoilValue } from "recoil";
-import { MeAtom } from "../../store/PlayersAtom";
+import {
+  MeAtom,
+  PlayerGroundStructuresFloorPlaneCornersSelector,
+} from "../../store/PlayersAtom";
 import { calculateMinimapPosition } from "../../utils";
 
 interface IMan {
@@ -26,12 +29,9 @@ export function Man({
   pantsColor,
   position,
 }: IMan) {
-  const threeScene = useThree((three) => three.scene);
-  const point = document.getElementById(`player-point-${playerId}`);
-  const nicknameBillboard = threeScene.getObjectByName(
-    `nickname-billboard-${playerId}`
+  const playerGroundStructuresFloorPlaneCorners = useRecoilValue(
+    PlayerGroundStructuresFloorPlaneCornersSelector
   );
-  const me = useRecoilValue(MeAtom);
 
   const memoizedPosition = useMemo(
     () => position,
@@ -40,6 +40,12 @@ export function Man({
   );
 
   const group = useRef<THREE.Group>(null);
+  const threeScene = useThree((three) => three.scene);
+  const point = document.getElementById(`player-point-${playerId}`);
+  const nicknameBillboard = threeScene.getObjectByName(
+    `nickname-billboard-${playerId}`
+  );
+  const me = useRecoilValue(MeAtom);
 
   const { scene, materials, animations } = useGLTF(
     "/models/Hoodie Character.glb"
@@ -59,8 +65,13 @@ export function Man({
       actions[animation]?.fadeOut(0.5);
     };
   }, [actions, animation]);
+  // const clock = new THREE.Clock();
 
   useFrame(({ camera }) => {
+    // console.log("clock.getElapsedTime();", clock.getElapsedTime());
+    // console.log(gl.info.render.frame);
+    // console.log("delta", delta);
+
     if (!group.current) return;
     if (group.current.position.distanceTo(position) > 0.1) {
       const direction = group.current.position
@@ -70,6 +81,8 @@ export function Man({
         .multiplyScalar(0.04);
       group.current.position.sub(direction);
       group.current.lookAt(position);
+      // api.position.copy(group.current.position);
+      // api.quaternion.copy(group.current.quaternion);
 
       if (point) {
         point.style.transform = `translate(
@@ -97,6 +110,20 @@ export function Man({
         group.current.position.z + 12
       );
       camera.lookAt(group.current.position);
+
+      playerGroundStructuresFloorPlaneCorners.filter((structure) => {
+        if (group.current) {
+          if (
+            group.current.position.x < structure.corners[0].x &&
+            group.current.position.x > structure.corners[2].x &&
+            group.current.position.z < structure.corners[0].z &&
+            group.current.position.z > structure.corners[2].z
+          ) {
+            console.log(structure.name);
+            console.log("에 들어옴");
+          }
+        }
+      });
     }
   });
   return (

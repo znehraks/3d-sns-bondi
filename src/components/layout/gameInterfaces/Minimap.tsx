@@ -1,13 +1,20 @@
 import { useRecoilValue } from "recoil";
 import { styled } from "styled-components";
-import { MeAtom, PlayersAtom } from "../../../store/PlayersAtom";
+import {
+  CurrentMapAtom,
+  MeAtom,
+  PlayersAtom,
+} from "../../../store/PlayersAtom";
 
 export const Minimap = () => {
+  const currentMap = useRecoilValue(CurrentMapAtom);
   const players = useRecoilValue(PlayersAtom);
   const me = useRecoilValue(MeAtom);
 
   return (
-    <MinimapWrapper>
+    <MinimapWrapper
+      className={currentMap === "GROUND" ? "visible" : "invisible"}
+    >
       {players.map((p) => (
         <PlayerPoint
           key={p.id}
@@ -27,6 +34,12 @@ const MinimapWrapper = styled.div`
   bottom: 50px;
   background-color: #00000055;
   rotate: 45deg;
+  &.visible {
+    display: block;
+  }
+  &.invisible {
+    display: none;
+  }
 `;
 
 const PlayerPoint = styled.div`

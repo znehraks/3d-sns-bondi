@@ -1,47 +1,56 @@
 import { useCallback, useRef, useState } from "react";
 import { styled } from "styled-components";
-import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
-import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+// import KeyboardArrowDownIcon from "@mui/icons-material/KeyboardArrowDown";
+// import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import { isValidText } from "../../../utils";
 import { socket } from "../../../sockets/clientSocket";
 import { useRecoilValue } from "recoil";
-import { ChatsAtom } from "../../../store/PlayersAtom";
+import { ChatsAtom, CurrentMapAtom } from "../../../store/PlayersAtom";
 
 export const ChatArea = () => {
+  const currentMap = useRecoilValue(CurrentMapAtom);
   const ref = useRef<HTMLDivElement>(null);
   const [isChatContentOpen, setIsChatContentOpen] = useState(false);
   const chats = useRecoilValue(ChatsAtom);
   const [tempText, setTempText] = useState<string>();
 
   const handleSubmit = useCallback(() => {
-    if (isValidText(tempText)) {
-      socket.emit("newText", tempText);
-      setTempText("");
-      if (!ref.current) return;
-      ref.current.scrollTop = ref.current.scrollHeight;
+    if (currentMap !== "MY_ROOM") {
+      if (isValidText(tempText)) {
+        socket.emit("newText", tempText);
+        setTempText("");
+        if (!ref.current) return;
+        ref.current.scrollTop = ref.current.scrollHeight;
+      }
+    } else {
+      console.log("포스트잇 남기기");
     }
-  }, [tempText]);
+  }, [currentMap, tempText]);
 
   const handleSubmitEnter = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (isValidText(tempText)) {
-        if (e.key === "Enter") {
-          socket.emit("newText", tempText);
-          setTempText("");
-          if (!ref.current) return;
-          ref.current.scrollTop = ref.current.scrollHeight;
+      if (currentMap !== "MY_ROOM") {
+        if (isValidText(tempText)) {
+          if (e.key === "Enter") {
+            socket.emit("newText", tempText);
+            setTempText("");
+            if (!ref.current) return;
+            ref.current.scrollTop = ref.current.scrollHeight;
+          }
         }
+      } else {
+        console.log("포스트잇 남기기기");
       }
     },
-    [tempText]
+    [currentMap, tempText]
   );
 
   return (
     <ChatAreaWrapper>
       <ChatDropdownWrapper className={isChatContentOpen ? "opened" : "closed"}>
         <ChatAreaTitle>
-          <span>채팅창</span>
-          {isChatContentOpen ? (
+          <span> {currentMap !== "MY_ROOM" ? "채팅창" : "메모 남기기"} </span>
+          {/* {isChatContentOpen ? (
             <KeyboardArrowDownIcon
               onClick={() => {
                 setIsChatContentOpen(false);
@@ -53,7 +62,7 @@ export const ChatArea = () => {
                 setIsChatContentOpen(true);
               }}
             />
-          )}
+          )} */}
         </ChatAreaTitle>
         <ChatContentContainer ref={ref}>
           {chats.map(({ senderNickname, senderJobPosition, text }) => (
@@ -73,7 +82,7 @@ export const ChatArea = () => {
           value={tempText}
           onChange={(e) => setTempText(e.currentTarget.value)}
           onKeyUp={handleSubmitEnter}
-          placeholder="메시지 입력"
+          placeholder="글 입력"
         />
 
         <button onClick={handleSubmit}>보내기</button>

@@ -21,7 +21,6 @@ export const CharacterInit = () => {
     if (!controls.current?.target) return;
     camera.position.set(5, 5, 5);
     controls.current.target.set(0, 1, 0);
-    return;
   }, [camera.position]);
   return (
     <>
