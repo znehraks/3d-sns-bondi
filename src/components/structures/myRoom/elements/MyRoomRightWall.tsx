@@ -1,10 +1,11 @@
-import { socket } from "../../../sockets/clientSocket";
+import { socket } from "../../../../sockets/clientSocket";
 
 export const MyRoomRightWall = () => {
   // const select = useSelect();
   // console.log("select", select);
   return (
     <mesh
+      name="my-room-right-wall"
       castShadow
       receiveShadow
       position-y={0}

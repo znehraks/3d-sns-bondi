@@ -10,3 +10,17 @@ export const calculateMinimapPosition = (originalPosition: Vector3) => {
     y: ((2 * 10) / 3) * originalPosition.z - 5,
   };
 };
+
+interface ICalculateThreePosition {
+  clientX: number;
+  clientY: number;
+}
+export const calculateThreePosition = ({
+  clientX,
+  clientY,
+}: ICalculateThreePosition) => {
+  return {
+    x: (clientX / window.innerWidth) * 2 - 1,
+    y: -(clientY / window.innerHeight) * 2 + 1,
+  };
+};

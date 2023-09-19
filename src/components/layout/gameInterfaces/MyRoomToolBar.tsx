@@ -1,12 +1,32 @@
 import { useState } from "react";
+import { useRecoilState } from "recoil";
 import styled from "styled-components";
-
+import { CurrentPlacingMyRoomSkillAtom } from "../../../store/PlayersAtom";
+const skills = [
+  "html",
+  "css",
+  "javascript",
+  "typescript",
+  "react",
+  "next",
+  "node",
+  "graphql",
+  "three",
+  "pixi",
+  "python",
+  "flutter",
+  "aws",
+];
 export const MyRoomToolBar = () => {
   const [openedDropdownIndex, setOpenedDropdownIndex] = useState<number>();
+  const [, setCurrentPlacingMyRoomSkill] = useRecoilState(
+    CurrentPlacingMyRoomSkillAtom
+  );
+
   return (
     <>
       <MyRoomToolBarWrapper>
-        {["기술스택배치", "가구배치", "메모 남기기"].map((item, idx) => {
+        {["기술", "가구"].map((item, idx) => {
           return (
             <ToolBarBtn
               onClick={() => {
@@ -24,10 +44,18 @@ export const MyRoomToolBar = () => {
         })}
         {openedDropdownIndex !== undefined && (
           <ToolBarBtnDropdown>
-            <ToolBarDropdownItem>html</ToolBarDropdownItem>
-            <ToolBarDropdownItem>css</ToolBarDropdownItem>
-            <ToolBarDropdownItem>javascript</ToolBarDropdownItem>
-            <ToolBarDropdownItem></ToolBarDropdownItem>
+            {skills.map((skill) => (
+              <ToolBarDropdownItem
+                onClick={() => {
+                  setCurrentPlacingMyRoomSkill((prev) => {
+                    if (prev === skill) return undefined;
+                    return skill;
+                  });
+                  setOpenedDropdownIndex(undefined);
+                }}
+                src={`/images/${skill}.png`}
+              ></ToolBarDropdownItem>
+            ))}
           </ToolBarBtnDropdown>
         )}
       </MyRoomToolBarWrapper>
@@ -42,7 +70,7 @@ const MyRoomToolBarWrapper = styled.div`
   position: fixed;
   top: 40px;
   left: 50%;
-  width: 270px;
+  width: 200px;
   height: 80px;
   transform: translateX(-50%);
   background-color: #ffffffee;
@@ -61,8 +89,12 @@ const ToolBarBtn = styled.div`
   background-color: aliceblue;
   border-radius: 10px;
   transition: 0.2s ease-in-out;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
   &:hover {
-    box-shadow: 0.5px 0.5px 0.5px 0.5px aqua;
+    background-color: aqua;
   }
 `;
 
@@ -70,17 +102,20 @@ const ToolBarBtnDropdown = styled.div`
   position: fixed;
   left: 0;
   top: 80px;
-  width: 270px;
-  background-color: rebeccapurple;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 10px;
+  width: 200px;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-gap: 10px;
+  gap: 5px;
 `;
 
-const ToolBarDropdownItem = styled.div`
-  padding: 10px;
-  background-color: aqua;
+const ToolBarDropdownItem = styled.div<{ src: string }>`
+  background-color: #eeeeee;
   width: 100%;
+  height: 46px;
+  background-image: ${(props) => `url(${props.src})`};
+  background-repeat: no-repeat;
+  background-size: cover;
+  cursor: pointer;
 `;

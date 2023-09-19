@@ -1,4 +1,4 @@
-import { socket } from "../../../sockets/clientSocket";
+import { socket } from "../../../../sockets/clientSocket";
 import { useLoader } from "@react-three/fiber";
 import { DoubleSide, RepeatWrapping, Texture, TextureLoader } from "three";
 
@@ -11,6 +11,7 @@ export const MyRoomFloor = () => {
   sandTexture.repeat.y = 5;
   return (
     <mesh
+      name="my-room-floor"
       position-y={-2.5}
       castShadow
       receiveShadow

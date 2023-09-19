@@ -26,3 +26,15 @@ export default App;
 // Swing set by Poly by Google [CC-BY] via Poly Pizza
 
 // Fps Rig by J-Toastie [CC-BY] via Poly Pizza
+
+// Darts by Jarlan Perez [CC-BY] via Poly Pizza
+
+// Dartboard by Jarlan Perez [CC-BY] via Poly Pizza
+
+// Gaming Computer by Alex Safayan [CC-BY] via Poly Pizza
+
+// Standing Desk by dook [CC-BY] via Poly Pizza
+
+// Chair by Poly by Google [CC-BY] via Poly Pizza
+
+// Bed by CMHT Oculus [CC-BY] via Poly Pizza

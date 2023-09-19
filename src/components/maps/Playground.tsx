@@ -22,10 +22,8 @@ import { Suspense, useEffect, useRef } from "react";
 import { CharacterInit } from "../CharacterInit";
 import { Loader } from "../utilComponents/Loader";
 import { Vector3 } from "three";
-import { MyRoomFloor } from "../structures/myRoom/MyRoomFloor";
-import { MyRoomLeftWall } from "../structures/myRoom/MyRoomLeftWall";
-import { MyRoomRightWall } from "../structures/myRoom/MyRoomRightWall";
 import { Swing } from "../structures/ground/Swing";
+import { MyRoom } from "../structures/myRoom";
 
 export const Playground = () => {
   const [currentMap] = useRecoilState(CurrentMapAtom);
@@ -55,21 +53,7 @@ export const Playground = () => {
 
   return (
     <>
-      <ambientLight name="ambientLight" intensity={5} />
-
-      <directionalLight
-        castShadow
-        receiveShadow
-        intensity={10}
-        position={[0, 50, -50]}
-        shadow-normalBias={0.1}
-        shadow-camera-left={-25}
-        shadow-camera-right={25}
-        shadow-camera-top={25}
-        shadow-camera-bottom={-25}
-        shadow-camera-near={0.1}
-        shadow-camera-far={200}
-      />
+      <ambientLight name="ambientLight" intensity={1} />
 
       {/* <PositionalAudio
         position={[0, 0, 0]}
@@ -81,6 +65,18 @@ export const Playground = () => {
       <OrbitControls ref={controls} minDistance={5} maxDistance={20} />
       {currentMap === "GROUND" && (
         <>
+          <directionalLight
+            castShadow
+            intensity={10}
+            position={[0, 50, -50]}
+            shadow-normalBias={0.1}
+            shadow-camera-left={-25}
+            shadow-camera-right={25}
+            shadow-camera-top={25}
+            shadow-camera-bottom={-25}
+            shadow-camera-near={0.1}
+            shadow-camera-far={200}
+          />
           {!characterSelectFinished && <CharacterInit />}
           {characterSelectFinished && (
             <>
@@ -143,9 +139,8 @@ export const Playground = () => {
       )}
       {currentMap === "MY_ROOM" && (
         <>
-          <MyRoomFloor />
-          <MyRoomLeftWall />
-          <MyRoomRightWall />
+          <directionalLight castShadow intensity={0.5} position={[0, 5, 5]} />
+          <MyRoom />
         </>
       )}
     </>

@@ -142,3 +142,17 @@ export const PlayerGroundStructuresFloorPlaneCornersSelector = selector({
     });
   },
 });
+
+export const CurrentPlacingMyRoomSkillAtom = atom<string | undefined>({
+  key: "CurrentPlacingMyRoomSkillAtom",
+  default: undefined,
+});
+
+export interface IPlacedMyRoomSkillAtom {
+  name: string;
+  position: Vector3;
+}
+export const PlacedMyRoomSkillsAtom = atom<IPlacedMyRoomSkillAtom[]>({
+  key: "PlacedMyRoomSkillsAtom",
+  default: [],
+});

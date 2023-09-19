@@ -1,8 +1,9 @@
 import { DoubleSide } from "three";
-import { socket } from "../../../sockets/clientSocket";
+import { socket } from "../../../../sockets/clientSocket";
 export const MyRoomLeftWall = () => {
   return (
     <mesh
+      name="my-room-left-wall"
       castShadow
       receiveShadow
       position-y={0}
