@@ -1,5 +1,6 @@
 import { DoubleSide } from "three";
 import { socket } from "../../../../sockets/clientSocket";
+import { myRoomSize } from "../../../../data";
 export const MyRoomLeftWall = () => {
   return (
     <mesh
@@ -15,7 +16,7 @@ export const MyRoomLeftWall = () => {
         socket.emit("move", [e.point.x, 0, e.point.z]);
       }}
     >
-      <planeGeometry args={[5, 5]} />
+      <planeGeometry args={[myRoomSize, myRoomSize]} />
       <meshStandardMaterial side={DoubleSide} color={"skyblue"} />
     </mesh>
   );

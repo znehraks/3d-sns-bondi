@@ -1,5 +1,6 @@
 import { useTexture } from "@react-three/drei";
 import { IPlacedMyRoomSkillAtom } from "../../../../store/PlayersAtom";
+import { myRoomSkillBoxSize } from "../../../../data";
 
 export const MyRoomPlacedSkillBox = ({
   placedMyRoomSkill,
@@ -15,8 +16,10 @@ export const MyRoomPlacedSkillBox = ({
         name={placedMyRoomSkill.name}
         position={placedMyRoomSkill.position}
       >
-        <boxGeometry args={[0.5, 0.5, 0.5]} />
-        <meshStandardMaterial map={texture} />
+        <boxGeometry
+          args={[myRoomSkillBoxSize, myRoomSkillBoxSize, myRoomSkillBoxSize]}
+        />
+        <meshStandardMaterial depthWrite={false} map={texture} />
       </mesh>
     </instancedMesh>
   );

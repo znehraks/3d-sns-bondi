@@ -1,6 +1,7 @@
 import { socket } from "../../../../sockets/clientSocket";
 import { useLoader } from "@react-three/fiber";
 import { DoubleSide, RepeatWrapping, Texture, TextureLoader } from "three";
+import { myRoomSize } from "../../../../data";
 
 export const MyRoomFloor = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -21,7 +22,7 @@ export const MyRoomFloor = () => {
         socket.emit("move", [e.point.x, 0, e.point.z]);
       }}
     >
-      <planeGeometry args={[5, 5]} />
+      <planeGeometry args={[myRoomSize, myRoomSize]} />
       <meshStandardMaterial side={DoubleSide} color={"aqua"} />
     </mesh>
   );

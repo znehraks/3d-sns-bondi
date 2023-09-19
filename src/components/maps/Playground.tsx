@@ -139,7 +139,7 @@ export const Playground = () => {
       )}
       {currentMap === "MY_ROOM" && (
         <>
-          <directionalLight castShadow intensity={0.5} position={[0, 5, 5]} />
+          <directionalLight castShadow intensity={1} position={[0, 5, 5]} />
           <MyRoom />
         </>
       )}

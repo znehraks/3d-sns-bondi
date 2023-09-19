@@ -42,3 +42,6 @@ export const colorCandidates = [
   "#e6e6c4",
   "#eeb422",
 ];
+
+export const myRoomSize = 5;
+export const myRoomSkillBoxSize = 5 / 20;

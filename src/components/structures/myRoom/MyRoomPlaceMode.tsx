@@ -8,6 +8,7 @@ import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 import { calculateThreePosition } from "../../../utils";
 import { useTexture } from "@react-three/drei";
+import { myRoomSize, myRoomSkillBoxSize } from "../../../data";
 
 export const MyRoomPlaceMode = ({
   currentPlacingMyRoomSkill,
@@ -38,52 +39,77 @@ export const MyRoomPlaceMode = ({
         .filter((item) => item.object.name !== "placing");
       const currentRaycastingMeshName = intersect.object.name;
 
+      console.log("intersect", intersect);
       let xOffset = 0;
       let yOffset = 0;
       let zOffset = 0;
       if (currentRaycastingMeshName === "my-room-floor") {
-        yOffset = 0.25;
-        if (intersect.point.x < -2) {
-          xOffset += Math.abs(intersect.point.x + 2.25);
+        yOffset = myRoomSkillBoxSize / 2 + 0.01;
+        if (intersect.point.x < -(myRoomSize / 2 - myRoomSkillBoxSize / 2)) {
+          xOffset += Math.abs(
+            intersect.point.x + (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+          );
         }
-        if (intersect.point.x > 2) {
-          xOffset -= Math.abs(intersect.point.x - 2.25);
+        if (intersect.point.x > myRoomSize / 2 + myRoomSkillBoxSize / 2) {
+          xOffset -= Math.abs(
+            intersect.point.x - (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+          );
         }
-        if (intersect.point.z < -2) {
-          zOffset += Math.abs(intersect.point.z + 2.25);
+        if (intersect.point.z < -(myRoomSize / 2 - myRoomSkillBoxSize / 2)) {
+          zOffset += Math.abs(
+            intersect.point.z + (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+          );
         }
-        if (intersect.point.z > 2) {
-          zOffset -= Math.abs(intersect.point.z - 2.25);
+        if (intersect.point.z > myRoomSize / 2 + myRoomSkillBoxSize / 2) {
+          zOffset -= Math.abs(
+            intersect.point.z - (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+          );
         }
       }
       if (currentRaycastingMeshName === "my-room-left-wall") {
-        xOffset = 0.25;
-        if (intersect.point.y < -2) {
-          yOffset += Math.abs(intersect.point.y + 2.25);
+        xOffset = myRoomSkillBoxSize / 2 + 0.01;
+        if (intersect.point.y < -(myRoomSize / 2 - myRoomSkillBoxSize / 2)) {
+          yOffset += Math.abs(
+            intersect.point.y + (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+          );
         }
-        if (intersect.point.y > 2) {
-          yOffset -= Math.abs(intersect.point.y - 2.25);
+        if (intersect.point.y > myRoomSize / 2 + myRoomSkillBoxSize / 2) {
+          yOffset -= Math.abs(
+            intersect.point.y - (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+          );
         }
-        if (intersect.point.z < -2) {
-          zOffset += Math.abs(intersect.point.z + 2.25);
+        if (intersect.point.z < -(myRoomSize / 2 - myRoomSkillBoxSize / 2)) {
+          zOffset += Math.abs(
+            intersect.point.z + (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+          );
         }
-        if (intersect.point.z > 2) {
-          zOffset -= Math.abs(intersect.point.z - 2.25);
+        if (intersect.point.z > myRoomSize / 2 + myRoomSkillBoxSize / 2) {
+          zOffset -= Math.abs(
+            intersect.point.z - (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+          );
         }
       }
       if (currentRaycastingMeshName === "my-room-right-wall") {
-        zOffset = 0.25;
-        if (intersect.point.x < -2) {
-          xOffset += Math.abs(intersect.point.x + 2.25);
+        zOffset = myRoomSkillBoxSize / 2 + 0.01;
+        if (intersect.point.x < -(myRoomSize / 2 - myRoomSkillBoxSize / 2)) {
+          xOffset += Math.abs(
+            intersect.point.x + (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+          );
         }
-        if (intersect.point.x > 2) {
-          xOffset -= Math.abs(intersect.point.x - 2.25);
+        if (intersect.point.x > myRoomSize / 2 + myRoomSkillBoxSize / 2) {
+          xOffset -= Math.abs(
+            intersect.point.x - (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+          );
         }
-        if (intersect.point.y < -2) {
-          yOffset += Math.abs(intersect.point.y + 2.25);
+        if (intersect.point.y < -(myRoomSize / 2 - myRoomSkillBoxSize / 2)) {
+          yOffset += Math.abs(
+            intersect.point.y + (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+          );
         }
-        if (intersect.point.y > 2) {
-          yOffset -= Math.abs(intersect.point.y - 2.25);
+        if (intersect.point.y > myRoomSize / 2 + myRoomSkillBoxSize / 2) {
+          yOffset -= Math.abs(
+            intersect.point.y - (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+          );
         }
       }
       if (intersect) {
@@ -94,7 +120,7 @@ export const MyRoomPlaceMode = ({
         );
       }
     };
-    const handlePointerDown = () => {
+    const handlePointerUp = () => {
       if (!ref.current) return;
       setPlacedMyRoomSkills((prev) => [
         ...prev.filter((item) => item.name !== currentPlacingMyRoomSkill),
@@ -108,10 +134,10 @@ export const MyRoomPlaceMode = ({
 
     console.log("currentPlacingMyRoomSkill", currentPlacingMyRoomSkill);
     gl.domElement.addEventListener("pointermove", handlePointerMove);
-    gl.domElement.addEventListener("pointerdown", handlePointerDown);
+    gl.domElement.addEventListener("pointerup", handlePointerUp);
     return () => {
       gl.domElement.removeEventListener("pointermove", handlePointerMove);
-      gl.domElement.removeEventListener("pointerdown", handlePointerDown);
+      gl.domElement.removeEventListener("pointerup", handlePointerUp);
     };
   }, [
     camera,
@@ -126,7 +152,9 @@ export const MyRoomPlaceMode = ({
   return (
     <instancedMesh>
       <mesh name="placing" ref={ref}>
-        <boxGeometry args={[0.5, 0.5, 0.5]} />
+        <boxGeometry
+          args={[myRoomSkillBoxSize, myRoomSkillBoxSize, myRoomSkillBoxSize]}
+        />
         <meshStandardMaterial map={texture.clone()} />
       </mesh>
     </instancedMesh>
