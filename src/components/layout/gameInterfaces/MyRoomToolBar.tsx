@@ -26,7 +26,7 @@ export const MyRoomToolBar = () => {
   return (
     <>
       <MyRoomToolBarWrapper>
-        {["기술", "가구"].map((item, idx) => {
+        {["스택배치", "가구배치"].map((item, idx) => {
           return (
             <ToolBarBtn
               onClick={() => {
@@ -86,7 +86,7 @@ const MyRoomToolBarWrapper = styled.div`
 const ToolBarBtn = styled.div`
   width: 60px;
   height: 60px;
-  background-color: aliceblue;
+  background-color: #f0f9ff;
   border-radius: 10px;
   transition: 0.2s ease-in-out;
   display: flex;
@@ -94,7 +94,8 @@ const ToolBarBtn = styled.div`
   align-items: center;
   cursor: pointer;
   &:hover {
-    background-color: aqua;
+    background-color: #3f97cd;
+    color: #ffffff;
   }
 `;
 

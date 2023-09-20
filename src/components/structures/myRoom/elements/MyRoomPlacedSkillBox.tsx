@@ -14,7 +14,7 @@ export const MyRoomPlacedSkillBox = ({
         // ref={ref}
         castShadow
         receiveShadow
-        name={placedMyRoomSkill.name}
+        name={`my-room-${placedMyRoomSkill.name}`}
         position={placedMyRoomSkill.position}
       >
         <boxGeometry

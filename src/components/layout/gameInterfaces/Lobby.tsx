@@ -169,6 +169,7 @@ export const Lobby = () => {
                   hairColor,
                   shirtColor,
                   pantsColor,
+                  myRoom: { object: [] },
                 });
               }}
               onKeyUp={(e) => {
@@ -181,6 +182,7 @@ export const Lobby = () => {
                     hairColor,
                     shirtColor,
                     pantsColor,
+                    myRoom: { object: [] },
                   });
                 }
               }}

@@ -1,4 +1,9 @@
-import { Vector3 } from "three";
+import { Scene, Vector3 } from "three";
+import {
+  IMyRoom,
+  IMyRoomObject,
+  IMyRoomObjectNames,
+} from "./store/PlayersAtom";
 
 export const isValidText = (text: string | undefined) => {
   return Boolean(text && text.trim() !== "");
@@ -23,4 +28,24 @@ export const calculateThreePosition = ({
     x: (clientX / window.innerWidth) * 2 - 1,
     y: -(clientY / window.innerHeight) * 2 + 1,
   };
+};
+
+export const getMyRoomObjects = (scene: Scene) => {
+  const myRoomObjects: IMyRoom["objects"] = [];
+  scene.children.forEach((child) =>
+    child.traverse((obj) => {
+      if (obj.name.includes("my-room")) {
+        const myRoomObject: IMyRoomObject = {
+          name: obj.name as IMyRoomObjectNames,
+          position: [obj.position.x, obj.position.y, obj.position.z],
+          rotation: [obj.rotation.x, obj.rotation.y, obj.rotation.z],
+          authorNickname: obj.userData.authorNickname,
+          text: obj.userData.text,
+          timestamp: obj.userData.timestamp,
+        };
+        myRoomObjects.push(myRoomObject);
+      }
+    })
+  );
+  return myRoomObjects;
 };

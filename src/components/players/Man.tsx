@@ -8,8 +8,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useGLTF, useAnimations } from "@react-three/drei";
 import { useFrame, useGraph, useThree } from "@react-three/fiber";
 import { GLTF, SkeletonUtils } from "three-stdlib";
-import { useRecoilValue } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
+  CurrentMyRoomPlayerIdAtom,
   MeAtom,
   PlayerGroundStructuresFloorPlaneCornersSelector,
 } from "../../store/PlayersAtom";
@@ -29,6 +30,9 @@ export function Man({
   pantsColor,
   position,
 }: IMan) {
+  const [, setCurrentMyRoomPlayerId] = useRecoilState(
+    CurrentMyRoomPlayerIdAtom
+  );
   const playerGroundStructuresFloorPlaneCorners = useRecoilValue(
     PlayerGroundStructuresFloorPlaneCornersSelector
   );
@@ -133,6 +137,12 @@ export function Man({
         position={memoizedPosition}
         dispose={null}
         name={playerId ?? ""}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (me?.id !== playerId) {
+            setCurrentMyRoomPlayerId(playerId);
+          }
+        }}
       >
         <group name="Root_Scene">
           <group name="RootNode">

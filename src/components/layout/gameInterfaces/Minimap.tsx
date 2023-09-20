@@ -10,7 +10,7 @@ export const Minimap = () => {
   const currentMap = useRecoilValue(CurrentMapAtom);
   const players = useRecoilValue(PlayersAtom);
   const me = useRecoilValue(MeAtom);
-
+  console.log(players);
   return (
     <MinimapWrapper
       className={currentMap === "GROUND" ? "visible" : "invisible"}

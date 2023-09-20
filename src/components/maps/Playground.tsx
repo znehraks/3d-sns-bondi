@@ -2,7 +2,6 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import {
   CharacterSelectFinishedAtom,
   CurrentMapAtom,
-  CurrentPlacingMyRoomSkillAtom,
   PlayerGroundStructuresFloorPlaneCornersSelector,
   PlayersAtom,
 } from "../../store/PlayersAtom";
@@ -23,15 +22,14 @@ export const Playground = () => {
   const playerGroundStructuresFloorPlaneCorners = useRecoilValue(
     PlayerGroundStructuresFloorPlaneCornersSelector
   );
-  const currentPlacingMyRoomSkill = useRecoilValue(
-    CurrentPlacingMyRoomSkillAtom
-  );
 
   const [players] = useRecoilState(PlayersAtom);
+
   const camera = useThree((three) => three.camera);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controls = useRef<any>(null);
-  console.log("controls", controls);
+
+  console.log(players);
   useEffect(() => {
     if (!controls.current?.target) return;
     camera.position.set(8, 8, 8);
@@ -60,7 +58,14 @@ export const Playground = () => {
         distance={1000}
         loop
       /> */}
-      <OrbitControls ref={controls} minDistance={5} maxDistance={1000} />
+      <OrbitControls
+        ref={controls}
+        minDistance={5}
+        maxDistance={1000}
+        maxPolarAngle={currentMap === "MY_ROOM" ? Math.PI / 2 : undefined}
+        maxAzimuthAngle={currentMap === "MY_ROOM" ? Math.PI / 2 : undefined}
+        minAzimuthAngle={currentMap === "MY_ROOM" ? 0 : undefined}
+      />
       {currentMap === "GROUND" && (
         <>
           <directionalLight
@@ -132,12 +137,8 @@ export const Playground = () => {
       )}
       {currentMap === "MY_ROOM" && (
         <Suspense fallback={<Loader />}>
-          <directionalLight
-            visible={!currentPlacingMyRoomSkill}
-            castShadow
-            intensity={0.5}
-            position={[0, 5, 5]}
-          />
+          <directionalLight castShadow intensity={0.6} position={[0, 5, 5]} />
+          <spotLight castShadow intensity={8} position={[-1, 5, -1]} />
           <MyRoom />
         </Suspense>
       )}

@@ -5,17 +5,27 @@ import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useCallback, useState } from "react";
 import { useRecoilState } from "recoil";
-import { CurrentMapAtom, TMaps } from "../../../store/PlayersAtom";
+import {
+  CurrentMapAtom,
+  CurrentMyRoomPlayerIdAtom,
+  MeAtom,
+  TMaps,
+} from "../../../store/PlayersAtom";
 
 export const SideBar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentMap, setCurrentMap] = useRecoilState(CurrentMapAtom);
+  const [, setCurrentMyRoomPlayerId] = useRecoilState(
+    CurrentMyRoomPlayerIdAtom
+  );
+  const [me] = useRecoilState(MeAtom);
   const handleClick = useCallback(
     (mapType: TMaps) => () => {
       setCurrentMap(mapType);
+      setCurrentMyRoomPlayerId(me?.id);
       setIsDropdownOpen(false);
     },
-    [setCurrentMap]
+    [me.id, setCurrentMap, setCurrentMyRoomPlayerId]
   );
   return (
     <>

@@ -1,7 +1,43 @@
 import { atom, selector } from "recoil";
 import { Vector3 } from "three";
 
+export interface IMyRoomObjectProps {
+  position: [number, number, number];
+  rotation: [number, number, number];
+}
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+
+export type IMyRoomObjectNames =
+  | "my-room-bed"
+  | "my-room-chair"
+  | "my-room-desk"
+  | "my-room-floor"
+  | "my-room-left-wall"
+  | "my-room-right-wall"
+  | "my-room-html"
+  | "my-room-css"
+  | "my-room-javascript"
+  | "my-room-typescript"
+  | "my-room-react"
+  | "my-room-next"
+  | "my-room-node"
+  | "my-room-graphql"
+  | "my-room-three"
+  | "my-room-pixi"
+  | "my-room-python"
+  | "my-room-flutter"
+  | "my-room-aws";
+export type IMyRoomObject = {
+  name: IMyRoomObjectNames;
+  position: [number, number, number];
+  rotation: [number, number, number];
+  authorNickname?: string;
+  text?: string;
+  timestamp?: string;
+};
+export interface IMyRoom {
+  objects: IMyRoomObject[];
+}
 export interface IPlayer {
   id: string;
   nickname: string;
@@ -10,6 +46,7 @@ export interface IPlayer {
   hairColor: string;
   shirtColor: string;
   pantsColor: string;
+  myRoom: IMyRoom;
 }
 // 모든 플레이어들
 export const PlayersAtom = atom<IPlayer[]>({
@@ -100,6 +137,20 @@ export const CurrentMapAtom = atom<TMaps>({
   default: "GROUND",
 });
 
+export const CurrentMyRoomPlayerIdAtom = atom<string | undefined>({
+  key: "CurrentMyRoomPlayerIdAtom",
+  default: undefined,
+});
+
+export const CurrentSelectedOtherPlayerSelector = selector({
+  key: "CurrentSelectedOtherPlayerSelector",
+  get: ({ get }) => {
+    const id = get(CurrentMyRoomPlayerIdAtom);
+    const players = get(PlayersAtom);
+    return players.find((p) => p.id === id);
+  },
+});
+
 interface PlayGroundStructureBoundingBoxAtom {
   name: string;
   box: { max: Vector3; min: Vector3 };
@@ -150,7 +201,7 @@ export const CurrentPlacingMyRoomSkillAtom = atom<string | undefined>({
 
 export interface IPlacedMyRoomSkillAtom {
   name: string;
-  position: Vector3;
+  position: [number, number, number];
 }
 export const PlacedMyRoomSkillsAtom = atom<IPlacedMyRoomSkillAtom[]>({
   key: "PlacedMyRoomSkillsAtom",

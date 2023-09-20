@@ -6,9 +6,10 @@ import {
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
-import { calculateThreePosition } from "../../../utils";
+import { calculateThreePosition, getMyRoomObjects } from "../../../utils";
 import { useTexture } from "@react-three/drei";
 import { myRoomSize, myRoomSkillBoxSize } from "../../../data";
+import { socket } from "../../../sockets/clientSocket";
 
 const leftWallVector = new THREE.Vector3(1, 0, 0);
 const rightWallVector = new THREE.Vector3(0, 0, 1);
@@ -41,8 +42,6 @@ export const MyRoomPlaceMode = ({
       const [intersect] = rayCaster
         .intersectObjects(scene.children)
         .filter((item) => item.object.name !== "placing");
-      console.log("intersect", intersect.normal);
-      console.log("intersect", intersect.point);
       intersect.normal?.clone();
       let roomTouched = false;
       let xOffset = 0;
@@ -138,10 +137,18 @@ export const MyRoomPlaceMode = ({
         ...prev.filter((item) => item.name !== currentPlacingMyRoomSkill),
         {
           name: currentPlacingMyRoomSkill,
-          position: ref.current!.position.clone(),
+          position: [
+            ref.current!.position.x,
+            ref.current!.position.y,
+            ref.current!.position.z,
+          ],
         },
       ]);
       setCurrentPlacingMyRoomSkill(undefined);
+      // socket.emit 하기 배치했음을 알려야함
+
+      const myRoomObjects = getMyRoomObjects(scene);
+      socket.emit("myRoomChange", { Objects: myRoomObjects });
     };
 
     const handlePointerDown = () => {};
@@ -159,6 +166,7 @@ export const MyRoomPlaceMode = ({
     camera,
     currentPlacingMyRoomSkill,
     gl.domElement,
+    scene,
     scene.children,
     setCurrentPlacingMyRoomSkill,
     setPlacedMyRoomSkills,
@@ -167,7 +175,6 @@ export const MyRoomPlaceMode = ({
   if (!currentPlacingMyRoomSkill) return null;
   return (
     <instancedMesh>
-      <directionalLight castShadow intensity={1} position={[0, 5, 5]} />
       <mesh name="placing" ref={ref}>
         <boxGeometry
           args={[myRoomSkillBoxSize, myRoomSkillBoxSize, myRoomSkillBoxSize]}

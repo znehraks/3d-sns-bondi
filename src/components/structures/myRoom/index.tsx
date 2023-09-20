@@ -5,27 +5,35 @@ import { MyRoomLeftWall } from "./elements/MyRoomLeftWall";
 import { MyRoomRightWall } from "./elements/MyRoomRightWall";
 import {
   CurrentPlacingMyRoomSkillAtom,
+  CurrentSelectedOtherPlayerSelector,
   PlacedMyRoomSkillsAtom,
 } from "../../../store/PlayersAtom";
 import { MyRoomPlacedSkillBox } from "./elements/MyRoomPlacedSkillBox";
-import { MyRoomChair } from "./elements/MyRoomChair";
 import { Suspense } from "react";
-import { MyRoomStandingDesk } from "./elements/MyRoomDesk";
-import { MyRoomBed } from "./elements/MyRoomBed";
+import { MyRoomElements } from "./elements";
 
 export const MyRoom = () => {
   const currentPlacingMyRoomSkill = useRecoilValue(
     CurrentPlacingMyRoomSkillAtom
   );
   const placedMyRoomSkills = useRecoilValue(PlacedMyRoomSkillsAtom);
+
+  const currentSelectedOtherPlayer = useRecoilValue(
+    CurrentSelectedOtherPlayerSelector
+  );
+  console.log("currentSelectedOtherPlayer", currentSelectedOtherPlayer);
   return (
     <Suspense>
+      {currentSelectedOtherPlayer?.myRoom?.objects.map((object) => {
+        return (
+          <>
+            <MyRoomElements object={object} />
+          </>
+        );
+      })}
       <MyRoomFloor />
       <MyRoomLeftWall />
       <MyRoomRightWall />
-      <MyRoomChair />
-      <MyRoomStandingDesk />
-      <MyRoomBed />
       {currentPlacingMyRoomSkill && (
         <MyRoomPlaceMode
           currentPlacingMyRoomSkill={currentPlacingMyRoomSkill}

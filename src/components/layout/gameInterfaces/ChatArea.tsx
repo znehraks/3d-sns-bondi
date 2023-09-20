@@ -24,6 +24,7 @@ export const ChatArea = () => {
       }
     } else {
       console.log("포스트잇 남기기");
+      
     }
   }, [currentMap, tempText]);
 
