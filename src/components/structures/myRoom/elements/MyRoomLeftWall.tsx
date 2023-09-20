@@ -1,5 +1,3 @@
-import { DoubleSide } from "three";
-import { socket } from "../../../../sockets/clientSocket";
 import { myRoomSize } from "../../../../data";
 export const MyRoomLeftWall = () => {
   return (
@@ -7,17 +5,12 @@ export const MyRoomLeftWall = () => {
       name="my-room-left-wall"
       castShadow
       receiveShadow
+      position-x={-2.5}
       position-y={0}
       position-z={0}
-      position-x={-2.5}
-      rotation-y={-Math.PI / 2}
-      onPointerDown={() => {}}
-      onPointerUp={(e) => {
-        socket.emit("move", [e.point.x, 0, e.point.z]);
-      }}
     >
-      <planeGeometry args={[myRoomSize, myRoomSize]} />
-      <meshStandardMaterial side={DoubleSide} color={"skyblue"} />
+      <boxGeometry args={[0.05, myRoomSize, myRoomSize]} />
+      <meshStandardMaterial color={"skyblue"} />
     </mesh>
   );
 };

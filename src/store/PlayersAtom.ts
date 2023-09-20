@@ -156,3 +156,27 @@ export const PlacedMyRoomSkillsAtom = atom<IPlacedMyRoomSkillAtom[]>({
   key: "PlacedMyRoomSkillsAtom",
   default: [],
 });
+
+export interface ICurrentPlacingMyRoomPostItAtom {
+  text: string;
+  authorNickname: string;
+  timestamp: string;
+}
+
+export const CurrentPlacingMyRoomPostItAtom = atom({
+  key: "CurrentPlacingMyRoomPostItAtom",
+  default: undefined,
+});
+
+export interface IPlacedMyRoomPostItsAtom {
+  text: string;
+  authorNickname: string;
+  timestamp: string;
+  position: Vector3;
+  rotation: Vector3;
+}
+
+export const PlacedMyRoomPostItsAtom = atom<IPlacedMyRoomPostItsAtom[]>({
+  key: "PlacedMyRoomPostItsAtom",
+  default: [],
+});

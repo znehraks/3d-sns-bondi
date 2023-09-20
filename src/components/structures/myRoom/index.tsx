@@ -8,6 +8,10 @@ import {
   PlacedMyRoomSkillsAtom,
 } from "../../../store/PlayersAtom";
 import { MyRoomPlacedSkillBox } from "./elements/MyRoomPlacedSkillBox";
+import { MyRoomChair } from "./elements/MyRoomChair";
+import { Suspense } from "react";
+import { MyRoomStandingDesk } from "./elements/MyRoomDesk";
+import { MyRoomBed } from "./elements/MyRoomBed";
 
 export const MyRoom = () => {
   const currentPlacingMyRoomSkill = useRecoilValue(
@@ -15,10 +19,13 @@ export const MyRoom = () => {
   );
   const placedMyRoomSkills = useRecoilValue(PlacedMyRoomSkillsAtom);
   return (
-    <>
+    <Suspense>
       <MyRoomFloor />
       <MyRoomLeftWall />
       <MyRoomRightWall />
+      <MyRoomChair />
+      <MyRoomStandingDesk />
+      <MyRoomBed />
       {currentPlacingMyRoomSkill && (
         <MyRoomPlaceMode
           currentPlacingMyRoomSkill={currentPlacingMyRoomSkill}
@@ -29,6 +36,6 @@ export const MyRoom = () => {
           <MyRoomPlacedSkillBox placedMyRoomSkill={placedMyRoomSkill} />
         </instancedMesh>
       ))}
-    </>
+    </Suspense>
   );
 };

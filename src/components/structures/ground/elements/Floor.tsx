@@ -1,4 +1,4 @@
-import { socket } from "../../../sockets/clientSocket";
+import { socket } from "../../../../sockets/clientSocket";
 import { useLoader } from "@react-three/fiber";
 import { RepeatWrapping, Texture, TextureLoader } from "three";
 

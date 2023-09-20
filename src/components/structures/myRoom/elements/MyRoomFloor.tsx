@@ -1,6 +1,5 @@
-import { socket } from "../../../../sockets/clientSocket";
 import { useLoader } from "@react-three/fiber";
-import { DoubleSide, RepeatWrapping, Texture, TextureLoader } from "three";
+import { RepeatWrapping, Texture, TextureLoader } from "three";
 import { myRoomSize } from "../../../../data";
 
 export const MyRoomFloor = () => {
@@ -10,20 +9,11 @@ export const MyRoomFloor = () => {
   sandTexture.wrapT = RepeatWrapping;
   sandTexture.repeat.x = 5;
   sandTexture.repeat.y = 5;
+
   return (
-    <mesh
-      name="my-room-floor"
-      position-y={-2.5}
-      castShadow
-      receiveShadow
-      rotation-x={-Math.PI / 2}
-      onPointerDown={() => {}}
-      onPointerUp={(e) => {
-        socket.emit("move", [e.point.x, 0, e.point.z]);
-      }}
-    >
-      <planeGeometry args={[myRoomSize, myRoomSize]} />
-      <meshStandardMaterial side={DoubleSide} color={"aqua"} />
+    <mesh name="my-room-floor" position-y={-2.5} castShadow receiveShadow>
+      <boxGeometry args={[myRoomSize, 0.05, myRoomSize]} />
+      <meshStandardMaterial color={"aqua"} />
     </mesh>
   );
 };

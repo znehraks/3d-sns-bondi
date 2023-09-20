@@ -2,7 +2,7 @@ import { useEffect, useMemo } from "react";
 import { useGLTF } from "@react-three/drei";
 import { Mesh, Vector3 } from "three";
 import { useRecoilState } from "recoil";
-import { PlayGroundStructuresBoundingBoxAtom } from "../../../store/PlayersAtom";
+import { PlayGroundStructuresBoundingBoxAtom } from "../../../../store/PlayersAtom";
 import _ from "lodash";
 
 const name = "playStructure";

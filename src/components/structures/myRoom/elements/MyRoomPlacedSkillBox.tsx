@@ -11,6 +11,7 @@ export const MyRoomPlacedSkillBox = ({
   return (
     <instancedMesh>
       <mesh
+        // ref={ref}
         castShadow
         receiveShadow
         name={placedMyRoomSkill.name}
@@ -19,7 +20,7 @@ export const MyRoomPlacedSkillBox = ({
         <boxGeometry
           args={[myRoomSkillBoxSize, myRoomSkillBoxSize, myRoomSkillBoxSize]}
         />
-        <meshStandardMaterial depthWrite={false} map={texture} />
+        <meshStandardMaterial map={texture} />
       </mesh>
     </instancedMesh>
   );

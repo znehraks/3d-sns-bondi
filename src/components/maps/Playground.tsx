@@ -2,34 +2,29 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import {
   CharacterSelectFinishedAtom,
   CurrentMapAtom,
+  CurrentPlacingMyRoomSkillAtom,
   PlayerGroundStructuresFloorPlaneCornersSelector,
   PlayersAtom,
 } from "../../store/PlayersAtom";
-import { Floor } from "../structures/ground/Floor";
 import { Man } from "../players/Man";
-import {
-  Billboard,
-  Line,
-  OrbitControls,
-  Select,
-  Text,
-} from "@react-three/drei";
+import { Billboard, Line, OrbitControls, Text } from "@react-three/drei";
 // import { PlayStructure } from "../structures/ground/PlayStructure";
-import { Slide } from "../structures/ground/Slide";
-import { JungleGym } from "../structures/ground/JungleGym";
 import { useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useRef } from "react";
 import { CharacterInit } from "../CharacterInit";
 import { Loader } from "../utilComponents/Loader";
 import { Vector3 } from "three";
-import { Swing } from "../structures/ground/Swing";
 import { MyRoom } from "../structures/myRoom";
+import { GroundElements } from "../structures/ground";
 
 export const Playground = () => {
   const [currentMap] = useRecoilState(CurrentMapAtom);
   const [characterSelectFinished] = useRecoilState(CharacterSelectFinishedAtom);
   const playerGroundStructuresFloorPlaneCorners = useRecoilValue(
     PlayerGroundStructuresFloorPlaneCornersSelector
+  );
+  const currentPlacingMyRoomSkill = useRecoilValue(
+    CurrentPlacingMyRoomSkillAtom
   );
 
   const [players] = useRecoilState(PlayersAtom);
@@ -53,7 +48,10 @@ export const Playground = () => {
 
   return (
     <>
-      <ambientLight name="ambientLight" intensity={1} />
+      <ambientLight
+        name="ambientLight"
+        intensity={currentMap === "GROUND" ? 5 : 0.5}
+      />
 
       {/* <PositionalAudio
         position={[0, 0, 0]}
@@ -62,7 +60,7 @@ export const Playground = () => {
         distance={1000}
         loop
       /> */}
-      <OrbitControls ref={controls} minDistance={5} maxDistance={20} />
+      <OrbitControls ref={controls} minDistance={5} maxDistance={1000} />
       {currentMap === "GROUND" && (
         <>
           <directionalLight
@@ -80,12 +78,7 @@ export const Playground = () => {
           {!characterSelectFinished && <CharacterInit />}
           {characterSelectFinished && (
             <>
-              <Select>
-                <Floor />
-              </Select>
-              <Swing />
-              <Slide />
-              <JungleGym />
+              <GroundElements />
               {playerGroundStructuresFloorPlaneCorners.map((corner) => {
                 return (
                   <Line
@@ -138,10 +131,15 @@ export const Playground = () => {
         </>
       )}
       {currentMap === "MY_ROOM" && (
-        <>
-          <directionalLight castShadow intensity={1} position={[0, 5, 5]} />
+        <Suspense fallback={<Loader />}>
+          <directionalLight
+            visible={!currentPlacingMyRoomSkill}
+            castShadow
+            intensity={0.5}
+            position={[0, 5, 5]}
+          />
           <MyRoom />
-        </>
+        </Suspense>
       )}
     </>
   );

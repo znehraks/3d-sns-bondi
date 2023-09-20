@@ -10,6 +10,10 @@ import { calculateThreePosition } from "../../../utils";
 import { useTexture } from "@react-three/drei";
 import { myRoomSize, myRoomSkillBoxSize } from "../../../data";
 
+const leftWallVector = new THREE.Vector3(1, 0, 0);
+const rightWallVector = new THREE.Vector3(0, 0, 1);
+const floorVector = new THREE.Vector3(0, 1, 0);
+
 export const MyRoomPlaceMode = ({
   currentPlacingMyRoomSkill,
 }: {
@@ -37,14 +41,20 @@ export const MyRoomPlaceMode = ({
       const [intersect] = rayCaster
         .intersectObjects(scene.children)
         .filter((item) => item.object.name !== "placing");
-      const currentRaycastingMeshName = intersect.object.name;
-
-      console.log("intersect", intersect);
+      console.log("intersect", intersect.normal);
+      console.log("intersect", intersect.point);
+      intersect.normal?.clone();
+      let roomTouched = false;
       let xOffset = 0;
       let yOffset = 0;
       let zOffset = 0;
-      if (currentRaycastingMeshName === "my-room-floor") {
+      if (!intersect.normal) return;
+
+      // 현재 rayCaster에 잡힌 첫번째 오브젝트의 법선벡터와 3축의 벡터가 평행하다면 각 축에 맞는 offset을 더해준다.
+      if (1 - Math.abs(intersect.normal.clone().dot(floorVector)) < 0.1) {
+        roomTouched = true;
         yOffset = myRoomSkillBoxSize / 2 + 0.01;
+        console.log("yOffset", yOffset);
         if (intersect.point.x < -(myRoomSize / 2 - myRoomSkillBoxSize / 2)) {
           xOffset += Math.abs(
             intersect.point.x + (myRoomSize / 2 + myRoomSkillBoxSize / 2)
@@ -66,7 +76,8 @@ export const MyRoomPlaceMode = ({
           );
         }
       }
-      if (currentRaycastingMeshName === "my-room-left-wall") {
+      if (1 - Math.abs(intersect.normal.clone().dot(leftWallVector)) < 0.1) {
+        roomTouched = true;
         xOffset = myRoomSkillBoxSize / 2 + 0.01;
         if (intersect.point.y < -(myRoomSize / 2 - myRoomSkillBoxSize / 2)) {
           yOffset += Math.abs(
@@ -89,7 +100,8 @@ export const MyRoomPlaceMode = ({
           );
         }
       }
-      if (currentRaycastingMeshName === "my-room-right-wall") {
+      if (1 - Math.abs(intersect.normal.clone().dot(rightWallVector)) < 0.1) {
+        roomTouched = true;
         zOffset = myRoomSkillBoxSize / 2 + 0.01;
         if (intersect.point.x < -(myRoomSize / 2 - myRoomSkillBoxSize / 2)) {
           xOffset += Math.abs(
@@ -112,7 +124,7 @@ export const MyRoomPlaceMode = ({
           );
         }
       }
-      if (intersect) {
+      if (intersect && roomTouched) {
         ref.current?.position.set(
           intersect.point.x + xOffset,
           intersect.point.y + yOffset,
@@ -132,12 +144,16 @@ export const MyRoomPlaceMode = ({
       setCurrentPlacingMyRoomSkill(undefined);
     };
 
+    const handlePointerDown = () => {};
+
     console.log("currentPlacingMyRoomSkill", currentPlacingMyRoomSkill);
     gl.domElement.addEventListener("pointermove", handlePointerMove);
     gl.domElement.addEventListener("pointerup", handlePointerUp);
+    gl.domElement.addEventListener("pointerdown", handlePointerDown);
     return () => {
       gl.domElement.removeEventListener("pointermove", handlePointerMove);
       gl.domElement.removeEventListener("pointerup", handlePointerUp);
+      gl.domElement.removeEventListener("pointerdown", handlePointerDown);
     };
   }, [
     camera,
@@ -151,6 +167,7 @@ export const MyRoomPlaceMode = ({
   if (!currentPlacingMyRoomSkill) return null;
   return (
     <instancedMesh>
+      <directionalLight castShadow intensity={1} position={[0, 5, 5]} />
       <mesh name="placing" ref={ref}>
         <boxGeometry
           args={[myRoomSkillBoxSize, myRoomSkillBoxSize, myRoomSkillBoxSize]}

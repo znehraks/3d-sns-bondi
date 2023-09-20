@@ -16,7 +16,7 @@ export const MainCanvas = () => {
         fov: 30,
         aspect: aspectRatio,
         near: 0.1,
-        far: 1000,
+        far: 100000,
         position: [12, 12, 12],
       }}
     >
