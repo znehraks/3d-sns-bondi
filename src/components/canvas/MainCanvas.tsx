@@ -15,7 +15,7 @@ export const MainCanvas = () => {
       camera={{
         fov: 30,
         aspect: aspectRatio,
-        near: 0.1,
+        near: 0.01,
         far: 100000,
         position: [12, 12, 12],
       }}

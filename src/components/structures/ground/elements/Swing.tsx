@@ -20,7 +20,7 @@ export const Swing = () => {
     });
 
     const mesh = scene.children[0] as Mesh;
-    if (mesh.geometry.boundingBox) {
+    if (mesh?.geometry.boundingBox) {
       setPlayGroundStructuresBoundingBox((prev) =>
         _.uniqBy(
           [

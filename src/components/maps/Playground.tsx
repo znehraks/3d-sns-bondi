@@ -17,6 +17,7 @@ import { Vector3 } from "three";
 import { MyRoom } from "../structures/myRoom";
 import { GroundElements } from "../structures/ground";
 import _ from "lodash";
+import { MiniGame } from "../structures/miniGame";
 
 export const Playground = () => {
   const [currentMap] = useRecoilState(CurrentMapAtom);
@@ -33,13 +34,30 @@ export const Playground = () => {
   const controls = useRef<any>(null);
 
   useEffect(() => {
-    if (!controls.current?.target) return;
-    camera.position.set(8, 8, 8);
-  }, [camera, camera.position, characterSelectFinished]);
+    if (currentMap === "GROUND") {
+      if (!controls.current) return;
+      camera.position.set(14, 14, 14);
+      controls.current.target.set(0, 0, 0);
+      return;
+    }
 
-  useEffect(() => {
-    camera.position.set(14, 14, 14);
-  }, [camera.position, currentMap]);
+    if (currentMap === "MY_ROOM") {
+      if (!controls.current) return;
+      camera.position.set(14, 14, 14);
+      controls.current.target.set(0, 0, 0);
+      return;
+    }
+
+    if (currentMap === "MINI_GAME") {
+      camera.position.set(0, 0, 10);
+      camera.lookAt(0, 0, -10);
+      return;
+    }
+    console.log(4);
+  }, [camera, camera.position, currentMap]);
+
+  console.log("controls", controls);
+  console.log("camera", camera);
 
   const reversedChats = useMemo(() => {
     return _.uniqBy([...chats].reverse(), "senderId");
@@ -59,16 +77,20 @@ export const Playground = () => {
         distance={1000}
         loop
       /> */}
-      <OrbitControls
-        ref={controls}
-        minDistance={5}
-        maxDistance={1000}
-        maxPolarAngle={currentMap === "MY_ROOM" ? Math.PI / 2 : undefined}
-        maxAzimuthAngle={currentMap === "MY_ROOM" ? Math.PI / 2 : undefined}
-        minAzimuthAngle={currentMap === "MY_ROOM" ? 0 : undefined}
-      />
+
+      {currentMap !== "MINI_GAME" && (
+        <OrbitControls
+          ref={controls}
+          minDistance={5}
+          maxDistance={1000}
+          maxPolarAngle={currentMap === "MY_ROOM" ? Math.PI / 2 : Math.PI}
+          maxAzimuthAngle={currentMap === "MY_ROOM" ? Math.PI / 2 : Infinity}
+          minAzimuthAngle={currentMap === "MY_ROOM" ? 0 : -Infinity}
+        />
+      )}
+
       {currentMap === "GROUND" && (
-        <>
+        <Suspense fallback={<Loader />}>
           <directionalLight
             castShadow
             intensity={10}
@@ -95,75 +117,73 @@ export const Playground = () => {
                 );
               })}
 
-              <Suspense fallback={<Loader />}>
-                {players.map((player) => {
-                  return (
-                    <>
-                      <Billboard
-                        position={[
-                          player.position[0],
-                          player.position[1] + 2,
-                          player.position[2],
-                        ]}
-                        name={`nickname-billboard-${player.id}`}
-                      >
-                        <Text
-                          font={"/NotoSansKR-Regular.ttf"}
-                          fontSize={0.25}
-                          color={0x000000}
-                        >
-                          {`${player.nickname}[${player.jobPosition}]`}
-                        </Text>
-                      </Billboard>
-                      <Man
-                        player={player}
-                        position={
-                          new Vector3(
-                            player.position[0],
-                            player.position[1],
-                            player.position[2]
-                          )
-                        }
-                        hairColor={player.hairColor}
-                        shirtColor={player.shirtColor}
-                        pantsColor={player.pantsColor}
-                      />
-                    </>
-                  );
-                })}
-                {reversedChats.map((chat) => {
-                  const player = players
-                    .filter((p) => p.id === chat.senderId)
-                    ?.at(-1);
-
-                  if (!player) return;
-                  return (
-                    <>
+              {players.map((player) => {
+                return (
+                  <>
+                    <Billboard
+                      position={[
+                        player.position[0],
+                        player.position[1] + 2,
+                        player.position[2],
+                      ]}
+                      name={`nickname-billboard-${player.id}`}
+                    >
                       <Text
-                        name={`chat-text-${player.id}`}
-                        rotation-y={Math.PI / 4}
-                        position={[
-                          player.position[0] + 1,
-                          player.position[1] + 3,
-                          player.position[2],
-                        ]}
                         font={"/NotoSansKR-Regular.ttf"}
-                        fontSize={0.2}
-                        fillOpacity={2}
-                        color={0x33df3f}
-                        overflowWrap="break-word"
-                        maxWidth={1.6}
-                        userData={{ timestamp: chat.timestamp }}
+                        fontSize={0.25}
+                        color={0x000000}
                       >
-                        {`${chat.text}`}
+                        {`${player.nickname}[${player.jobPosition}]`}
                       </Text>
-                    </>
-                  );
-                })}
-              </Suspense>
+                    </Billboard>
+                    <Man
+                      player={player}
+                      position={
+                        new Vector3(
+                          player.position[0],
+                          player.position[1],
+                          player.position[2]
+                        )
+                      }
+                      hairColor={player.hairColor}
+                      shirtColor={player.shirtColor}
+                      pantsColor={player.pantsColor}
+                    />
+                  </>
+                );
+              })}
+              {reversedChats.map((chat) => {
+                const player = players
+                  .filter((p) => p.id === chat.senderId)
+                  ?.at(-1);
+
+                if (!player) return null;
+                return (
+                  <>
+                    <Text
+                      name={`chat-text-${player.id}`}
+                      rotation-y={Math.PI / 4}
+                      position={[
+                        player.position[0] + 1,
+                        player.position[1] + 3,
+                        player.position[2],
+                      ]}
+                      font={"/NotoSansKR-Regular.ttf"}
+                      fontSize={0.2}
+                      fillOpacity={2}
+                      color={0x33df3f}
+                      overflowWrap="break-word"
+                      maxWidth={1.6}
+                      userData={{ timestamp: chat.timestamp }}
+                    >
+                      {`${chat.text}`}
+                    </Text>
+                  </>
+                );
+              })}
             </>
           )}
-        </>
+        </Suspense>
       )}
       {currentMap === "MY_ROOM" && (
         <Suspense fallback={<Loader />}>
@@ -172,6 +192,7 @@ export const Playground = () => {
           <MyRoom />
         </Suspense>
       )}
+      {currentMap === "MINI_GAME" && <MiniGame />}
     </>
   );
 };

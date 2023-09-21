@@ -11,7 +11,6 @@ import {
   PlacedMyRoomMemosAtom,
 } from "../../../store/PlayersAtom";
 
-import { Suspense } from "react";
 import { MyRoomElements } from "./elements";
 import { MyRoomPlacedSkillBox } from "./elements/MyRoomPlacedSkillBox";
 import { MyRoomMemoPlaceMode } from "./MyRoomMemoPlaceMode";
@@ -28,13 +27,9 @@ export const MyRoom = () => {
 
   const currentMyRoomPlayer = useRecoilValue(CurrentMyRoomPlayerAtom);
   return (
-    <Suspense>
+    <>
       {currentMyRoomPlayer?.myRoom?.objects.map((object) => {
-        return (
-          <>
-            <MyRoomElements key={object.name} object={object} />
-          </>
-        );
+        return <MyRoomElements key={object.name} object={object} />;
       })}
       <MyRoomFloor />
       <MyRoomLeftWall />
@@ -58,6 +53,6 @@ export const MyRoom = () => {
           <MyRoomPlacedMemo placedMyRoomMemo={placedMyRoomMemo} />
         </instancedMesh>
       ))}
-    </Suspense>
+    </>
   );
 };

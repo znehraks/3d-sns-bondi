@@ -1,47 +1,43 @@
 import { styled } from "styled-components";
 import HomeIcon from "@mui/icons-material/Home";
-import CategoryIcon from "@mui/icons-material/Category";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
+import SportsCricketIcon from "@mui/icons-material/SportsCricket";
+import SportsEsportsIcon from "@mui/icons-material/SportsEsports";
 import { useCallback, useState } from "react";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 import {
   CurrentMapAtom,
   CurrentMyRoomPlayerAtom,
   MeAtom,
-  PlayersAtom,
   TMaps,
 } from "../../../store/PlayersAtom";
 
 export const SideBar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [currentMap, setCurrentMap] = useRecoilState(CurrentMapAtom);
+  const [, setCurrentMap] = useRecoilState(CurrentMapAtom);
   const [, setCurrentMyRoomPlayer] = useRecoilState(CurrentMyRoomPlayerAtom);
-  const players = useRecoilValue(PlayersAtom);
   const [me] = useRecoilState(MeAtom);
   const handleClick = useCallback(
     (mapType: TMaps) => () => {
+      setCurrentMyRoomPlayer(mapType === "MY_ROOM" ? me : undefined);
       setCurrentMap(mapType);
-      setCurrentMyRoomPlayer(
-        mapType === "MY_ROOM" ? players.find((p) => p.id === me?.id) : undefined
-      );
       setIsDropdownOpen(false);
     },
-    [me?.id, players, setCurrentMap, setCurrentMyRoomPlayer]
+    [me, setCurrentMap, setCurrentMyRoomPlayer]
   );
   return (
     <>
       <SideBarWrapper className={isDropdownOpen ? "opened" : "closed"}>
-        <div
-          onClick={handleClick(currentMap !== "MY_ROOM" ? "MY_ROOM" : "GROUND")}
-        >
-          <HomeIcon />{" "}
-          <span>
-            {currentMap !== "MY_ROOM" ? "내 방으로 가기" : "놀이터로 가기"}
-          </span>
+        <div onClick={handleClick("GROUND")}>
+          <SportsCricketIcon />
+          <span>놀이터로 가기</span>
+        </div>
+        <div onClick={handleClick("MY_ROOM")}>
+          <HomeIcon /> <span>내 방으로 가기</span>
         </div>
         <div onClick={handleClick("MINI_GAME")}>
-          <CategoryIcon /> <span>게임 방으로 가기</span>
+          <SportsEsportsIcon /> <span>게임 방으로 가기</span>
         </div>
       </SideBarWrapper>
       <DropdownController

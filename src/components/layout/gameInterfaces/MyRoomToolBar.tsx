@@ -47,6 +47,7 @@ export const MyRoomToolBar = () => {
             {["스택배치"].map((item, idx) => {
               return (
                 <ToolBarBtn
+                  key={item}
                   onClick={() => {
                     setOpenedDropdownIndex((prev) => {
                       if (prev === idx) {
