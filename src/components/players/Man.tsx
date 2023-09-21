@@ -18,7 +18,7 @@ import {
 import { calculateMinimapPosition } from "../../utils";
 
 interface IMan {
-  player: IPlayer;
+  player?: IPlayer;
   hairColor: string;
   shirtColor: string;
   pantsColor: string;
@@ -31,7 +31,7 @@ export function Man({
   pantsColor,
   position,
 }: IMan) {
-  const playerId = player.id;
+  const playerId = player?.id;
   const [, setCurrentMyRoomPlayer] = useRecoilState(CurrentMyRoomPlayerAtom);
   const playerGroundStructuresFloorPlaneCorners = useRecoilValue(
     PlayerGroundStructuresFloorPlaneCornersSelector
@@ -107,7 +107,11 @@ export function Man({
       );
       nicknameBillboard.lookAt(10000, 10000, 10000);
     }
-    if (me?.id === playerId) {
+    if (
+      me?.id !== undefined &&
+      player?.id !== undefined &&
+      me?.id === playerId
+    ) {
       camera.position.set(
         group.current.position.x + 12,
         group.current.position.y + 12,

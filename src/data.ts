@@ -45,3 +45,4 @@ export const colorCandidates = [
 
 export const myRoomSize = 5;
 export const myRoomSkillBoxSize = 5 / 20;
+export const myRoomMemoBoxSize = [0.3, 0.3, 0.01];

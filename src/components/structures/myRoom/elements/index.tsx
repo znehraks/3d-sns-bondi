@@ -2,6 +2,7 @@ import { IMyRoomObject } from "../../../../store/PlayersAtom";
 import { MyRoomBed } from "./MyRoomBed";
 import { MyRoomChair } from "./MyRoomChair";
 import { MyRoomStandingDesk } from "./MyRoomDesk";
+import { MyRoomPlacedMemo } from "./MyRoomPlacedMemo";
 import { MyRoomPlacedSkillBox } from "./MyRoomPlacedSkillBox";
 
 export const MyRoomElements = ({ object }: { object: IMyRoomObject }) => {
@@ -27,6 +28,19 @@ export const MyRoomElements = ({ object }: { object: IMyRoomObject }) => {
       <MyRoomStandingDesk
         position={object.position}
         rotation={object.rotation}
+      />
+    );
+  }
+  if (object.name.includes("my-room-memo")) {
+    return (
+      <MyRoomPlacedMemo
+        placedMyRoomMemo={{
+          authorNickname: object.authorNickname ?? "",
+          position: object.position,
+          rotation: object.rotation,
+          text: object.text ?? "",
+          timestamp: object.timestamp ?? "",
+        }}
       />
     );
   }

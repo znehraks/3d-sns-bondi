@@ -1,42 +1,37 @@
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
-  CurrentPlacingMyRoomSkillAtom,
-  PlacedMyRoomSkillsAtom,
+  CurrentMyRoomPlayerAtom,
+  CurrentPlacingMyRoomMemoAtom,
+  PlacedMyRoomMemosAtom,
 } from "../../../store/PlayersAtom";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 import { calculateThreePosition, getMyRoomObjects } from "../../../utils";
-import { useTexture } from "@react-three/drei";
-import { myRoomSize, myRoomSkillBoxSize } from "../../../data";
+import {
+  myRoomMemoBoxSize,
+  myRoomSize,
+  myRoomSkillBoxSize,
+} from "../../../data";
 import { socket } from "../../../sockets/clientSocket";
 
 const leftWallVector = new THREE.Vector3(1, 0, 0);
 const rightWallVector = new THREE.Vector3(0, 0, 1);
 const floorVector = new THREE.Vector3(0, 1, 0);
 
-export const MyRoomPlaceMode = ({
-  currentPlacingMyRoomSkill,
-}: {
-  currentPlacingMyRoomSkill: string;
-}) => {
+export const MyRoomMemoPlaceMode = () => {
   const [isFinished, setIsFinished] = useState(false);
   const { scene, gl, camera } = useThree();
-  const [, setCurrentPlacingMyRoomSkill] = useRecoilState(
-    CurrentPlacingMyRoomSkillAtom
-  );
-  const [placedMyRoomSkills, setPlacedMyRoomSkills] = useRecoilState(
-    PlacedMyRoomSkillsAtom
-  );
-  const texture = useTexture(`/images/${currentPlacingMyRoomSkill}.png`);
-  texture.wrapS = THREE.RepeatWrapping;
-  texture.wrapT = THREE.RepeatWrapping;
-  texture.repeat.x = 1;
-  texture.repeat.y = 1;
+  const currentMyRoomPlayer = useRecoilValue(CurrentMyRoomPlayerAtom);
+  const [currentPlacingMyRoomMemo, setCurrentPlacingMyRoomMemo] =
+    useRecoilState(CurrentPlacingMyRoomMemoAtom);
+  const [, setPlacedMyRoomMemos] = useRecoilState(PlacedMyRoomMemosAtom);
+
   const ref = useRef<THREE.Mesh>(null);
   useEffect(() => {
     if (!ref.current) return;
     const handlePointerMove = (e: PointerEvent) => {
+      if (!ref.current) return;
       const { clientX, clientY } = e;
       const { x, y } = calculateThreePosition({ clientX, clientY });
       const rayCaster = new THREE.Raycaster();
@@ -50,9 +45,12 @@ export const MyRoomPlaceMode = ({
       let yOffset = 0;
       let zOffset = 0;
       if (!intersect.normal) return;
+      ref.current.rotation.set(0, 0, 0);
+      console.log(intersect.normal);
 
       // 현재 rayCaster에 잡힌 첫번째 오브젝트의 법선벡터와 3축의 벡터가 평행하다면 각 축에 맞는 offset을 더해준다.
       if (1 - Math.abs(intersect.normal.clone().dot(floorVector)) < 0.1) {
+        ref.current.rotation.x = -Math.PI / 2;
         roomTouched = true;
         yOffset = myRoomSkillBoxSize / 2 + 0.01;
         console.log("yOffset", yOffset);
@@ -78,6 +76,7 @@ export const MyRoomPlaceMode = ({
         }
       }
       if (1 - Math.abs(intersect.normal.clone().dot(leftWallVector)) < 0.1) {
+        ref.current.rotation.y = -Math.PI / 2;
         roomTouched = true;
         xOffset = myRoomSkillBoxSize / 2 + 0.01;
         if (intersect.point.y < -(myRoomSize / 2 - myRoomSkillBoxSize / 2)) {
@@ -134,70 +133,77 @@ export const MyRoomPlaceMode = ({
       }
     };
     const handlePointerUp = () => {
-      setPlacedMyRoomSkills((prev) => [
-        ...prev.filter((item) => item.name !== currentPlacingMyRoomSkill),
+      if (!currentPlacingMyRoomMemo) return;
+      setPlacedMyRoomMemos((prev) => [
+        ...prev,
         {
-          name: currentPlacingMyRoomSkill,
+          text: currentPlacingMyRoomMemo.text,
+          authorNickname: currentPlacingMyRoomMemo.authorNickname,
+          timestamp: currentPlacingMyRoomMemo.timestamp,
           position: [
             ref.current!.position.x,
             ref.current!.position.y,
             ref.current!.position.z,
           ],
+          rotation: [
+            ref.current!.rotation.x,
+            ref.current!.rotation.y,
+            ref.current!.rotation.z,
+          ],
         },
       ]);
-
       setIsFinished(true);
 
       // socket.emit 하기 배치했음을 알려야함
     };
 
-    const handlePointerDown = () => {};
-
-    console.log("currentPlacingMyRoomSkill", currentPlacingMyRoomSkill);
     gl.domElement.addEventListener("pointermove", handlePointerMove);
     gl.domElement.addEventListener("pointerup", handlePointerUp);
-    gl.domElement.addEventListener("pointerdown", handlePointerDown);
     return () => {
       gl.domElement.removeEventListener("pointermove", handlePointerMove);
       gl.domElement.removeEventListener("pointerup", handlePointerUp);
-      gl.domElement.removeEventListener("pointerdown", handlePointerDown);
     };
   }, [
     camera,
-    currentPlacingMyRoomSkill,
+    currentPlacingMyRoomMemo,
     gl.domElement,
     scene,
     scene.children,
-    setCurrentPlacingMyRoomSkill,
-    setPlacedMyRoomSkills,
-    texture,
+    setPlacedMyRoomMemos,
   ]);
 
   useEffect(() => {
     if (isFinished) {
       const myRoomObjects = getMyRoomObjects(scene);
       console.log("myRoomObjects", myRoomObjects);
-      setCurrentPlacingMyRoomSkill(undefined);
-      setPlacedMyRoomSkills([]);
-      socket.emit("myRoomChange", { objects: myRoomObjects });
+      setCurrentPlacingMyRoomMemo(undefined);
+      setPlacedMyRoomMemos([]);
+      socket.emit(
+        "myRoomChange",
+        { objects: myRoomObjects },
+        currentMyRoomPlayer?.id
+      );
     }
   }, [
-    currentPlacingMyRoomSkill,
+    currentMyRoomPlayer?.id,
     isFinished,
-    placedMyRoomSkills,
     scene,
-    setCurrentPlacingMyRoomSkill,
-    setPlacedMyRoomSkills,
+    setCurrentPlacingMyRoomMemo,
+    setPlacedMyRoomMemos,
   ]);
   // 이부분 수정 필요, 소켓을 쏘기전에 메시가 나와있어야함
-  if (!currentPlacingMyRoomSkill) return null;
+  if (!currentPlacingMyRoomMemo) return null;
   return (
     <instancedMesh>
       <mesh name="placing" ref={ref}>
         <boxGeometry
-          args={[myRoomSkillBoxSize, myRoomSkillBoxSize, myRoomSkillBoxSize]}
+          args={[
+            myRoomMemoBoxSize[0],
+            myRoomMemoBoxSize[1],
+            myRoomMemoBoxSize[2],
+          ]}
         />
-        <meshStandardMaterial map={texture.clone()} />
+        <meshStandardMaterial color={"yellow"} />
       </mesh>
     </instancedMesh>
   );

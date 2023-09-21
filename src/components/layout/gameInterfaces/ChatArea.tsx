@@ -5,60 +5,42 @@ import { styled } from "styled-components";
 import { isValidText } from "../../../utils";
 import { socket } from "../../../sockets/clientSocket";
 import { useRecoilValue } from "recoil";
-import {
-  ChatsAtom,
-  CurrentMapAtom,
-  CurrentMyRoomPlayerAtom,
-} from "../../../store/PlayersAtom";
+import { ChatsAtom } from "../../../store/PlayersAtom";
 
 export const ChatArea = () => {
-  const currentMap = useRecoilValue(CurrentMapAtom);
-  const CurrentMyRoomPlayer = useRecoilValue(CurrentMyRoomPlayerAtom);
   const ref = useRef<HTMLDivElement>(null);
   const [isChatContentOpen, setIsChatContentOpen] = useState(false);
   const chats = useRecoilValue(ChatsAtom);
   const [tempText, setTempText] = useState<string>();
 
   const handleSubmit = useCallback(() => {
-    if (currentMap !== "MY_ROOM") {
-      if (isValidText(tempText)) {
-        socket.emit("newText", tempText);
-        setTempText("");
-        if (!ref.current) return;
-        ref.current.scrollTop = ref.current.scrollHeight;
-      }
-    } else {
-      console.log("포스트잇 남기기");
+    if (isValidText(tempText)) {
+      socket.emit("newText", tempText);
+      setTempText("");
+      if (!ref.current) return;
+      ref.current.scrollTop = ref.current.scrollHeight;
     }
-  }, [currentMap, tempText]);
+  }, [tempText]);
 
   const handleSubmitEnter = useCallback(
     (e: React.KeyboardEvent<HTMLInputElement>) => {
-      if (currentMap !== "MY_ROOM") {
-        if (isValidText(tempText)) {
-          if (e.key === "Enter") {
-            socket.emit("newText", tempText);
-            setTempText("");
-            if (!ref.current) return;
-            ref.current.scrollTop = ref.current.scrollHeight;
-          }
+      if (isValidText(tempText)) {
+        if (e.key === "Enter") {
+          socket.emit("newText", tempText);
+          setTempText("");
+          if (!ref.current) return;
+          ref.current.scrollTop = ref.current.scrollHeight;
         }
-      } else {
-        console.log("포스트잇 남기기기");
       }
     },
-    [currentMap, tempText]
+    [tempText]
   );
 
   return (
     <ChatAreaWrapper>
       <ChatDropdownWrapper className={isChatContentOpen ? "opened" : "closed"}>
         <ChatAreaTitle>
-          <span>
-            {currentMap !== "MY_ROOM"
-              ? "채팅창"
-              : `${CurrentMyRoomPlayer?.nickname}에게 메모 남기기`}
-          </span>
+          <span>채팅창</span>
           {/* {isChatContentOpen ? (
             <KeyboardArrowDownIcon
               onClick={() => {
@@ -74,8 +56,8 @@ export const ChatArea = () => {
           )} */}
         </ChatAreaTitle>
         <ChatContentContainer ref={ref}>
-          {chats.map(({ senderNickname, senderJobPosition, text }) => (
-            <ChatLine>
+          {chats.map(({ senderNickname, senderJobPosition, text }, index) => (
+            <ChatLine key={index}>
               <ChatSender>{`${senderNickname}[${senderJobPosition}]`}</ChatSender>
               {" : "}
               <ChatContent>{text}</ChatContent>

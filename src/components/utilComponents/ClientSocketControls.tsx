@@ -31,7 +31,7 @@ export const ClientSocketControls = () => {
       console.log("disconnected");
     };
 
-    const handleInitialize = (value: { id: string }) => {
+    const handleInitialize = (value: IPlayer) => {
       setMe(value);
       console.log("hello");
     };
@@ -50,6 +50,7 @@ export const ClientSocketControls = () => {
         (p) => p.id === currentMyRoomPlayer?.id
       );
       if (currentMyRoomUpdated) {
+        console.log("currentMyRoomUpdated", currentMyRoomUpdated);
         setCurrentMyRoomPlayer(currentMyRoomUpdated);
       }
     };

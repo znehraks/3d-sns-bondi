@@ -87,6 +87,7 @@ export const Playground = () => {
               {playerGroundStructuresFloorPlaneCorners.map((corner) => {
                 return (
                   <Line
+                    key={corner.name}
                     color="red"
                     points={corner.corners.map((c) => [c.x, 0.01, c.z])}
                   />
@@ -114,7 +115,6 @@ export const Playground = () => {
                         </Text>
                       </Billboard>
                       <Man
-                        key={player.id}
                         player={player}
                         position={
                           new Vector3(

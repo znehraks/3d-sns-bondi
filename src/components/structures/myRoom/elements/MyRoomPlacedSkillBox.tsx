@@ -1,27 +1,24 @@
 import { useTexture } from "@react-three/drei";
-import { IPlacedMyRoomSkillAtom } from "../../../../store/PlayersAtom";
+import { IPlacedMyRoomSkill } from "../../../../store/PlayersAtom";
 import { myRoomSkillBoxSize } from "../../../../data";
 
 export const MyRoomPlacedSkillBox = ({
   placedMyRoomSkill,
 }: {
-  placedMyRoomSkill: IPlacedMyRoomSkillAtom;
+  placedMyRoomSkill: IPlacedMyRoomSkill;
 }) => {
   const texture = useTexture(`/images/${placedMyRoomSkill.name}.png`);
   return (
-    <instancedMesh>
-      <mesh
-        // ref={ref}
-        castShadow
-        receiveShadow
-        name={`my-room-${placedMyRoomSkill.name}`}
-        position={placedMyRoomSkill.position}
-      >
-        <boxGeometry
-          args={[myRoomSkillBoxSize, myRoomSkillBoxSize, myRoomSkillBoxSize]}
-        />
-        <meshStandardMaterial map={texture} />
-      </mesh>
-    </instancedMesh>
+    <mesh
+      castShadow
+      receiveShadow
+      name={`my-room-${placedMyRoomSkill.name}`}
+      position={placedMyRoomSkill.position}
+    >
+      <boxGeometry
+        args={[myRoomSkillBoxSize, myRoomSkillBoxSize, myRoomSkillBoxSize]}
+      />
+      <meshStandardMaterial map={texture} />
+    </mesh>
   );
 };

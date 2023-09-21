@@ -14,6 +14,7 @@ import { Notice } from "./gameInterfaces/Notice";
 import { Minimap } from "./gameInterfaces/Minimap";
 import { MyRoomToolBar } from "./gameInterfaces/MyRoomToolBar";
 import { Popup } from "./gameInterfaces/Popup";
+import { Memo } from "./gameInterfaces/Memo";
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   const [isLoadCompleted] = useRecoilState(IsLoadCompletedAtom);
@@ -35,6 +36,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           {currentMyRoomPlayer && me?.id !== currentMyRoomPlayer?.id && (
             <Popup />
           )}
+          <Memo />
         </>
       )}
       <Footer />

@@ -118,6 +118,7 @@ export const Lobby = () => {
                     {colorCandidatesMemo.map((color) => (
                       <div>
                         <ColorRound
+                          key={color}
                           selected={color === hairColor}
                           onClick={handleClickColorRound(setHairColor)(color)}
                           color={color}
@@ -132,6 +133,7 @@ export const Lobby = () => {
                     {colorCandidatesMemo.map((color) => (
                       <div>
                         <ColorRound
+                          key={color}
                           selected={color === shirtColor}
                           onClick={handleClickColorRound(setShirtColor)(color)}
                           color={color}
@@ -146,6 +148,7 @@ export const Lobby = () => {
                     {colorCandidatesMemo.map((color) => (
                       <div>
                         <ColorRound
+                          key={color}
                           selected={color === pantsColor}
                           onClick={handleClickColorRound(setPantsColor)(color)}
                           color={color}

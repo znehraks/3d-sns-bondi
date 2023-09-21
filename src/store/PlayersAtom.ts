@@ -61,12 +61,9 @@ export const PlayersAtom = atom<IPlayer[]>({
 // });
 
 // 내 player정보
-export interface IMe {
-  id: string;
-}
 
 // 내 socket 정보
-export const MeAtom = atom<IMe>({
+export const MeAtom = atom<IPlayer>({
   key: "MeAtom",
   default: undefined,
 });
@@ -147,13 +144,13 @@ export const CurrentMyRoomPlayerAtom = atom<IPlayer | undefined>({
   default: undefined,
 });
 
-interface PlayGroundStructureBoundingBoxAtom {
+interface PlayGroundStructureBoundingBox {
   name: string;
   box: { max: Vector3; min: Vector3 };
   position: Vector3;
 }
 export const PlayGroundStructuresBoundingBoxAtom = atom<
-  PlayGroundStructureBoundingBoxAtom[]
+  PlayGroundStructureBoundingBox[]
 >({
   key: "PlayGroundStructuresBoundingBoxAtom",
   default: [],
@@ -195,35 +192,44 @@ export const CurrentPlacingMyRoomSkillAtom = atom<string | undefined>({
   default: undefined,
 });
 
-export interface IPlacedMyRoomSkillAtom {
+export interface IPlacedMyRoomSkill {
   name: string;
   position: [number, number, number];
 }
-export const PlacedMyRoomSkillsAtom = atom<IPlacedMyRoomSkillAtom[]>({
+export const PlacedMyRoomSkillsAtom = atom<IPlacedMyRoomSkill[]>({
   key: "PlacedMyRoomSkillsAtom",
   default: [],
 });
 
-export interface ICurrentPlacingMyRoomPostItAtom {
+export interface ICurrentPlacingMyRoomMemo {
   text: string;
   authorNickname: string;
   timestamp: string;
 }
 
-export const CurrentPlacingMyRoomPostItAtom = atom({
-  key: "CurrentPlacingMyRoomPostItAtom",
+export const CurrentPlacingMyRoomMemoAtom = atom<
+  ICurrentPlacingMyRoomMemo | undefined
+>({
+  key: "CurrentPlacingMyRoomMemoAtom",
   default: undefined,
 });
 
-export interface IPlacedMyRoomPostItsAtom {
+export interface IPlacedMyRoomMemos {
   text: string;
   authorNickname: string;
   timestamp: string;
-  position: Vector3;
-  rotation: Vector3;
+  position: [number, number, number];
+  rotation: [number, number, number];
 }
 
-export const PlacedMyRoomPostItsAtom = atom<IPlacedMyRoomPostItsAtom[]>({
-  key: "PlacedMyRoomPostItsAtom",
+export const PlacedMyRoomMemosAtom = atom<IPlacedMyRoomMemos[]>({
+  key: "PlacedMyRoomMemosAtom",
   default: [],
+});
+
+export const CurrentSelectedMemoAtom = atom<
+  ICurrentPlacingMyRoomMemo | undefined
+>({
+  key: "CurrentSelectedMemoAtom",
+  default: undefined,
 });

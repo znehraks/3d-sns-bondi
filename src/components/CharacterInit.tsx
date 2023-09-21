@@ -25,7 +25,7 @@ export const CharacterInit = () => {
   return (
     <>
       <Man
-        playerId=""
+        player={undefined}
         position={new Vector3(0, 0, 0)}
         hairColor={hairColor}
         shirtColor={shirtColor}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
 import {
@@ -6,7 +6,9 @@ import {
   CurrentPlacingMyRoomSkillAtom,
   CurrentMyRoomPlayerAtom,
   MeAtom,
+  CurrentPlacingMyRoomMemoAtom,
 } from "../../../store/PlayersAtom";
+import { isValidText } from "../../../utils";
 const skills = [
   "html",
   "css",
@@ -24,14 +26,18 @@ const skills = [
 ];
 export const MyRoomToolBar = () => {
   const [openedDropdownIndex, setOpenedDropdownIndex] = useState<number>();
+  const [isMemoFormOpen, setIsMemoFormOpen] = useState(false);
   const currentMyRoomPlayer = useRecoilValue(CurrentMyRoomPlayerAtom);
   const me = useRecoilValue(MeAtom);
   const [, setCurrentPlacingMyRoomSkill] = useRecoilState(
     CurrentPlacingMyRoomSkillAtom
   );
-  // const [, setCurrentPlacingMyRoomPostIt] = useRecoilState(
-  //   CurrentPlacingMyRoomPostItAtom
-  // );
+  const [, setCurrentPlacingMyRoomMemo] = useRecoilState(
+    CurrentPlacingMyRoomMemoAtom
+  );
+  const [currentMemoText, setCurrentMemoText] = useState<string | undefined>(
+    undefined
+  );
 
   return (
     <>
@@ -58,6 +64,7 @@ export const MyRoomToolBar = () => {
               <ToolBarBtnDropdown>
                 {skills.map((skill) => (
                   <ToolBarDropdownItem
+                    key={skill}
                     onClick={() => {
                       setCurrentPlacingMyRoomSkill((prev) => {
                         if (prev === skill) return undefined;
@@ -72,7 +79,41 @@ export const MyRoomToolBar = () => {
             )}
           </>
         ) : (
-          <>{`${currentMyRoomPlayer?.nickname}[${currentMyRoomPlayer?.jobPosition}]의 방`}</>
+          <ColumnWrapper>
+            {`${currentMyRoomPlayer?.nickname}[${currentMyRoomPlayer?.jobPosition}의 방`}
+            <ToolBarBtn
+              onClick={() => {
+                setIsMemoFormOpen((prev) => !prev);
+              }}
+            >
+              메모
+            </ToolBarBtn>
+            <MemoFormPropdown
+              className={isMemoFormOpen ? "visible" : "invisible"}
+            >
+              <textarea
+                value={currentMemoText ?? ""}
+                onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => {
+                  setCurrentMemoText(e.currentTarget.value);
+                }}
+              ></textarea>
+
+              <MemoSubmitBtn
+                onClick={() => {
+                  if (!isValidText(currentMemoText)) return;
+                  setCurrentPlacingMyRoomMemo({
+                    text: currentMemoText!,
+                    authorNickname: me.nickname,
+                    timestamp: new Date() + "",
+                  });
+                  setCurrentMemoText(undefined);
+                  setIsMemoFormOpen(false);
+                }}
+              >
+                메모 남기기
+              </MemoSubmitBtn>
+            </MemoFormPropdown>
+          </ColumnWrapper>
         )}
       </MyRoomToolBarWrapper>
       {/* {openedDropdownIndex === 0 && (
@@ -87,7 +128,7 @@ const MyRoomToolBarWrapper = styled.div`
   top: 40px;
   left: 50%;
   min-width: 200px;
-  height: 80px;
+  min-height: 80px;
   transform: translateX(-50%);
   background-color: #ffffffee;
   border-radius: 20px;
@@ -96,7 +137,7 @@ const MyRoomToolBarWrapper = styled.div`
   justify-content: center;
   align-items: center;
   gap: 20px;
-  padding: 20px;
+  padding: 10px;
 `;
 
 const ToolBarBtn = styled.div`
@@ -135,4 +176,54 @@ const ToolBarDropdownItem = styled.div<{ src: string }>`
   background-repeat: no-repeat;
   background-size: cover;
   cursor: pointer;
+`;
+
+const ColumnWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  font-size: 20px;
+  gap: 10px;
+  position: relative;
+`;
+
+const MemoFormPropdown = styled.div`
+  position: fixed;
+  top: 120px;
+  left: 0;
+  width: 100%;
+  height: 200px;
+  box-shadow: 1px 1px 4px 4px #cccccc;
+  textarea {
+    width: 100%;
+    height: 100%;
+    background-color: yellow;
+    outline: none;
+    border: none;
+    resize: none;
+    font-size: 18px;
+  }
+  &.visible {
+    display: flex;
+  }
+  &.invisible {
+    display: none;
+  }
+`;
+
+const MemoSubmitBtn = styled.button`
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  border-width: 1px;
+  outline: none;
+  font-size: 18px;
+  padding: 10px;
+  background-color: #f0f9ff;
+  cursor: pointer;
+  &:hover {
+    background-color: #3f97cd;
+    color: #ffffff;
+  }
 `;
