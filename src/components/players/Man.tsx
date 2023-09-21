@@ -49,6 +49,8 @@ export function Man({
   const nicknameBillboard = threeScene.getObjectByName(
     `nickname-billboard-${playerId}`
   );
+  const chatText = threeScene.getObjectByName(`chat-text-${playerId}`);
+
   const me = useRecoilValue(MeAtom);
 
   const { scene, materials, animations } = useGLTF(
@@ -103,6 +105,22 @@ export function Man({
       );
       nicknameBillboard.lookAt(10000, 10000, 10000);
     }
+    if (chatText) {
+      chatText.position.set(
+        group.current.position.x + 1,
+        group.current.position.y + 3,
+        group.current.position.z
+      );
+      if (
+        Number(new Date()) - Number(new Date(chatText.userData.timestamp)) >
+        4000
+      ) {
+        chatText.visible = false;
+      } else {
+        chatText.visible = true;
+      }
+    }
+
     if (
       me?.id !== undefined &&
       player?.id !== undefined &&

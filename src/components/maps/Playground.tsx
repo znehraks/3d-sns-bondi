@@ -1,6 +1,7 @@
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   CharacterSelectFinishedAtom,
+  ChatsAtom,
   CurrentMapAtom,
   PlayerGroundStructuresFloorPlaneCornersSelector,
   PlayersAtom,
@@ -9,15 +10,17 @@ import { Man } from "../players/Man";
 import { Billboard, Line, OrbitControls, Text } from "@react-three/drei";
 // import { PlayStructure } from "../structures/ground/PlayStructure";
 import { useThree } from "@react-three/fiber";
-import { Suspense, useEffect, useRef } from "react";
+import { Suspense, useEffect, useMemo, useRef } from "react";
 import { CharacterInit } from "../CharacterInit";
 import { Loader } from "../utilComponents/Loader";
 import { Vector3 } from "three";
 import { MyRoom } from "../structures/myRoom";
 import { GroundElements } from "../structures/ground";
+import _ from "lodash";
 
 export const Playground = () => {
   const [currentMap] = useRecoilState(CurrentMapAtom);
+  const chats = useRecoilValue(ChatsAtom);
   const [characterSelectFinished] = useRecoilState(CharacterSelectFinishedAtom);
   const playerGroundStructuresFloorPlaneCorners = useRecoilValue(
     PlayerGroundStructuresFloorPlaneCornersSelector
@@ -37,6 +40,10 @@ export const Playground = () => {
   useEffect(() => {
     camera.position.set(14, 14, 14);
   }, [camera.position, currentMap]);
+
+  const reversedChats = useMemo(() => {
+    return _.uniqBy([...chats].reverse(), "senderId");
+  }, [chats]);
 
   return (
     <>
@@ -121,6 +128,35 @@ export const Playground = () => {
                         shirtColor={player.shirtColor}
                         pantsColor={player.pantsColor}
                       />
+                    </>
+                  );
+                })}
+                {reversedChats.map((chat) => {
+                  const player = players
+                    .filter((p) => p.id === chat.senderId)
+                    ?.at(-1);
+
+                  if (!player) return;
+                  return (
+                    <>
+                      <Text
+                        name={`chat-text-${player.id}`}
+                        rotation-y={Math.PI / 4}
+                        position={[
+                          player.position[0] + 1,
+                          player.position[1] + 3,
+                          player.position[2],
+                        ]}
+                        font={"/NotoSansKR-Regular.ttf"}
+                        fontSize={0.2}
+                        fillOpacity={2}
+                        color={0x33df3f}
+                        overflowWrap="break-word"
+                        maxWidth={1.6}
+                        userData={{ timestamp: chat.timestamp }}
+                      >
+                        {`${chat.text}`}
+                      </Text>
                     </>
                   );
                 })}

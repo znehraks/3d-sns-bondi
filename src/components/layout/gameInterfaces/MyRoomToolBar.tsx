@@ -44,7 +44,7 @@ export const MyRoomToolBar = () => {
       <MyRoomToolBarWrapper>
         {currentMyRoomPlayer?.id === me?.id ? (
           <>
-            {["스택배치", "가구배치"].map((item, idx) => {
+            {["스택배치"].map((item, idx) => {
               return (
                 <ToolBarBtn
                   onClick={() => {
@@ -127,7 +127,6 @@ const MyRoomToolBarWrapper = styled.div`
   position: fixed;
   top: 40px;
   left: 50%;
-  min-width: 200px;
   min-height: 80px;
   transform: translateX(-50%);
   background-color: #ffffffee;
@@ -183,6 +182,7 @@ const ColumnWrapper = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  width: 200px;
   font-size: 20px;
   gap: 10px;
   position: relative;

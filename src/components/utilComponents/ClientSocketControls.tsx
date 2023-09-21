@@ -54,13 +54,15 @@ export const ClientSocketControls = () => {
     };
 
     const handleNewText = ({
+      senderId,
       senderNickname,
       senderJobPosition,
       text,
+      timestamp,
     }: IChat) => {
       setChats((prev) => [
         ...prev,
-        { senderNickname, senderJobPosition, text },
+        { senderId, senderNickname, senderJobPosition, text, timestamp },
       ]);
     };
 

@@ -99,9 +99,11 @@ export const IsLoadCompletedAtom = atom({
 });
 
 export interface IChat {
+  senderId: IPlayer["id"];
   senderNickname: IPlayer["nickname"];
   senderJobPosition: IPlayer["jobPosition"];
   text: string;
+  timestamp: string;
 }
 
 // 채팅 정보
