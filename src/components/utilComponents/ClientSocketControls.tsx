@@ -25,15 +25,14 @@ export const ClientSocketControls = () => {
 
   useEffect(() => {
     const handleConnect = () => {
-      console.log("connected");
+      console.info("connected");
     };
     const handleDisconnect = () => {
-      console.log("disconnected");
+      console.info("disconnected");
     };
 
     const handleInitialize = (value: IPlayer) => {
       setMe(value);
-      console.log("hello");
     };
 
     const handleEnter = (value: INotice) => {
@@ -50,7 +49,6 @@ export const ClientSocketControls = () => {
         (p) => p.id === currentMyRoomPlayer?.id
       );
       if (currentMyRoomUpdated) {
-        console.log("currentMyRoomUpdated", currentMyRoomUpdated);
         setCurrentMyRoomPlayer(currentMyRoomUpdated);
       }
     };

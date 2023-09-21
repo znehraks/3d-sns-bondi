@@ -72,10 +72,6 @@ export function Man({
   // const clock = new THREE.Clock();
 
   useFrame(({ camera }) => {
-    // console.log("clock.getElapsedTime();", clock.getElapsedTime());
-    // console.log(gl.info.render.frame);
-    // console.log("delta", delta);
-
     if (!group.current) return;
     if (group.current.position.distanceTo(position) > 0.1) {
       const direction = group.current.position
@@ -127,8 +123,7 @@ export function Man({
             group.current.position.z < structure.corners[0].z &&
             group.current.position.z > structure.corners[2].z
           ) {
-            console.log(structure.name);
-            console.log("에 들어옴");
+            console.info("에 들어옴");
           }
         }
       });

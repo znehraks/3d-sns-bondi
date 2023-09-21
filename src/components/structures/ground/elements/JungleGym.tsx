@@ -41,7 +41,6 @@ export const JungleGym = () => {
       );
     }
 
-    console.log((scene.children[0] as Mesh).geometry.boundingBox);
   }, [position, scene, setPlayGroundStructuresBoundingBox]);
   return (
     <primitive name={name} scale={scale} position={position} object={scene} />

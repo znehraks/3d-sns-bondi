@@ -27,8 +27,6 @@ export const MyRoom = () => {
   const placedMyRoomMemos = useRecoilValue(PlacedMyRoomMemosAtom);
 
   const currentMyRoomPlayer = useRecoilValue(CurrentMyRoomPlayerAtom);
-  console.log("currentMyRoomPlayer", currentMyRoomPlayer);
-  console.log("placedMyRoomMemos", placedMyRoomMemos);
   return (
     <Suspense>
       {currentMyRoomPlayer?.myRoom?.objects.map((object) => {

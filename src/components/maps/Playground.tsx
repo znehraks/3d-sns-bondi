@@ -29,7 +29,6 @@ export const Playground = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controls = useRef<any>(null);
 
-  console.log(players);
   useEffect(() => {
     if (!controls.current?.target) return;
     camera.position.set(8, 8, 8);
@@ -38,11 +37,6 @@ export const Playground = () => {
   useEffect(() => {
     camera.position.set(14, 14, 14);
   }, [camera.position, currentMap]);
-
-  console.log(
-    "playerGroundStructuresFloorPlaneCorners",
-    playerGroundStructuresFloorPlaneCorners
-  );
 
   return (
     <>

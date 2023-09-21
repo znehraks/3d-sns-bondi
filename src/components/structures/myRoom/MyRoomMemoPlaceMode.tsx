@@ -8,11 +8,7 @@ import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 import { calculateThreePosition, getMyRoomObjects } from "../../../utils";
-import {
-  myRoomMemoBoxSize,
-  myRoomSize,
-  myRoomSkillBoxSize,
-} from "../../../data";
+import { myRoomMemoBoxSize, myRoomSize } from "../../../data";
 import { socket } from "../../../sockets/clientSocket";
 
 const leftWallVector = new THREE.Vector3(1, 0, 0);
@@ -46,81 +42,79 @@ export const MyRoomMemoPlaceMode = () => {
       let zOffset = 0;
       if (!intersect.normal) return;
       ref.current.rotation.set(0, 0, 0);
-      console.log(intersect.normal);
 
       // 현재 rayCaster에 잡힌 첫번째 오브젝트의 법선벡터와 3축의 벡터가 평행하다면 각 축에 맞는 offset을 더해준다.
       if (1 - Math.abs(intersect.normal.clone().dot(floorVector)) < 0.1) {
         ref.current.rotation.x = -Math.PI / 2;
         roomTouched = true;
-        yOffset = myRoomSkillBoxSize / 2 + 0.01;
-        console.log("yOffset", yOffset);
-        if (intersect.point.x < -(myRoomSize / 2 - myRoomSkillBoxSize / 2)) {
+        yOffset = 0.01;
+        if (intersect.point.x < -(myRoomSize / 2 - myRoomMemoBoxSize[0] / 2)) {
           xOffset += Math.abs(
-            intersect.point.x + (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+            intersect.point.x + (myRoomSize / 2 + myRoomMemoBoxSize[0] / 2)
           );
         }
-        if (intersect.point.x > myRoomSize / 2 + myRoomSkillBoxSize / 2) {
+        if (intersect.point.x > myRoomSize / 2 + myRoomMemoBoxSize[0] / 2) {
           xOffset -= Math.abs(
-            intersect.point.x - (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+            intersect.point.x - (myRoomSize / 2 + myRoomMemoBoxSize[0] / 2)
           );
         }
-        if (intersect.point.z < -(myRoomSize / 2 - myRoomSkillBoxSize / 2)) {
+        if (intersect.point.z < -(myRoomSize / 2 - myRoomMemoBoxSize[2] / 2)) {
           zOffset += Math.abs(
-            intersect.point.z + (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+            intersect.point.z + (myRoomSize / 2 + myRoomMemoBoxSize[2] / 2)
           );
         }
-        if (intersect.point.z > myRoomSize / 2 + myRoomSkillBoxSize / 2) {
+        if (intersect.point.z > myRoomSize / 2 + myRoomMemoBoxSize[2] / 2) {
           zOffset -= Math.abs(
-            intersect.point.z - (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+            intersect.point.z - (myRoomSize / 2 + myRoomMemoBoxSize[2] / 2)
           );
         }
       }
       if (1 - Math.abs(intersect.normal.clone().dot(leftWallVector)) < 0.1) {
         ref.current.rotation.y = -Math.PI / 2;
         roomTouched = true;
-        xOffset = myRoomSkillBoxSize / 2 + 0.01;
-        if (intersect.point.y < -(myRoomSize / 2 - myRoomSkillBoxSize / 2)) {
+        xOffset = 0.01;
+        if (intersect.point.y < -(myRoomSize / 2 - myRoomMemoBoxSize[1] / 2)) {
           yOffset += Math.abs(
-            intersect.point.y + (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+            intersect.point.y + (myRoomSize / 2 + myRoomMemoBoxSize[1] / 2)
           );
         }
-        if (intersect.point.y > myRoomSize / 2 + myRoomSkillBoxSize / 2) {
+        if (intersect.point.y > myRoomSize / 2 + myRoomMemoBoxSize[1] / 2) {
           yOffset -= Math.abs(
-            intersect.point.y - (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+            intersect.point.y - (myRoomSize / 2 + myRoomMemoBoxSize[1] / 2)
           );
         }
-        if (intersect.point.z < -(myRoomSize / 2 - myRoomSkillBoxSize / 2)) {
+        if (intersect.point.z < -(myRoomSize / 2 - myRoomMemoBoxSize[2] / 2)) {
           zOffset += Math.abs(
-            intersect.point.z + (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+            intersect.point.z + (myRoomSize / 2 + myRoomMemoBoxSize[2] / 2)
           );
         }
-        if (intersect.point.z > myRoomSize / 2 + myRoomSkillBoxSize / 2) {
+        if (intersect.point.z > myRoomSize / 2 + myRoomMemoBoxSize[2] / 2) {
           zOffset -= Math.abs(
-            intersect.point.z - (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+            intersect.point.z - (myRoomSize / 2 + myRoomMemoBoxSize[2] / 2)
           );
         }
       }
       if (1 - Math.abs(intersect.normal.clone().dot(rightWallVector)) < 0.1) {
         roomTouched = true;
-        zOffset = myRoomSkillBoxSize / 2 + 0.01;
-        if (intersect.point.x < -(myRoomSize / 2 - myRoomSkillBoxSize / 2)) {
+        zOffset = 0.01;
+        if (intersect.point.x < -(myRoomSize / 2 - myRoomMemoBoxSize[0] / 2)) {
           xOffset += Math.abs(
-            intersect.point.x + (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+            intersect.point.x + (myRoomSize / 2 + myRoomMemoBoxSize[0] / 2)
           );
         }
-        if (intersect.point.x > myRoomSize / 2 + myRoomSkillBoxSize / 2) {
+        if (intersect.point.x > myRoomSize / 2 + myRoomMemoBoxSize[0] / 2) {
           xOffset -= Math.abs(
-            intersect.point.x - (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+            intersect.point.x - (myRoomSize / 2 + myRoomMemoBoxSize[0] / 2)
           );
         }
-        if (intersect.point.y < -(myRoomSize / 2 - myRoomSkillBoxSize / 2)) {
+        if (intersect.point.y < -(myRoomSize / 2 - myRoomMemoBoxSize[1] / 2)) {
           yOffset += Math.abs(
-            intersect.point.y + (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+            intersect.point.y + (myRoomSize / 2 + myRoomMemoBoxSize[1] / 2)
           );
         }
-        if (intersect.point.y > myRoomSize / 2 + myRoomSkillBoxSize / 2) {
+        if (intersect.point.y > myRoomSize / 2 + myRoomMemoBoxSize[1] / 2) {
           yOffset -= Math.abs(
-            intersect.point.y - (myRoomSize / 2 + myRoomSkillBoxSize / 2)
+            intersect.point.y - (myRoomSize / 2 + myRoomMemoBoxSize[1] / 2)
           );
         }
       }
@@ -175,7 +169,6 @@ export const MyRoomMemoPlaceMode = () => {
   useEffect(() => {
     if (isFinished) {
       const myRoomObjects = getMyRoomObjects(scene);
-      console.log("myRoomObjects", myRoomObjects);
       setCurrentPlacingMyRoomMemo(undefined);
       setPlacedMyRoomMemos([]);
       socket.emit(

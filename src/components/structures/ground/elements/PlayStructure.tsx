@@ -19,7 +19,6 @@ export function PlayStructure() {
       mesh.castShadow = true;
       mesh.receiveShadow = true;
     });
-    console.log("scene", scene);
     const mesh = scene.children[0] as Mesh;
     if (mesh.geometry.boundingBox) {
       setPlayGroundStructuresBoundingBox((prev) =>

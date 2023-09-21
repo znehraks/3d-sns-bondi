@@ -12,7 +12,6 @@ export const Swing = () => {
     PlayGroundStructuresBoundingBoxAtom
   );
   const { scene } = useGLTF("/models/Swing.glb");
-  console.log(scene);
   const position = useMemo(() => new Vector3(8, 0, 8), []);
   useEffect(() => {
     scene.traverse((mesh) => {

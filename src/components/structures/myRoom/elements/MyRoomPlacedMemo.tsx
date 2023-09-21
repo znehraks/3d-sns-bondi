@@ -22,7 +22,6 @@ export const MyRoomPlacedMemo = ({
         timestamp: placedMyRoomMemo.timestamp,
       }}
       onClick={() => {
-        console.log("placedMyRoomMemo.text", placedMyRoomMemo.text);
         setCurrentSelectedMemo({...placedMyRoomMemo})
       }}
     >

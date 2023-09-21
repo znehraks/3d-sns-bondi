@@ -35,7 +35,6 @@ export const getMyRoomObjects = (scene: Scene) => {
   scene.children.forEach((child) =>
     child.traverse((obj) => {
       if (obj.name.includes("my-room")) {
-        console.log(obj);
         const myRoomObject: IMyRoomObject = {
           name: obj.name as IMyRoomObjectNames,
           position: [obj.position.x, obj.position.y, obj.position.z],

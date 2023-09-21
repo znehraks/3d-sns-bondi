@@ -55,7 +55,6 @@ export const MyRoomPlaceMode = ({
       if (1 - Math.abs(intersect.normal.clone().dot(floorVector)) < 0.1) {
         roomTouched = true;
         yOffset = myRoomSkillBoxSize / 2 + 0.01;
-        console.log("yOffset", yOffset);
         if (intersect.point.x < -(myRoomSize / 2 - myRoomSkillBoxSize / 2)) {
           xOffset += Math.abs(
             intersect.point.x + (myRoomSize / 2 + myRoomSkillBoxSize / 2)
@@ -151,7 +150,6 @@ export const MyRoomPlaceMode = ({
       // socket.emit 하기 배치했음을 알려야함
     };
 
-    console.log("currentPlacingMyRoomSkill", currentPlacingMyRoomSkill);
     gl.domElement.addEventListener("pointermove", handlePointerMove);
     gl.domElement.addEventListener("pointerup", handlePointerUp);
     return () => {
@@ -172,7 +170,6 @@ export const MyRoomPlaceMode = ({
   useEffect(() => {
     if (isFinished) {
       const myRoomObjects = getMyRoomObjects(scene);
-      console.log("myRoomObjects", myRoomObjects);
       setCurrentPlacingMyRoomSkill(undefined);
       setPlacedMyRoomSkills([]);
       socket.emit("myRoomChange", { objects: myRoomObjects });
