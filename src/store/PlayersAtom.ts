@@ -137,18 +137,14 @@ export const CurrentMapAtom = atom<TMaps>({
   default: "GROUND",
 });
 
-export const CurrentMyRoomPlayerIdAtom = atom<string | undefined>({
-  key: "CurrentMyRoomPlayerIdAtom",
+export const CurrentMyRoomPopupPlayerIdAtom = atom<string | undefined>({
+  key: "CurrentMyRoomPopupPlayerIdAtom",
   default: undefined,
 });
 
-export const CurrentSelectedOtherPlayerSelector = selector({
-  key: "CurrentSelectedOtherPlayerSelector",
-  get: ({ get }) => {
-    const id = get(CurrentMyRoomPlayerIdAtom);
-    const players = get(PlayersAtom);
-    return players.find((p) => p.id === id);
-  },
+export const CurrentMyRoomPlayerAtom = atom<IPlayer | undefined>({
+  key: "CurrentMyRoomPlayerAtom",
+  default: undefined,
 });
 
 interface PlayGroundStructureBoundingBoxAtom {

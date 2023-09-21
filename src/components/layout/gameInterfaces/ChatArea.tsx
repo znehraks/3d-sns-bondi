@@ -5,10 +5,15 @@ import { styled } from "styled-components";
 import { isValidText } from "../../../utils";
 import { socket } from "../../../sockets/clientSocket";
 import { useRecoilValue } from "recoil";
-import { ChatsAtom, CurrentMapAtom } from "../../../store/PlayersAtom";
+import {
+  ChatsAtom,
+  CurrentMapAtom,
+  CurrentMyRoomPlayerAtom,
+} from "../../../store/PlayersAtom";
 
 export const ChatArea = () => {
   const currentMap = useRecoilValue(CurrentMapAtom);
+  const CurrentMyRoomPlayer = useRecoilValue(CurrentMyRoomPlayerAtom);
   const ref = useRef<HTMLDivElement>(null);
   const [isChatContentOpen, setIsChatContentOpen] = useState(false);
   const chats = useRecoilValue(ChatsAtom);
@@ -24,7 +29,6 @@ export const ChatArea = () => {
       }
     } else {
       console.log("포스트잇 남기기");
-      
     }
   }, [currentMap, tempText]);
 
@@ -50,7 +54,11 @@ export const ChatArea = () => {
     <ChatAreaWrapper>
       <ChatDropdownWrapper className={isChatContentOpen ? "opened" : "closed"}>
         <ChatAreaTitle>
-          <span> {currentMap !== "MY_ROOM" ? "채팅창" : "메모 남기기"} </span>
+          <span>
+            {currentMap !== "MY_ROOM"
+              ? "채팅창"
+              : `${CurrentMyRoomPlayer?.nickname}에게 메모 남기기`}
+          </span>
           {/* {isChatContentOpen ? (
             <KeyboardArrowDownIcon
               onClick={() => {

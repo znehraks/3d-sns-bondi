@@ -5,12 +5,13 @@ import { MyRoomLeftWall } from "./elements/MyRoomLeftWall";
 import { MyRoomRightWall } from "./elements/MyRoomRightWall";
 import {
   CurrentPlacingMyRoomSkillAtom,
-  CurrentSelectedOtherPlayerSelector,
+  CurrentMyRoomPlayerAtom,
   PlacedMyRoomSkillsAtom,
 } from "../../../store/PlayersAtom";
-import { MyRoomPlacedSkillBox } from "./elements/MyRoomPlacedSkillBox";
+
 import { Suspense } from "react";
 import { MyRoomElements } from "./elements";
+import { MyRoomPlacedSkillBox } from "./elements/MyRoomPlacedSkillBox";
 
 export const MyRoom = () => {
   const currentPlacingMyRoomSkill = useRecoilValue(
@@ -18,13 +19,11 @@ export const MyRoom = () => {
   );
   const placedMyRoomSkills = useRecoilValue(PlacedMyRoomSkillsAtom);
 
-  const currentSelectedOtherPlayer = useRecoilValue(
-    CurrentSelectedOtherPlayerSelector
-  );
-  console.log("currentSelectedOtherPlayer", currentSelectedOtherPlayer);
+  const currentMyRoomPlayer = useRecoilValue(CurrentMyRoomPlayerAtom);
+  console.log("currentMyRoomPlayer", currentMyRoomPlayer);
   return (
     <Suspense>
-      {currentSelectedOtherPlayer?.myRoom?.objects.map((object) => {
+      {currentMyRoomPlayer?.myRoom?.objects.map((object) => {
         return (
           <>
             <MyRoomElements object={object} />
@@ -40,7 +39,7 @@ export const MyRoom = () => {
         />
       )}
       {placedMyRoomSkills.map((placedMyRoomSkill) => (
-        <instancedMesh key={placedMyRoomSkill.name}>
+        <instancedMesh  key={placedMyRoomSkill.name}>
           <MyRoomPlacedSkillBox placedMyRoomSkill={placedMyRoomSkill} />
         </instancedMesh>
       ))}

@@ -1,7 +1,12 @@
 import { useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import styled from "styled-components";
-import { CurrentPlacingMyRoomSkillAtom } from "../../../store/PlayersAtom";
+import {
+  // CurrentPlacingMyRoomPostItAtom,
+  CurrentPlacingMyRoomSkillAtom,
+  CurrentMyRoomPlayerAtom,
+  MeAtom,
+} from "../../../store/PlayersAtom";
 const skills = [
   "html",
   "css",
@@ -19,44 +24,55 @@ const skills = [
 ];
 export const MyRoomToolBar = () => {
   const [openedDropdownIndex, setOpenedDropdownIndex] = useState<number>();
+  const currentMyRoomPlayer = useRecoilValue(CurrentMyRoomPlayerAtom);
+  const me = useRecoilValue(MeAtom);
   const [, setCurrentPlacingMyRoomSkill] = useRecoilState(
     CurrentPlacingMyRoomSkillAtom
   );
+  // const [, setCurrentPlacingMyRoomPostIt] = useRecoilState(
+  //   CurrentPlacingMyRoomPostItAtom
+  // );
 
   return (
     <>
       <MyRoomToolBarWrapper>
-        {["스택배치", "가구배치"].map((item, idx) => {
-          return (
-            <ToolBarBtn
-              onClick={() => {
-                setOpenedDropdownIndex((prev) => {
-                  if (prev === idx) {
-                    return undefined;
-                  }
-                  return idx;
-                });
-              }}
-            >
-              {item}
-            </ToolBarBtn>
-          );
-        })}
-        {openedDropdownIndex !== undefined && (
-          <ToolBarBtnDropdown>
-            {skills.map((skill) => (
-              <ToolBarDropdownItem
-                onClick={() => {
-                  setCurrentPlacingMyRoomSkill((prev) => {
-                    if (prev === skill) return undefined;
-                    return skill;
-                  });
-                  setOpenedDropdownIndex(undefined);
-                }}
-                src={`/images/${skill}.png`}
-              ></ToolBarDropdownItem>
-            ))}
-          </ToolBarBtnDropdown>
+        {currentMyRoomPlayer?.id === me?.id ? (
+          <>
+            {["스택배치", "가구배치"].map((item, idx) => {
+              return (
+                <ToolBarBtn
+                  onClick={() => {
+                    setOpenedDropdownIndex((prev) => {
+                      if (prev === idx) {
+                        return undefined;
+                      }
+                      return idx;
+                    });
+                  }}
+                >
+                  {item}
+                </ToolBarBtn>
+              );
+            })}
+            {openedDropdownIndex !== undefined && (
+              <ToolBarBtnDropdown>
+                {skills.map((skill) => (
+                  <ToolBarDropdownItem
+                    onClick={() => {
+                      setCurrentPlacingMyRoomSkill((prev) => {
+                        if (prev === skill) return undefined;
+                        return skill;
+                      });
+                      setOpenedDropdownIndex(undefined);
+                    }}
+                    src={`/images/${skill}.png`}
+                  ></ToolBarDropdownItem>
+                ))}
+              </ToolBarBtnDropdown>
+            )}
+          </>
+        ) : (
+          <>{`${currentMyRoomPlayer?.nickname}[${currentMyRoomPlayer?.jobPosition}]의 방`}</>
         )}
       </MyRoomToolBarWrapper>
       {/* {openedDropdownIndex === 0 && (
@@ -70,7 +86,7 @@ const MyRoomToolBarWrapper = styled.div`
   position: fixed;
   top: 40px;
   left: 50%;
-  width: 200px;
+  min-width: 200px;
   height: 80px;
   transform: translateX(-50%);
   background-color: #ffffffee;

@@ -4,28 +4,30 @@ import CategoryIcon from "@mui/icons-material/Category";
 import CloseIcon from "@mui/icons-material/Close";
 import MenuIcon from "@mui/icons-material/Menu";
 import { useCallback, useState } from "react";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   CurrentMapAtom,
-  CurrentMyRoomPlayerIdAtom,
+  CurrentMyRoomPlayerAtom,
   MeAtom,
+  PlayersAtom,
   TMaps,
 } from "../../../store/PlayersAtom";
 
 export const SideBar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [currentMap, setCurrentMap] = useRecoilState(CurrentMapAtom);
-  const [, setCurrentMyRoomPlayerId] = useRecoilState(
-    CurrentMyRoomPlayerIdAtom
-  );
+  const [, setCurrentMyRoomPlayer] = useRecoilState(CurrentMyRoomPlayerAtom);
+  const players = useRecoilValue(PlayersAtom);
   const [me] = useRecoilState(MeAtom);
   const handleClick = useCallback(
     (mapType: TMaps) => () => {
       setCurrentMap(mapType);
-      setCurrentMyRoomPlayerId(me?.id);
+      setCurrentMyRoomPlayer(
+        mapType === "MY_ROOM" ? players.find((p) => p.id === me?.id) : undefined
+      );
       setIsDropdownOpen(false);
     },
-    [me.id, setCurrentMap, setCurrentMyRoomPlayerId]
+    [me?.id, players, setCurrentMap, setCurrentMyRoomPlayer]
   );
   return (
     <>

@@ -1,26 +1,20 @@
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import styled from "styled-components";
 import {
   CurrentMapAtom,
-  CurrentMyRoomPlayerIdAtom,
-  CurrentSelectedOtherPlayerSelector,
+  CurrentMyRoomPlayerAtom,
 } from "../../../store/PlayersAtom";
 import { useState } from "react";
 
 export const Popup = () => {
-  const currentSelectedOtherPlayer = useRecoilValue(
-    CurrentSelectedOtherPlayerSelector
-  );
-  const [, setCurrentMyRoomPlayerId] = useRecoilState(
-    CurrentMyRoomPlayerIdAtom
+  const [currentMyRoomPlayer, setCurrentMyRoomPlayer] = useRecoilState(
+    CurrentMyRoomPlayerAtom
   );
   const setCurrentMap = useSetRecoilState(CurrentMapAtom);
-  const [visible, setVisible] = useState<boolean>(
-    Boolean(currentSelectedOtherPlayer)
-  );
+  const [visible, setVisible] = useState<boolean>(Boolean(currentMyRoomPlayer));
   return (
     <PopupWrapper className={visible ? "visible" : "invisible"}>
-      <PopupTitle>{`${currentSelectedOtherPlayer?.nickname}[${currentSelectedOtherPlayer?.jobPosition}]의 방으로 이동할까요?`}</PopupTitle>
+      <PopupTitle>{`${currentMyRoomPlayer?.nickname}[${currentMyRoomPlayer?.jobPosition}]의 방으로 이동할까요?`}</PopupTitle>
       <PopupButtonContainer>
         <PopupButton
           className="yes"
@@ -34,7 +28,7 @@ export const Popup = () => {
         <PopupButton
           className="no"
           onClick={() => {
-            setCurrentMyRoomPlayerId(undefined);
+            setCurrentMyRoomPlayer(undefined);
             setVisible(false);
           }}
         >

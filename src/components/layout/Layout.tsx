@@ -6,8 +6,9 @@ import { Footer } from "./gameInterfaces/Footer";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   CurrentMapAtom,
-  CurrentSelectedOtherPlayerSelector,
+  CurrentMyRoomPlayerAtom,
   IsLoadCompletedAtom,
+  MeAtom,
 } from "../../store/PlayersAtom";
 import { Notice } from "./gameInterfaces/Notice";
 import { Minimap } from "./gameInterfaces/Minimap";
@@ -17,9 +18,8 @@ import { Popup } from "./gameInterfaces/Popup";
 export const Layout = ({ children }: { children: ReactNode }) => {
   const [isLoadCompleted] = useRecoilState(IsLoadCompletedAtom);
   const currentMap = useRecoilValue(CurrentMapAtom);
-  const currentSelectedOtherPlayer = useRecoilValue(
-    CurrentSelectedOtherPlayerSelector
-  );
+  const [currentMyRoomPlayer] = useRecoilState(CurrentMyRoomPlayerAtom);
+  const me = useRecoilValue(MeAtom);
   return (
     <Wrapper>
       {/* <audio src="/bgm.mp3" autoPlay loop /> */}
@@ -32,7 +32,9 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           <SideBar />
           <ChatArea />
           <Minimap />
-          {currentSelectedOtherPlayer && <Popup />}
+          {currentMyRoomPlayer && me?.id !== currentMyRoomPlayer?.id && (
+            <Popup />
+          )}
         </>
       )}
       <Footer />

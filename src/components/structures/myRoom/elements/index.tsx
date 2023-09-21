@@ -13,6 +13,15 @@ export const MyRoomElements = ({ object }: { object: IMyRoomObject }) => {
       <MyRoomChair position={object.position} rotation={object.rotation} />
     );
   }
+  if (object.name === "my-room-floor") {
+    return null;
+  }
+  if (object.name === "my-room-left-wall") {
+    return null;
+  }
+  if (object.name === "my-room-right-wall") {
+    return null;
+  }
   if (object.name === "my-room-desk") {
     return (
       <MyRoomStandingDesk

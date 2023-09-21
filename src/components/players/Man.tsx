@@ -10,29 +10,29 @@ import { useFrame, useGraph, useThree } from "@react-three/fiber";
 import { GLTF, SkeletonUtils } from "three-stdlib";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
-  CurrentMyRoomPlayerIdAtom,
+  CurrentMyRoomPlayerAtom,
+  IPlayer,
   MeAtom,
   PlayerGroundStructuresFloorPlaneCornersSelector,
 } from "../../store/PlayersAtom";
 import { calculateMinimapPosition } from "../../utils";
 
 interface IMan {
-  playerId: string;
+  player: IPlayer;
   hairColor: string;
   shirtColor: string;
   pantsColor: string;
   position: THREE.Vector3;
 }
 export function Man({
-  playerId,
+  player,
   hairColor,
   shirtColor,
   pantsColor,
   position,
 }: IMan) {
-  const [, setCurrentMyRoomPlayerId] = useRecoilState(
-    CurrentMyRoomPlayerIdAtom
-  );
+  const playerId = player.id;
+  const [, setCurrentMyRoomPlayer] = useRecoilState(CurrentMyRoomPlayerAtom);
   const playerGroundStructuresFloorPlaneCorners = useRecoilValue(
     PlayerGroundStructuresFloorPlaneCornersSelector
   );
@@ -140,7 +140,7 @@ export function Man({
         onClick={(e) => {
           e.stopPropagation();
           if (me?.id !== playerId) {
-            setCurrentMyRoomPlayerId(playerId);
+            setCurrentMyRoomPlayer(player);
           }
         }}
       >

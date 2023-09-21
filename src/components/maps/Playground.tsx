@@ -115,7 +115,7 @@ export const Playground = () => {
                       </Billboard>
                       <Man
                         key={player.id}
-                        playerId={player.id}
+                        player={player}
                         position={
                           new Vector3(
                             player.position[0],

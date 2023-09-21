@@ -3,7 +3,7 @@ import {
   CurrentPlacingMyRoomSkillAtom,
   PlacedMyRoomSkillsAtom,
 } from "../../../store/PlayersAtom";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 import { calculateThreePosition, getMyRoomObjects } from "../../../utils";
@@ -20,11 +20,14 @@ export const MyRoomPlaceMode = ({
 }: {
   currentPlacingMyRoomSkill: string;
 }) => {
+  const [isFinished, setIsFinished] = useState(false);
   const { scene, gl, camera } = useThree();
   const [, setCurrentPlacingMyRoomSkill] = useRecoilState(
     CurrentPlacingMyRoomSkillAtom
   );
-  const [, setPlacedMyRoomSkills] = useRecoilState(PlacedMyRoomSkillsAtom);
+  const [placedMyRoomSkills, setPlacedMyRoomSkills] = useRecoilState(
+    PlacedMyRoomSkillsAtom
+  );
   const texture = useTexture(`/images/${currentPlacingMyRoomSkill}.png`);
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
@@ -33,7 +36,6 @@ export const MyRoomPlaceMode = ({
   const ref = useRef<THREE.Mesh>(null);
   useEffect(() => {
     if (!ref.current) return;
-    if (!currentPlacingMyRoomSkill) return;
     const handlePointerMove = (e: PointerEvent) => {
       const { clientX, clientY } = e;
       const { x, y } = calculateThreePosition({ clientX, clientY });
@@ -132,7 +134,6 @@ export const MyRoomPlaceMode = ({
       }
     };
     const handlePointerUp = () => {
-      if (!ref.current) return;
       setPlacedMyRoomSkills((prev) => [
         ...prev.filter((item) => item.name !== currentPlacingMyRoomSkill),
         {
@@ -144,11 +145,10 @@ export const MyRoomPlaceMode = ({
           ],
         },
       ]);
-      setCurrentPlacingMyRoomSkill(undefined);
-      // socket.emit 하기 배치했음을 알려야함
 
-      const myRoomObjects = getMyRoomObjects(scene);
-      socket.emit("myRoomChange", { Objects: myRoomObjects });
+      setIsFinished(true);
+
+      // socket.emit 하기 배치했음을 알려야함
     };
 
     const handlePointerDown = () => {};
@@ -172,6 +172,24 @@ export const MyRoomPlaceMode = ({
     setPlacedMyRoomSkills,
     texture,
   ]);
+
+  useEffect(() => {
+    if (isFinished) {
+      const myRoomObjects = getMyRoomObjects(scene);
+      console.log("myRoomObjects", myRoomObjects);
+      setCurrentPlacingMyRoomSkill(undefined);
+      setPlacedMyRoomSkills([]);
+      socket.emit("myRoomChange", { objects: myRoomObjects });
+    }
+  }, [
+    currentPlacingMyRoomSkill,
+    isFinished,
+    placedMyRoomSkills,
+    scene,
+    setCurrentPlacingMyRoomSkill,
+    setPlacedMyRoomSkills,
+  ]);
+  // 이부분 수정 필요, 소켓을 쏘기전에 메시가 나와있어야함
   if (!currentPlacingMyRoomSkill) return null;
   return (
     <instancedMesh>

@@ -1,7 +1,8 @@
 import { useEffect } from "react";
-import { useSetRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import {
   ChatsAtom,
+  CurrentMyRoomPlayerAtom,
   EnterNoticeAtom,
   ExitNoticeAtom,
   IChat,
@@ -14,10 +15,13 @@ import { socket } from "../../sockets/clientSocket";
 
 export const ClientSocketControls = () => {
   const setPlayers = useSetRecoilState(PlayersAtom);
-  const setMe = useSetRecoilState(MeAtom);
+  const [, setMe] = useRecoilState(MeAtom);
   const setChats = useSetRecoilState(ChatsAtom);
   const setEnterNotice = useSetRecoilState(EnterNoticeAtom);
   const setExitNotice = useSetRecoilState(ExitNoticeAtom);
+  const [currentMyRoomPlayer, setCurrentMyRoomPlayer] = useRecoilState(
+    CurrentMyRoomPlayerAtom
+  );
 
   useEffect(() => {
     const handleConnect = () => {
@@ -34,15 +38,20 @@ export const ClientSocketControls = () => {
 
     const handleEnter = (value: INotice) => {
       setEnterNotice(value);
-      console.log("hello");
     };
+
     const handleExit = (value: INotice) => {
       setExitNotice(value);
-      console.log("hello");
     };
 
     const handlePlayers = (value: IPlayer[]) => {
       setPlayers(value);
+      const currentMyRoomUpdated = value.find(
+        (p) => p.id === currentMyRoomPlayer?.id
+      );
+      if (currentMyRoomUpdated) {
+        setCurrentMyRoomPlayer(currentMyRoomUpdated);
+      }
     };
 
     const handleNewText = ({
@@ -72,6 +81,14 @@ export const ClientSocketControls = () => {
       socket.off("players", handlePlayers);
       socket.off("newText", handleNewText);
     };
-  }, [setChats, setEnterNotice, setExitNotice, setMe, setPlayers]);
+  }, [
+    currentMyRoomPlayer?.id,
+    setChats,
+    setCurrentMyRoomPlayer,
+    setEnterNotice,
+    setExitNotice,
+    setMe,
+    setPlayers,
+  ]);
   return null;
 };

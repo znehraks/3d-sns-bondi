@@ -13,7 +13,6 @@ export const MyRoomChair = (props: IMyRoomObjectProps) => {
       mesh.receiveShadow = true;
     });
   }, [position, scene]);
-  console.log("scene", scene);
   return (
     <>
       <primitive
