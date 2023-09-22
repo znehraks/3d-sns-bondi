@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import { styled } from "styled-components";
-import { SideBar } from "./gameInterfaces/SideBar";
-import { ChatArea } from "./gameInterfaces/ChatArea";
-import { Footer } from "./gameInterfaces/Footer";
+import { SideBar } from "../gameInterfaces/common/SideBar";
+import { ChatArea } from "../gameInterfaces/common/ChatArea";
+import { Footer } from "../gameInterfaces/common/Footer";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   CurrentMapAtom,
@@ -10,13 +10,14 @@ import {
   IsLoadCompletedAtom,
   MeAtom,
 } from "../../store/PlayersAtom";
-import { Notice } from "./gameInterfaces/Notice";
-import { Minimap } from "./gameInterfaces/Minimap";
-import { MyRoomToolBar } from "./gameInterfaces/MyRoomToolBar";
-import { Popup } from "./gameInterfaces/Popup";
-import { Memo } from "./gameInterfaces/Memo";
-import { Crosshair } from "./gameInterfaces/Crosshair";
-import { ObjectInteraction } from "./gameInterfaces/ObjectInteraction";
+import { Notice } from "../gameInterfaces/common/Notice";
+import { Minimap } from "../gameInterfaces/ground/Minimap";
+import { MyRoomToolBar } from "../gameInterfaces/myRoom/MyRoomToolBar";
+import { Popup } from "../gameInterfaces/ground/Popup";
+import { Memo } from "../gameInterfaces/myRoom/Memo";
+import { Crosshair } from "../gameInterfaces/miniGame/Crosshair";
+import { ObjectInteraction } from "../gameInterfaces/ground/ObjectInteraction";
+import { MiniGameHeader } from "../gameInterfaces/miniGame/MiniGameHeader";
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   const [isLoadCompleted] = useRecoilState(IsLoadCompletedAtom);
@@ -31,10 +32,11 @@ export const Layout = ({ children }: { children: ReactNode }) => {
       {isLoadCompleted && (
         <>
           {currentMap === "MY_ROOM" && <MyRoomToolBar />}
+          {currentMap === "MINI_GAME" && <MiniGameHeader />}
           <ObjectInteraction />
           <Notice />
           <SideBar />
-          <ChatArea />
+          {currentMap !== "MINI_GAME" && <ChatArea />}
           <Minimap />
           {currentMap !== "MY_ROOM" &&
             currentMyRoomPlayer &&

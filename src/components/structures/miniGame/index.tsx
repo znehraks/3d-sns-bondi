@@ -5,6 +5,7 @@ import { useEffect, useRef } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { PointerLockControls as PL } from "three/examples/jsm/controls/PointerLockControls.js";
 import { Vector3 } from "three";
+import { TargetMesh } from "./elements/TargetMesh";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const MiniGame = () => {
@@ -44,6 +45,13 @@ export const MiniGame = () => {
       )}
       <Plane args={[10, 10]} position={[0, 0, -10]} />
       <GunHand />
+      <instancedMesh>
+        {Array(10)
+          .fill(null)
+          .map(() => {
+            return <TargetMesh />;
+          })}
+      </instancedMesh>
     </>
   );
 };

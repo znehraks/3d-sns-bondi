@@ -19,7 +19,8 @@ export const SideBar = () => {
   const [, setCurrentMyRoomPlayer] = useRecoilState(CurrentMyRoomPlayerAtom);
   const [me] = useRecoilState(MeAtom);
   const handleClick = useCallback(
-    (mapType: TMaps) => () => {
+    (mapType: TMaps) => (e: React.MouseEvent<HTMLDivElement>) => {
+      e.stopPropagation();
       setCurrentMyRoomPlayer(mapType === "MY_ROOM" ? me : undefined);
       setCurrentMap(mapType);
       setIsDropdownOpen(false);
@@ -41,7 +42,8 @@ export const SideBar = () => {
         </div>
       </SideBarWrapper>
       <DropdownController
-        onClick={() => {
+        onClick={(e: React.MouseEvent<HTMLDivElement>) => {
+          e.stopPropagation();
           setIsDropdownOpen((prev) => !prev);
         }}
       >
