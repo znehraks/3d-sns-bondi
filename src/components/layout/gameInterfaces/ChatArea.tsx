@@ -86,7 +86,8 @@ const ChatAreaWrapper = styled.div`
   position: fixed;
   right: 0;
   top: 0;
-  width: 400px;
+  width: 30vw;
+  max-width: 400px;
   height: 55%;
   display: flex;
   flex-direction: column;

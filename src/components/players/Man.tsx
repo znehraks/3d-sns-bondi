@@ -42,10 +42,11 @@ export function Man({
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   );
+  const point = document.getElementById(`player-point-${playerId}`);
+  const objectInteractionDiv = document.getElementById("object-interaction");
 
   const group = useRef<THREE.Group>(null);
   const threeScene = useThree((three) => three.scene);
-  const point = document.getElementById(`player-point-${playerId}`);
   const nicknameBillboard = threeScene.getObjectByName(
     `nickname-billboard-${playerId}`
   );
@@ -73,6 +74,7 @@ export function Man({
   }, [actions, animation]);
   // const clock = new THREE.Clock();
 
+  // const tempVec3 = new THREE.Vector3();
   useFrame(({ camera }) => {
     if (!group.current) return;
     if (group.current.position.distanceTo(position) > 0.1) {
@@ -133,18 +135,32 @@ export function Man({
       );
       camera.lookAt(group.current.position);
 
-      playerGroundStructuresFloorPlaneCorners.filter((structure) => {
-        if (group.current) {
-          if (
-            group.current.position.x < structure.corners[0].x &&
-            group.current.position.x > structure.corners[2].x &&
-            group.current.position.z < structure.corners[0].z &&
-            group.current.position.z > structure.corners[2].z
-          ) {
-            console.info("에 들어옴");
-          }
+      const currentCloseStructure =
+        playerGroundStructuresFloorPlaneCorners.find((structure) => {
+          return (
+            group.current!.position.x < structure.corners[0].x &&
+            group.current!.position.x > structure.corners[2].x &&
+            group.current!.position.z < structure.corners[0].z &&
+            group.current!.position.z > structure.corners[2].z
+          );
+        });
+      if (currentCloseStructure) {
+        if (objectInteractionDiv) {
+          objectInteractionDiv.innerText = currentCloseStructure.name;
+          objectInteractionDiv.style.display = "block";
+          camera.lookAt(currentCloseStructure.position);
+          camera.position.set(
+            group.current.position.x + 6,
+            group.current.position.y + 6,
+            group.current.position.z + 6
+          );
         }
-      });
+      } else {
+        if (objectInteractionDiv) {
+          objectInteractionDiv.innerText = "";
+          objectInteractionDiv.style.display = "none";
+        }
+      }
     }
   });
   return (

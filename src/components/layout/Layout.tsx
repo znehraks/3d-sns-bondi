@@ -16,6 +16,7 @@ import { MyRoomToolBar } from "./gameInterfaces/MyRoomToolBar";
 import { Popup } from "./gameInterfaces/Popup";
 import { Memo } from "./gameInterfaces/Memo";
 import { Crosshair } from "./gameInterfaces/Crosshair";
+import { ObjectInteraction } from "./gameInterfaces/ObjectInteraction";
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   const [isLoadCompleted] = useRecoilState(IsLoadCompletedAtom);
@@ -30,6 +31,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
       {isLoadCompleted && (
         <>
           {currentMap === "MY_ROOM" && <MyRoomToolBar />}
+          <ObjectInteraction />
           <Notice />
           <SideBar />
           <ChatArea />
