@@ -15,6 +15,7 @@ import { Minimap } from "./gameInterfaces/Minimap";
 import { MyRoomToolBar } from "./gameInterfaces/MyRoomToolBar";
 import { Popup } from "./gameInterfaces/Popup";
 import { Memo } from "./gameInterfaces/Memo";
+import { Crosshair } from "./gameInterfaces/Crosshair";
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   const [isLoadCompleted] = useRecoilState(IsLoadCompletedAtom);
@@ -33,10 +34,11 @@ export const Layout = ({ children }: { children: ReactNode }) => {
           <SideBar />
           <ChatArea />
           <Minimap />
-          {currentMyRoomPlayer && me?.id !== currentMyRoomPlayer?.id && (
-            <Popup />
-          )}
+          {currentMap !== "MY_ROOM" &&
+            currentMyRoomPlayer &&
+            me?.id !== currentMyRoomPlayer?.id && <Popup />}
           <Memo />
+          <Crosshair />
         </>
       )}
       <Footer />

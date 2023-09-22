@@ -15,7 +15,7 @@ import { socket } from "../../sockets/clientSocket";
 
 export const ClientSocketControls = () => {
   const setPlayers = useSetRecoilState(PlayersAtom);
-  const [, setMe] = useRecoilState(MeAtom);
+  const [me, setMe] = useRecoilState(MeAtom);
   const setChats = useSetRecoilState(ChatsAtom);
   const setEnterNotice = useSetRecoilState(EnterNoticeAtom);
   const setExitNotice = useSetRecoilState(ExitNoticeAtom);
@@ -44,10 +44,16 @@ export const ClientSocketControls = () => {
     };
 
     const handlePlayers = (value: IPlayer[]) => {
+      console.log("value", value);
       setPlayers(value);
+      const newMe = value.find((p) => p.id === me.id);
+      if (newMe) {
+        setMe(newMe);
+      }
       const currentMyRoomUpdated = value.find(
         (p) => p.id === currentMyRoomPlayer?.id
       );
+      console.log("currentMyRoomUpdated", currentMyRoomUpdated);
       if (currentMyRoomUpdated) {
         setCurrentMyRoomPlayer(currentMyRoomUpdated);
       }
@@ -84,6 +90,7 @@ export const ClientSocketControls = () => {
     };
   }, [
     currentMyRoomPlayer?.id,
+    me?.id,
     setChats,
     setCurrentMyRoomPlayer,
     setEnterNotice,

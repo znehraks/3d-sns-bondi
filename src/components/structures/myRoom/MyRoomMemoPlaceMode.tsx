@@ -184,8 +184,7 @@ export const MyRoomMemoPlaceMode = () => {
     setCurrentPlacingMyRoomMemo,
     setPlacedMyRoomMemos,
   ]);
-  // 이부분 수정 필요, 소켓을 쏘기전에 메시가 나와있어야함
-  if (!currentPlacingMyRoomMemo) return null;
+
   return (
     <instancedMesh>
       <mesh name="placing" ref={ref}>

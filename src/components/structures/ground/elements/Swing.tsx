@@ -45,6 +45,12 @@ export const Swing = () => {
   }, [position, scene, setPlayGroundStructuresBoundingBox]);
 
   return (
-    <primitive name={name} scale={scale} position={position} object={scene} />
+    <primitive
+      visible
+      name={name}
+      scale={scale}
+      position={position}
+      object={scene}
+    />
   );
 };

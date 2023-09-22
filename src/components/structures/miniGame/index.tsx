@@ -32,6 +32,16 @@ export const MiniGame = () => {
         minPolarAngle={Math.PI / 2.5}
         ref={ref as any}
       />
+      {gunHand && (
+        <directionalLight
+          intensity={2}
+          position={[
+            gunHand.position.x,
+            gunHand.position.y + 1,
+            gunHand.position.z,
+          ]}
+        />
+      )}
       <Plane args={[10, 10]} position={[0, 0, -10]} />
       <GunHand />
     </>

@@ -30,6 +30,9 @@ export const Playground = () => {
   const [players] = useRecoilState(PlayersAtom);
 
   const camera = useThree((three) => three.camera);
+
+  const scene = useThree((three) => three.scene);
+  console.log("scene", scene);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controls = useRef<any>(null);
 
@@ -56,6 +59,7 @@ export const Playground = () => {
     console.log(4);
   }, [camera, camera.position, currentMap]);
 
+  console.log("players", players);
   console.log("controls", controls);
   console.log("camera", camera);
 
@@ -107,7 +111,7 @@ export const Playground = () => {
           {characterSelectFinished && (
             <>
               <GroundElements />
-              {playerGroundStructuresFloorPlaneCorners.map((corner) => {
+              {playerGroundStructuresFloorPlaneCorners?.map((corner) => {
                 return (
                   <Line
                     key={corner.name}

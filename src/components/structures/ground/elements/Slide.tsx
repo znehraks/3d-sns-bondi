@@ -39,5 +39,5 @@ export const Slide = () => {
     }
   }, [position, scene, setPlayGroundStructuresBoundingBox]);
 
-  return <primitive name={name} position={position} object={scene} />;
+  return <primitive visible name={name} position={position} object={scene} />;
 };
