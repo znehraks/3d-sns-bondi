@@ -1,5 +1,5 @@
 import { useRecoilValue } from "recoil";
-import { MyRoomPlaceMode } from "./MyRoomSkillPlaceMode";
+import { MyRoomPlaceMode } from "./placeMode/MyRoomSkillPlaceMode";
 import { MyRoomFloor } from "./elements/MyRoomFloor";
 import { MyRoomLeftWall } from "./elements/MyRoomLeftWall";
 import { MyRoomRightWall } from "./elements/MyRoomRightWall";
@@ -13,7 +13,7 @@ import {
 
 import { MyRoomElements } from "./elements";
 import { MyRoomPlacedSkillBox } from "./elements/MyRoomPlacedSkillBox";
-import { MyRoomMemoPlaceMode } from "./MyRoomMemoPlaceMode";
+import { MyRoomMemoPlaceMode } from "./placeMode/MyRoomMemoPlaceMode";
 import { MyRoomPlacedMemo } from "./elements/MyRoomPlacedMemo";
 
 export const MyRoom = () => {

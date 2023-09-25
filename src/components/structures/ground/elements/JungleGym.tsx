@@ -4,7 +4,7 @@ import { useRecoilState } from "recoil";
 import { Mesh, Vector3 } from "three";
 import { PlayGroundStructuresBoundingBoxAtom } from "../../../../store/PlayersAtom";
 import _ from "lodash";
-const name = "jungleGym";
+const name = "ground-jungleGym";
 const scale = 0.8;
 export const JungleGym = () => {
   const { scene } = useGLTF("/models/Jungle gym.glb");

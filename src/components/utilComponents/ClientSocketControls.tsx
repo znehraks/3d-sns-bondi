@@ -46,12 +46,12 @@ export const ClientSocketControls = () => {
     const handlePlayers = (value: IPlayer[]) => {
       console.log("value", value);
       setPlayers(value);
-      const newMe = value.find((p) => p.id === me.id);
+      const newMe = value.find((p) => p && me && p?.id === me?.id);
       if (newMe) {
         setMe(newMe);
       }
       const currentMyRoomUpdated = value.find(
-        (p) => p.id === currentMyRoomPlayer?.id
+        (p) => p && currentMyRoomPlayer && p?.id === currentMyRoomPlayer?.id
       );
       console.log("currentMyRoomUpdated", currentMyRoomUpdated);
       if (currentMyRoomUpdated) {
@@ -89,7 +89,9 @@ export const ClientSocketControls = () => {
       socket.off("newText", handleNewText);
     };
   }, [
+    currentMyRoomPlayer,
     currentMyRoomPlayer?.id,
+    me,
     me?.id,
     setChats,
     setCurrentMyRoomPlayer,

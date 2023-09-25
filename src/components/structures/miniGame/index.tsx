@@ -1,17 +1,23 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Plane, PointerLockControls } from "@react-three/drei";
+import { PointerLockControls } from "@react-three/drei";
 import { GunHand } from "./elements/GunHand";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { PointerLockControls as PL } from "three/examples/jsm/controls/PointerLockControls.js";
-import { Vector3 } from "three";
+import { Mesh, Quaternion, Vector3 } from "three";
 import { TargetMesh } from "./elements/TargetMesh";
+import { Bullet } from "./elements/Bullet";
+import { PublicApi } from "@react-three/cannon";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
+// 물리엔진으로 실제 총알을 날려서 처리
+// 총알이 날아간 후, 기존 메시는 없어지고, 새 총알 메시가 렌더 되어야 함
 export const MiniGame = () => {
   const three = useThree();
   const ref = useRef<PL>(null);
   const [isShoot, setIsShoot] = useState(false);
+  const [isShooting, setIsShooting] = useState(false);
+
   const randomPositions = useMemo(
     () =>
       Array(10)
@@ -40,7 +46,18 @@ export const MiniGame = () => {
   );
 
   const gunHand = three.scene.getObjectByName("gunHand");
-  console.log(gunHand);
+
+  const shoot = useCallback(
+    (mesh: Mesh, api: PublicApi) => {
+      const cameraDirection = new Vector3();
+      three.camera.getWorldDirection(cameraDirection).multiplyScalar(100);
+      api.applyImpulse(
+        [cameraDirection.x, cameraDirection.y, cameraDirection.z],
+        [0, 0, 0]
+      );
+    },
+    [three.camera]
+  );
 
   useEffect(() => {
     if (!isShoot) return;
@@ -53,17 +70,36 @@ export const MiniGame = () => {
   }, [isShoot]);
 
   useEffect(() => {
-    const handlePointerdown = () => {
+    let timeout: number;
+    const handlePointerDown = () => {
       if (!gunHand) return;
-      console.log("sss");
+      const cameraDirection = new Vector3();
+      three.camera.getWorldDirection(cameraDirection).multiplyScalar(10);
       setIsShoot(true);
+      setIsShooting(true);
+      timeout = setTimeout(() => {
+        setIsShooting(false);
+      }, 1000) as unknown as number;
     };
-    window.addEventListener("pointerdown", handlePointerdown);
+    const handlePointerUp = () => {
+      if (!gunHand) return;
+    };
+    window.addEventListener("pointerdown", handlePointerDown);
+    window.addEventListener("pointerup", handlePointerUp);
     return () => {
-      window.removeEventListener("pointerdown", handlePointerdown);
+      clearTimeout(timeout);
+      window.removeEventListener("pointerdown", handlePointerDown);
+      window.removeEventListener("pointerup", handlePointerUp);
     };
-  }, [gunHand, three.controls, three.gl.domElement, three.scene]);
+  }, [gunHand, three.camera, three.controls, three.gl.domElement, three.scene]);
+
   const directionVector = new Vector3();
+
+  const cameraDirection = new Vector3();
+  const worldUpVector = new Vector3(0, 1, 0);
+  const perpendicularVector = new Vector3();
+  const quaterinion = new Quaternion();
+
   useFrame(() => {
     if (!gunHand) return;
     if (!ref.current) return;
@@ -77,11 +113,21 @@ export const MiniGame = () => {
       gunHand.position.set(gunPosition.x, gunPosition.y - 0.1, gunPosition.z);
       gunHand.lookAt(directionVector.clone().multiplyScalar(-10000));
     } else {
-      gunHand.rotation.x += 0.1;
-      console.log("directionVector", directionVector);
-      ref.current.camera.position.y += 0.01;
+      ref.current.camera.getWorldDirection(cameraDirection);
+
+      perpendicularVector
+        .crossVectors(worldUpVector, cameraDirection)
+        .multiplyScalar(-1)
+        .normalize();
+
+      quaterinion.setFromAxisAngle(perpendicularVector, 0.005);
+      ref.current.camera.quaternion.premultiply(quaterinion);
+      gunHand.quaternion.premultiply(
+        quaterinion.clone().setFromAxisAngle(perpendicularVector, 0.1)
+      );
     }
   });
+
   return (
     <>
       <PointerLockControls
@@ -99,13 +145,23 @@ export const MiniGame = () => {
           ]}
         />
       )}
-      <Plane args={[10, 10]} position={[0, 0, -10]} />
       <GunHand />
-      <instancedMesh>
+      {isShooting && gunHand && (
+        <Bullet
+          shoot={shoot}
+          position={[
+            gunHand.position.x,
+            gunHand.position.y,
+            gunHand.position.z,
+          ]}
+        />
+      )}
+      <TargetMesh position={randomPositions[0]} color={randomColors[0]} />;
+      {/* <instancedMesh>
         {randomPositions.map((position, i) => {
           return <TargetMesh position={position} color={randomColors[i]} />;
         })}
-      </instancedMesh>
+      </instancedMesh> */}
     </>
   );
 };

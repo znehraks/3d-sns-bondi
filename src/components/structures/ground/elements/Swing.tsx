@@ -5,7 +5,7 @@ import { useRecoilState } from "recoil";
 import _ from "lodash";
 import { Mesh, Vector3 } from "three";
 
-const name = "swing";
+const name = "ground-swing";
 const scale = 0.04;
 export const Swing = () => {
   const [, setPlayGroundStructuresBoundingBox] = useRecoilState(

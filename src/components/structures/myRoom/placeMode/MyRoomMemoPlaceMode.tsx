@@ -3,13 +3,13 @@ import {
   CurrentMyRoomPlayerAtom,
   CurrentPlacingMyRoomMemoAtom,
   PlacedMyRoomMemosAtom,
-} from "../../../store/PlayersAtom";
+} from "../../../../store/PlayersAtom";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
-import { calculateThreePosition, getMyRoomObjects } from "../../../utils";
-import { myRoomMemoBoxSize, myRoomSize } from "../../../data";
-import { socket } from "../../../sockets/clientSocket";
+import { calculateThreePosition, getMyRoomObjects } from "../../../../utils";
+import { myRoomMemoBoxSize, myRoomSize } from "../../../../data";
+import { socket } from "../../../../sockets/clientSocket";
 
 const leftWallVector = new THREE.Vector3(1, 0, 0);
 const rightWallVector = new THREE.Vector3(0, 0, 1);

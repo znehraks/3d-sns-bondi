@@ -5,7 +5,7 @@ import { useRecoilState } from "recoil";
 import _ from "lodash";
 import { Mesh, Vector3 } from "three";
 
-const name = "slide";
+const name = "ground-slide";
 export const Slide = () => {
   const [, setPlayGroundStructuresBoundingBox] = useRecoilState(
     PlayGroundStructuresBoundingBoxAtom

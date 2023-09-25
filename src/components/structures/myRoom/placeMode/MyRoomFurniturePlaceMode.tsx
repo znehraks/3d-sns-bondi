@@ -2,20 +2,20 @@ import { useRecoilState } from "recoil";
 import {
   CurrentPlacingMyRoomSkillAtom,
   PlacedMyRoomSkillsAtom,
-} from "../../../store/PlayersAtom";
+} from "../../../../store/PlayersAtom";
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
-import { calculateThreePosition, getMyRoomObjects } from "../../../utils";
+import { calculateThreePosition, getMyRoomObjects } from "../../../../utils";
 import { useTexture } from "@react-three/drei";
-import { myRoomSize, myRoomSkillBoxSize } from "../../../data";
-import { socket } from "../../../sockets/clientSocket";
+import { myRoomSize, myRoomSkillBoxSize } from "../../../../data";
+import { socket } from "../../../../sockets/clientSocket";
 
 const leftWallVector = new THREE.Vector3(1, 0, 0);
 const rightWallVector = new THREE.Vector3(0, 0, 1);
 const floorVector = new THREE.Vector3(0, 1, 0);
 
-export const MyRoomPlaceMode = ({
+export const MyRoomFurniturePlaceMode = ({
   currentPlacingMyRoomSkill,
 }: {
   currentPlacingMyRoomSkill: string;

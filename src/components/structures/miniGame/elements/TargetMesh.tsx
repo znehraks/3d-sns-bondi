@@ -1,5 +1,6 @@
+import { useBox } from "@react-three/cannon";
 import { Box } from "@react-three/drei";
-import { Vector3 } from "three";
+import { Mesh, Vector3 } from "three";
 
 export const TargetMesh = ({
   position,
@@ -8,12 +9,16 @@ export const TargetMesh = ({
   position: Vector3;
   color: number;
 }) => {
-  console.log(
-    "Math.floor(Math.random() * 16777215).toString(16)",
-    Math.floor(Math.random() * 16777215).toString(16)
-  );
+  // 물리엔진 넣고, 충돌시에 점수가 오르도록 이벤트 함수 구현하면 됨
+  const [ref] = useBox<Mesh>(() => ({
+    mass: 1,
+    position: [position.x, position.y, position.z],
+    onCollide: () => {
+      console.log("hi");
+    },
+  }));
   return (
-    <Box args={[0.2, 0.2, 0.2]} position={position}>
+    <Box ref={ref} args={[0.2, 0.2, 0.2]} position={position}>
       <meshStandardMaterial color={color} />
     </Box>
   );
