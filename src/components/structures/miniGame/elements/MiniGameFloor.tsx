@@ -13,7 +13,7 @@ export const MiniGameFloor = () => {
         socket.emit("move", [e.point.x, 0, e.point.z]);
       }}
     >
-      <planeGeometry args={[100, 100]} />
+      <planeGeometry args={[50, 50]} />
       <meshStandardMaterial color="eeeeee" />
     </mesh>
   );
