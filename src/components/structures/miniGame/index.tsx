@@ -4,10 +4,11 @@ import { GunHand } from "./elements/GunHand";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useFrame, useThree } from "@react-three/fiber";
 import { PointerLockControls as PL } from "three/examples/jsm/controls/PointerLockControls.js";
-import { Mesh, Quaternion, Vector3 } from "three";
+import { Quaternion, Vector3 } from "three";
 import { TargetMesh } from "./elements/TargetMesh";
 import { Bullet } from "./elements/Bullet";
 import { PublicApi } from "@react-three/cannon";
+import { MiniGameFloor } from "./elements/MiniGameFloor";
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 // 물리엔진으로 실제 총알을 날려서 처리
@@ -17,6 +18,11 @@ export const MiniGame = () => {
   const ref = useRef<PL>(null);
   const [isShoot, setIsShoot] = useState(false);
   const [isShooting, setIsShooting] = useState(false);
+  const [bulletCount, setBulletCount] = useState(100);
+  const [isHit, setIsHit] = useState(false);
+
+  console.log("isHit", isHit);
+  console.log("bulletCount", bulletCount);
 
   const randomPositions = useMemo(
     () =>
@@ -25,12 +31,12 @@ export const MiniGame = () => {
         .map(
           () =>
             new Vector3(
-              (Math.random() - 0.5) * 10,
-              (Math.random() - 0.5) * 10,
+              (Math.random() - 0.5) * 3,
+              (Math.random() - 0.5) * 3,
               -10
             )
         ),
-    []
+    [isHit]
   );
 
   const randomColors = useMemo(
@@ -42,19 +48,19 @@ export const MiniGame = () => {
             Number(`0x${Math.floor(Math.random() * 16777215).toString(16)}`),
           -10
         ),
-    []
+    [isHit]
   );
-
   const gunHand = three.scene.getObjectByName("gunHand");
 
   const shoot = useCallback(
-    (mesh: Mesh, api: PublicApi) => {
+    (api: PublicApi) => {
       const cameraDirection = new Vector3();
       three.camera.getWorldDirection(cameraDirection).multiplyScalar(100);
-      api.applyImpulse(
+      api.applyForce(
         [cameraDirection.x, cameraDirection.y, cameraDirection.z],
         [0, 0, 0]
       );
+      setBulletCount((prev) => prev - 1);
     },
     [three.camera]
   );
@@ -79,7 +85,7 @@ export const MiniGame = () => {
       setIsShooting(true);
       timeout = setTimeout(() => {
         setIsShooting(false);
-      }, 1000) as unknown as number;
+      }, 3000) as unknown as number;
     };
     const handlePointerUp = () => {
       if (!gunHand) return;
@@ -92,6 +98,25 @@ export const MiniGame = () => {
       window.removeEventListener("pointerup", handlePointerUp);
     };
   }, [gunHand, three.camera, three.controls, three.gl.domElement, three.scene]);
+
+  useEffect(() => {
+    let timeout: number;
+    if (isHit) {
+      timeout = setTimeout(() => {
+        setIsHit(false);
+      }, 1000) as unknown as number;
+    }
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [isHit]);
+
+  useEffect(() => {
+    if (!ref.current) return;
+    ref.current.addEventListener("keydown", () => {
+      console.log("hi");
+    });
+  }, []);
 
   const directionVector = new Vector3();
 
@@ -151,12 +176,19 @@ export const MiniGame = () => {
           shoot={shoot}
           position={[
             gunHand.position.x,
-            gunHand.position.y,
+            gunHand.position.y + 0.1,
             gunHand.position.z,
           ]}
         />
       )}
-      <TargetMesh position={randomPositions[0]} color={randomColors[0]} />;
+      <MiniGameFloor />
+      {!isHit && bulletCount > 0 && (
+        <TargetMesh
+          position={randomPositions[0]}
+          color={randomColors[0]}
+          setIsHit={setIsHit}
+        />
+      )}
       {/* <instancedMesh>
         {randomPositions.map((position, i) => {
           return <TargetMesh position={position} color={randomColors[i]} />;

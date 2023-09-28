@@ -38,3 +38,11 @@ export default App;
 // Chair by Poly by Google [CC-BY] via Poly Pizza
 
 // Bed by CMHT Oculus [CC-BY] via Poly Pizza
+
+// Little Man by Don Carson [CC-BY] via Poly Pizza
+
+// Cube Woman Character byQuaternius
+
+// Cube Guy Character byQuaternius
+
+// Dodge Charger by David Sirera [CC-BY] via Poly Pizza

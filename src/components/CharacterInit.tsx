@@ -9,6 +9,8 @@ import {
   ShirtColorAtom,
 } from "../store/PlayersAtom";
 import { Vector3 } from "three";
+// import { CubeMan } from "./players/CubeMan";
+// import { CubeWoman } from "./players/CubeWoman";
 
 export const CharacterInit = () => {
   const camera = useThree((three) => three.camera);
@@ -31,6 +33,7 @@ export const CharacterInit = () => {
         shirtColor={shirtColor}
         pantsColor={pantsColor}
       />
+      {/* <CubeMan modelingType="man" /> */}
       <OrbitControls
         ref={controls}
         minDistance={1}

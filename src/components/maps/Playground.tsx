@@ -20,6 +20,7 @@ import _ from "lodash";
 import { MiniGame } from "../structures/miniGame";
 
 export const Playground = () => {
+  // const backgroundTexture = useTexture("./images/scene_map.jpeg");
   const [currentMap] = useRecoilState(CurrentMapAtom);
   const chats = useRecoilValue(ChatsAtom);
   const [characterSelectFinished] = useRecoilState(CharacterSelectFinishedAtom);
@@ -35,6 +36,11 @@ export const Playground = () => {
   console.log("scene", scene);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controls = useRef<any>(null);
+
+  // useEffect(() => {
+  //   backgroundTexture.mapping = EquirectangularReflectionMapping;
+  //   scene.background = backgroundTexture;
+  // }, [backgroundTexture, scene]);
 
   useEffect(() => {
     if (currentMap === "GROUND") {
@@ -52,7 +58,7 @@ export const Playground = () => {
     }
 
     if (currentMap === "MINI_GAME") {
-      camera.position.set(0, 0, 10);
+      camera.position.set(0, 1, 0);
       camera.lookAt(0, 0, -10);
       return;
     }
