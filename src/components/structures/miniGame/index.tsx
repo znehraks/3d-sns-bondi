@@ -17,8 +17,6 @@ export const MiniGame = () => {
   const three = useThree();
   const ref = useRef<PL>(null);
   const [isShoot, setIsShoot] = useState(false);
-  const [isHit, setIsHit] = useState(false);
-  const [isBulletRendered, setIsBulletRendered] = useState(false);
   const [bulletCount, setBulletCount] = useState(100);
 
   console.log("bulletCount", bulletCount);
@@ -81,7 +79,6 @@ export const MiniGame = () => {
       const cameraDirection = new Vector3();
       three.camera.getWorldDirection(cameraDirection).multiplyScalar(10);
       setIsShoot(true);
-      setIsBulletRendered(true);
     };
 
     const handlePointerUp = () => {
@@ -245,11 +242,10 @@ export const MiniGame = () => {
         />
       )}
       <GunHand />
-      {isBulletRendered && gunHand && (
+      {gunHand && (
         <Bullet
           key={Date.now()}
           shoot={shoot}
-          setIsBulletRendered={setIsBulletRendered}
           position={[
             gunHand.position.x,
             gunHand.position.y + 0.1,
@@ -266,13 +262,7 @@ export const MiniGame = () => {
       )} */}
       <instancedMesh>
         {randomPositions.map((position, i) => {
-          return (
-            <TargetMesh
-              position={position}
-              color={randomColors[i]}
-              setIsHit={setIsHit}
-            />
-          );
+          return <TargetMesh position={position} color={randomColors[i]} />;
         })}
       </instancedMesh>
     </>

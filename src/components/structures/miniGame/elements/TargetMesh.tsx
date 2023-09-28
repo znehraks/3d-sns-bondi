@@ -1,15 +1,12 @@
 import { useSphere } from "@react-three/cannon";
-import { SetStateAction } from "react";
 import { DoubleSide, Mesh, Vector3 } from "three";
 
 export const TargetMesh = ({
   position,
   color,
-  setIsHit,
 }: {
   position: Vector3;
   color: number;
-  setIsHit: React.Dispatch<SetStateAction<boolean>>;
 }) => {
   // 물리엔진 넣고, 충돌시에 점수가 오르도록 이벤트 함수 구현하면 됨
   const [ref] = useSphere<Mesh>(() => ({
@@ -23,7 +20,6 @@ export const TargetMesh = ({
       console.log("e.contact.contactPoint", e.contact.contactPoint);
       console.log("e.contact.impactVelocity", e.contact.impactVelocity);
       console.log("ref.current.position", ref.current.position);
-      setIsHit(true);
     },
     onCollideBegin: (e) => {
       console.log("충돌시작");
