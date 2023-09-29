@@ -9,8 +9,10 @@ type BulletProps = {
 
 export const Bullet = ({ position, shoot }: BulletProps) => {
   const [ref, api] = useSphere<Mesh>(() => ({
-    mass: 1,
+    mass: 10,
     position: [position[0], position[1], position[2]],
+    collisionFilterGroup: 1,
+    collisionFilterMask: 2,
     allowSleep: false,
   }));
 
@@ -19,8 +21,12 @@ export const Bullet = ({ position, shoot }: BulletProps) => {
   }, [api, ref, shoot]);
 
   return (
-    <mesh ref={ref} position={[position[0], position[1], position[2]]}>
-      <sphereGeometry attach="geometry" args={[0.01]} />
+    <mesh
+      name="bullet"
+      ref={ref}
+      position={[position[0], position[1], position[2]]}
+    >
+      <sphereGeometry attach="geometry" args={[0.5, 32, 32]} />
       <meshStandardMaterial attach="material" color="red" />
     </mesh>
   );

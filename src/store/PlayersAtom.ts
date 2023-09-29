@@ -235,3 +235,23 @@ export const CurrentSelectedMemoAtom = atom<
   key: "CurrentSelectedMemoAtom",
   default: undefined,
 });
+
+export const IsMiniGameStartedAtom = atom<boolean>({
+  key: "IsMiniGameStartedAtom",
+  default: false,
+});
+
+export const BulletCountAtom = atom({
+  key: "BulletCountAtom",
+  default: 15,
+});
+
+export const HitCountAtom = atom({
+  key: "HitCountAtom",
+  default: 0,
+});
+
+export const IsMiniGameClearedAtom = atom({
+  key: " IsMiniGameClearedAtom",
+  default: false,
+});

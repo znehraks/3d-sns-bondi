@@ -44,6 +44,7 @@ export const Playground = () => {
 
   useEffect(() => {
     if (currentMap === "GROUND") {
+      document.exitPointerLock();
       if (!controls.current) return;
       camera.position.set(14, 14, 14);
       controls.current.target.set(0, 0, 0);
@@ -58,8 +59,8 @@ export const Playground = () => {
     }
 
     if (currentMap === "MINI_GAME") {
-      camera.position.set(0, 1, 0);
-      camera.lookAt(0, 0, -10);
+      camera.position.set(10, 1, 10);
+      camera.lookAt(0, 0, 0);
       return;
     }
     console.log(4);

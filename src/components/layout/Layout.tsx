@@ -17,7 +17,7 @@ import { Popup } from "../gameInterfaces/ground/Popup";
 import { Memo } from "../gameInterfaces/myRoom/Memo";
 import { Crosshair } from "../gameInterfaces/miniGame/Crosshair";
 import { ObjectInteraction } from "../gameInterfaces/ground/ObjectInteraction";
-import { MiniGameHeader } from "../gameInterfaces/miniGame/MiniGameHeader";
+import { MiniGameLayout } from "../gameInterfaces/miniGame/MiniGameLayout";
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   const [isLoadCompleted] = useRecoilState(IsLoadCompletedAtom);
@@ -32,7 +32,7 @@ export const Layout = ({ children }: { children: ReactNode }) => {
       {isLoadCompleted && (
         <>
           {currentMap === "MY_ROOM" && <MyRoomToolBar />}
-          {currentMap === "MINI_GAME" && <MiniGameHeader />}
+          {currentMap === "MINI_GAME" && <MiniGameLayout />}
           <ObjectInteraction />
           <Notice />
           <SideBar />

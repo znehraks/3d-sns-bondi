@@ -24,9 +24,9 @@ export const MainCanvas = () => {
         <color attach="background" args={["beige"]} />
       )}
       <Physics
-        gravity={[0, 0, 0]}
-        defaultContactMaterial={{ restitution: 1, friction: 1 }}
-        allowSleep={false}
+        gravity={[0, -20, 0]}
+        defaultContactMaterial={{ restitution: 0.1, friction: 0 }}
+        allowSleep
       >
         <Playground />
       </Physics>
