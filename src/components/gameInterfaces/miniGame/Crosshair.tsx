@@ -8,7 +8,8 @@ export const Crosshair = () => {
     <CrosshairWrapper
       className={currentMap === "MINI_GAME" ? "visible" : "invisible"}
     >
-      +
+      <span id="crosshair">+</span>
+      <CooltimeProgressbar id="cooltime-progress" />
     </CrosshairWrapper>
   );
 };
@@ -27,4 +28,13 @@ const CrosshairWrapper = styled.div`
   &.invisible {
     display: none;
   }
+`;
+
+const CooltimeProgressbar = styled.div`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  display: block;
+  /* background: radial-gradient(closest-side, white 79%, transparent 80% 100%),
+    conic-gradient(hotpink 50%, pink 0); */
 `;

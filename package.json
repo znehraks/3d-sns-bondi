@@ -14,6 +14,8 @@
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.14.9",
     "@mui/material": "^5.14.9",
+    "@react-spring/core": "^9.7.3",
+    "@react-spring/three": "^9.7.3",
     "@react-three/cannon": "^6.6.0",
     "@react-three/drei": "^9.83.9",
     "@react-three/fiber": "^8.14.1",

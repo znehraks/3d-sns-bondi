@@ -27,8 +27,8 @@ export const TargetMesh = ({
         console.log("충 돌");
         console.log(e);
         console.log("e.contact.contactPoint", e.contact.contactPoint);
+        setHitCount((prev) => prev + 1);
         const timeout = setTimeout(() => {
-          setHitCount((prev) => prev + 1);
           ref.current!.visible = false;
           const bullet = three.scene.getObjectByName("bullet");
           if (bullet) {

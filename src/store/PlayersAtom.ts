@@ -255,3 +255,8 @@ export const IsMiniGameClearedAtom = atom({
   key: " IsMiniGameClearedAtom",
   default: false,
 });
+
+export const CoolTimeAtom = atom<number | undefined>({
+  key: "CoolTimeAtom",
+  default: undefined,
+});
