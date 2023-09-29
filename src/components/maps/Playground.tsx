@@ -18,6 +18,7 @@ import { MyRoom } from "../structures/myRoom";
 import { GroundElements } from "../structures/ground";
 import _ from "lodash";
 import { MiniGame } from "../structures/miniGame";
+import { GsapTest } from "../test/GsapTest";
 
 export const Playground = () => {
   // const backgroundTexture = useTexture("./images/scene_map.jpeg");
@@ -102,6 +103,7 @@ export const Playground = () => {
 
       {currentMap === "GROUND" && (
         <Suspense fallback={<Loader />}>
+          <GsapTest />
           <directionalLight
             castShadow
             intensity={10}

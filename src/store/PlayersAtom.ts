@@ -194,12 +194,23 @@ export const CurrentPlacingMyRoomSkillAtom = atom<string | undefined>({
   default: undefined,
 });
 
-export interface IPlacedMyRoomSkill {
+export interface IPlacedMyRoomObject {
   name: string;
   position: [number, number, number];
 }
-export const PlacedMyRoomSkillsAtom = atom<IPlacedMyRoomSkill[]>({
+export const PlacedMyRoomSkillsAtom = atom<IPlacedMyRoomObject[]>({
   key: "PlacedMyRoomSkillsAtom",
+  default: [],
+});
+
+// TODO 가구 배치하기
+export const CurrentPlacingMyRoomFurnitureAtom = atom<string | undefined>({
+  key: "CurrentPlacingMyRoomFurnitureAtom",
+  default: undefined,
+});
+
+export const PlacedMyRoomFurnitures = atom<IPlacedMyRoomObject[]>({
+  key: "PlacedMyRoomFurnitures",
   default: [],
 });
 

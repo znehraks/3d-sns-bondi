@@ -15,6 +15,7 @@ const leftWallVector = new THREE.Vector3(1, 0, 0);
 const rightWallVector = new THREE.Vector3(0, 0, 1);
 const floorVector = new THREE.Vector3(0, 1, 0);
 
+// 가구 배치하기
 export const MyRoomFurniturePlaceMode = ({
   currentPlacingMyRoomSkill,
 }: {

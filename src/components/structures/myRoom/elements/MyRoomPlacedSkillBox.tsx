@@ -1,11 +1,11 @@
 import { useTexture } from "@react-three/drei";
-import { IPlacedMyRoomSkill } from "../../../../store/PlayersAtom";
+import { IPlacedMyRoomObject } from "../../../../store/PlayersAtom";
 import { myRoomSkillBoxSize } from "../../../../data";
 
 export const MyRoomPlacedSkillBox = ({
   placedMyRoomSkill,
 }: {
-  placedMyRoomSkill: IPlacedMyRoomSkill;
+  placedMyRoomSkill: IPlacedMyRoomObject;
 }) => {
   const texture = useTexture(`/images/${placedMyRoomSkill.name}.png`);
   return (

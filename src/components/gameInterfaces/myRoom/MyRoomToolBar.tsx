@@ -24,6 +24,10 @@ const skills = [
   "flutter",
   "aws",
 ];
+
+// 가구 배치
+const furnitures = ["의자", "침대", "책상"];
+
 export const MyRoomToolBar = () => {
   const [openedDropdownIndex, setOpenedDropdownIndex] = useState<number>();
   const [isMemoFormOpen, setIsMemoFormOpen] = useState(false);
@@ -44,7 +48,7 @@ export const MyRoomToolBar = () => {
       <MyRoomToolBarWrapper>
         {currentMyRoomPlayer?.id === me?.id ? (
           <>
-            {["스택배치"].map((item, idx) => {
+            {["스택배치", "가구배치"].map((item, idx) => {
               return (
                 <ToolBarBtn
                   key={item}
@@ -61,9 +65,26 @@ export const MyRoomToolBar = () => {
                 </ToolBarBtn>
               );
             })}
-            {openedDropdownIndex !== undefined && (
+            {openedDropdownIndex === 0 && (
               <ToolBarBtnDropdown>
                 {skills.map((skill) => (
+                  <ToolBarDropdownItem
+                    key={skill}
+                    onClick={() => {
+                      setCurrentPlacingMyRoomSkill((prev) => {
+                        if (prev === skill) return undefined;
+                        return skill;
+                      });
+                      setOpenedDropdownIndex(undefined);
+                    }}
+                    src={`/images/${skill}.png`}
+                  ></ToolBarDropdownItem>
+                ))}
+              </ToolBarBtnDropdown>
+            )}
+            {openedDropdownIndex === 1 && (
+              <ToolBarBtnDropdown>
+                {furnitures.map((skill) => (
                   <ToolBarDropdownItem
                     key={skill}
                     onClick={() => {
