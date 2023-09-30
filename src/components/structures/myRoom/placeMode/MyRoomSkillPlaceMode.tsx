@@ -1,5 +1,8 @@
-import { useRecoilState } from "recoil";
-import { CurrentPlacingMyRoomSkillAtom } from "../../../../store/PlayersAtom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  CurrentMyRoomPlayerAtom,
+  CurrentPlacingMyRoomSkillAtom,
+} from "../../../../store/PlayersAtom";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
@@ -18,6 +21,7 @@ export const MyRoomSkillPlaceMode = ({
   currentPlacingMyRoomSkill: string;
 }) => {
   const { scene, gl, camera } = useThree();
+  const currentMyRoomPlayer = useRecoilValue(CurrentMyRoomPlayerAtom);
   const [, setCurrentPlacingMyRoomSkill] = useRecoilState(
     CurrentPlacingMyRoomSkillAtom
   );
@@ -127,30 +131,35 @@ export const MyRoomSkillPlaceMode = ({
         );
       }
     };
+
     const handlePointerUp = () => {
       const myRoomObjects = getMyRoomObjects(
         scene,
         `my-room-${currentPlacingMyRoomSkill}`
       );
-      socket.emit("myRoomChange", {
-        objects: [
-          ...myRoomObjects,
-          {
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            name: `my-room-${currentPlacingMyRoomSkill}`,
-            position: [
-              ref.current!.position.x,
-              ref.current!.position.y,
-              ref.current!.position.z,
-            ],
-            rotation: [
-              ref.current!.rotation.x,
-              ref.current!.rotation.y,
-              ref.current!.rotation.z,
-            ],
-          },
-        ],
-      });
+      socket.emit(
+        "myRoomChange",
+        {
+          objects: [
+            ...myRoomObjects,
+            {
+              // eslint-disable-next-line @typescript-eslint/no-explicit-any
+              name: `my-room-${currentPlacingMyRoomSkill}`,
+              position: [
+                ref.current!.position.x,
+                ref.current!.position.y,
+                ref.current!.position.z,
+              ],
+              rotation: [
+                ref.current!.rotation.x,
+                ref.current!.rotation.y,
+                ref.current!.rotation.z,
+              ],
+            },
+          ],
+        },
+        currentMyRoomPlayer?.id
+      );
       setCurrentPlacingMyRoomSkill(undefined);
 
       // socket.emit 하기 배치했음을 알려야함
@@ -164,6 +173,7 @@ export const MyRoomSkillPlaceMode = ({
     };
   }, [
     camera,
+    currentMyRoomPlayer?.id,
     currentPlacingMyRoomSkill,
     gl.domElement,
     scene,
@@ -173,13 +183,11 @@ export const MyRoomSkillPlaceMode = ({
   ]);
 
   return (
-    <instancedMesh>
-      <mesh name="placing" ref={ref}>
-        <boxGeometry
-          args={[myRoomSkillBoxSize, myRoomSkillBoxSize, myRoomSkillBoxSize]}
-        />
-        <meshStandardMaterial map={texture.clone()} />
-      </mesh>
-    </instancedMesh>
+    <mesh name="placing" ref={ref}>
+      <boxGeometry
+        args={[myRoomSkillBoxSize, myRoomSkillBoxSize, myRoomSkillBoxSize]}
+      />
+      <meshStandardMaterial map={texture.clone()} />
+    </mesh>
   );
 };

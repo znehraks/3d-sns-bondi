@@ -1,4 +1,7 @@
-import { CurrentSelectedMemoAtom, IPlacedMyRoomMemos } from "../../../../store/PlayersAtom";
+import {
+  CurrentSelectedMemoAtom,
+  IPlacedMyRoomMemos,
+} from "../../../../store/PlayersAtom";
 import { myRoomMemoBoxSize } from "../../../../data";
 import { useRecoilState } from "recoil";
 
@@ -7,10 +10,9 @@ export const MyRoomPlacedMemo = ({
 }: {
   placedMyRoomMemo: IPlacedMyRoomMemos;
 }) => {
-  const  [,setCurrentSelectedMemo] = useRecoilState(CurrentSelectedMemoAtom)
+  const [, setCurrentSelectedMemo] = useRecoilState(CurrentSelectedMemoAtom);
   return (
     <mesh
-      // ref={ref}
       castShadow
       receiveShadow
       name={`my-room-memo-${placedMyRoomMemo.authorNickname}-${placedMyRoomMemo.timestamp}`}
@@ -22,7 +24,7 @@ export const MyRoomPlacedMemo = ({
         timestamp: placedMyRoomMemo.timestamp,
       }}
       onClick={() => {
-        setCurrentSelectedMemo({...placedMyRoomMemo})
+        setCurrentSelectedMemo({ ...placedMyRoomMemo });
       }}
     >
       <boxGeometry

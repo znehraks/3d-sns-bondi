@@ -24,8 +24,7 @@ export const MyRoomPlacedFurniture = ({
       <primitive
         visible
         name={`my-room-${placedMyRoomFurniture.name}`}
-        object={modeling.scene}
-        // position={placedMyRoomFurniture.position}
+        object={modeling.scene.clone()}
         scale={placedMyRoomFurniture.scale ?? [1, 1, 1]}
         position={placedMyRoomFurniture.position}
       />

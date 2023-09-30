@@ -3,6 +3,7 @@ import { Playground } from "../maps/Playground";
 import { useRecoilValue } from "recoil";
 import { CurrentMapAtom } from "../../store/PlayersAtom";
 import { Physics } from "@react-three/cannon";
+import { Preload } from "@react-three/drei";
 
 export const MainCanvas = () => {
   const currentMap = useRecoilValue(CurrentMapAtom);
@@ -28,6 +29,7 @@ export const MainCanvas = () => {
         defaultContactMaterial={{ restitution: 0.1, friction: 0 }}
         allowSleep
       >
+        <Preload all />
         <Playground />
       </Physics>
     </Canvas>

@@ -1,5 +1,8 @@
-import { useRecoilState } from "recoil";
-import { CurrentPlacingMyRoomFurnitureAtom } from "../../../../store/PlayersAtom";
+import { useRecoilState, useRecoilValue } from "recoil";
+import {
+  CurrentMyRoomPlayerAtom,
+  CurrentPlacingMyRoomFurnitureAtom,
+} from "../../../../store/PlayersAtom";
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
@@ -12,6 +15,9 @@ const leftWallVector = new THREE.Vector3(1, 0, 0);
 const rightWallVector = new THREE.Vector3(0, 0, 1);
 const floorVector = new THREE.Vector3(0, 1, 0);
 
+const bedYOffset = 0.5;
+const deskYOffset = 1;
+
 // 가구 배치하기
 export const MyRoomFurniturePlaceMode = ({
   currentPlacingMyRoomFurniture,
@@ -19,14 +25,18 @@ export const MyRoomFurniturePlaceMode = ({
   currentPlacingMyRoomFurniture: string;
 }) => {
   const { scene: threeScene, gl, camera } = useThree();
+
+  const currentMyRoomPlayer = useRecoilValue(CurrentMyRoomPlayerAtom);
   const [, setCurrentPlacingMyRoomFurniture] = useRecoilState(
     CurrentPlacingMyRoomFurnitureAtom
   );
   const { scene } = useGLTF(`/models/${currentPlacingMyRoomFurniture}.glb`);
 
   const ref = useRef<THREE.Mesh>(null);
+
   useEffect(() => {
     if (!ref.current) return;
+    if (!scene) return;
     scene.traverse((obj) => {
       obj.userData.placing = true;
       if ((obj as THREE.Mesh).isMesh) {
@@ -34,7 +44,6 @@ export const MyRoomFurniturePlaceMode = ({
       }
     });
     const boundingBox = new THREE.Box3().setFromObject(scene);
-    console.log("boundingBox", boundingBox);
     const handlePointerMove = (e: PointerEvent) => {
       const { clientX, clientY } = e;
       const { x, y } = calculateThreePosition({ clientX, clientY });
@@ -46,7 +55,13 @@ export const MyRoomFurniturePlaceMode = ({
       intersect.normal?.clone();
       let roomTouched = false;
       let xOffset = 0;
-      const yOffset = boundingBox.min.y;
+      let yOffset = -2.5;
+      if (currentPlacingMyRoomFurniture === "furniture-Bed") {
+        yOffset += bedYOffset;
+      }
+      if (currentPlacingMyRoomFurniture === "furniture-Standing Desk") {
+        yOffset += deskYOffset;
+      }
       let zOffset = 0;
       if (!intersect.normal) return;
 
@@ -93,28 +108,33 @@ export const MyRoomFurniturePlaceMode = ({
       }
     };
     const handlePointerUp = () => {
+      if (!currentPlacingMyRoomFurniture) return;
       const myRoomObjects = getMyRoomObjects(
         threeScene,
         `my-room-${currentPlacingMyRoomFurniture}`
       );
-      socket.emit("myRoomChange", {
-        objects: [
-          ...myRoomObjects,
-          {
-            name: `my-room-${currentPlacingMyRoomFurniture}`,
-            position: [
-              ref.current!.position.x,
-              ref.current!.position.y,
-              ref.current!.position.z,
-            ],
-            rotation: [
-              ref.current!.rotation.x,
-              ref.current!.rotation.y,
-              ref.current!.rotation.z,
-            ],
-          },
-        ],
-      });
+      socket.emit(
+        "myRoomChange",
+        {
+          objects: [
+            ...myRoomObjects,
+            {
+              name: `my-room-${currentPlacingMyRoomFurniture}`,
+              position: [
+                ref.current!.position.x,
+                ref.current!.position.y,
+                ref.current!.position.z,
+              ],
+              rotation: [
+                ref.current!.rotation.x,
+                ref.current!.rotation.y,
+                ref.current!.rotation.z,
+              ],
+            },
+          ],
+        },
+        currentMyRoomPlayer?.id
+      );
       setCurrentPlacingMyRoomFurniture(undefined);
 
       // socket.emit 하기 배치했음을 알려야함
@@ -134,7 +154,8 @@ export const MyRoomFurniturePlaceMode = ({
     threeScene.children,
     setCurrentPlacingMyRoomFurniture,
     scene,
+    currentMyRoomPlayer?.id,
   ]);
 
-  return <primitive visible name="placing" ref={ref} object={scene} />;
+  return <primitive name="placing" ref={ref} object={scene.clone()} />;
 };

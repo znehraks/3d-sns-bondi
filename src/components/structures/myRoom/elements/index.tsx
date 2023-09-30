@@ -1,11 +1,9 @@
-import { useGLTF } from "@react-three/drei";
 import { IMyRoomObject } from "../../../../store/PlayersAtom";
 import { MyRoomPlacedFurniture } from "./MyRoomPlacedFurniture";
 import { MyRoomPlacedMemo } from "./MyRoomPlacedMemo";
 import { MyRoomPlacedSkillBox } from "./MyRoomPlacedSkillBox";
 
 export const MyRoomElements = ({ object }: { object: IMyRoomObject }) => {
-  useGLTF("/models/furniture-Couch Small.glb");
   if (object.name.includes("my-room-memo")) {
     return (
       <MyRoomPlacedMemo
@@ -37,6 +35,7 @@ export const MyRoomElements = ({ object }: { object: IMyRoomObject }) => {
         key={object.name}
         placedMyRoomFurniture={{
           position: object.position,
+          scale: object.scale,
           name: `furniture-${object.name.split("-")[3]}`,
         }}
       />

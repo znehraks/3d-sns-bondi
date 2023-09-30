@@ -18,7 +18,7 @@ export const MyRoomPlacedSkillBox = ({
       <boxGeometry
         args={[myRoomSkillBoxSize, myRoomSkillBoxSize, myRoomSkillBoxSize]}
       />
-      <meshStandardMaterial map={texture} />
+      <meshStandardMaterial map={texture.clone()} />
     </mesh>
   );
 };
