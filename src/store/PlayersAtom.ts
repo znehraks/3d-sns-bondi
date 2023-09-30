@@ -5,30 +5,29 @@ export interface IMyRoomObjectProps {
   position: [number, number, number];
   rotation: [number, number, number];
 }
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 
-export type IMyRoomObjectNames =
-  | "my-room-bed"
-  | "my-room-chair"
-  | "my-room-desk"
-  | "my-room-floor"
-  | "my-room-left-wall"
-  | "my-room-right-wall"
-  | "my-room-html"
-  | "my-room-css"
-  | "my-room-javascript"
-  | "my-room-typescript"
-  | "my-room-react"
-  | "my-room-next"
-  | "my-room-node"
-  | "my-room-graphql"
-  | "my-room-three"
-  | "my-room-pixi"
-  | "my-room-python"
-  | "my-room-flutter"
-  | "my-room-aws";
+// export type IMyRoomObjectNames =
+//   | "my-room-bed"
+//   | "my-room-chair"
+//   | "my-room-desk"
+//   | "my-room-floor"
+//   | "my-room-left-wall"
+//   | "my-room-right-wall"
+//   | "my-room-html"
+//   | "my-room-css"
+//   | "my-room-javascript"
+//   | "my-room-typescript"
+//   | "my-room-react"
+//   | "my-room-next"
+//   | "my-room-node"
+//   | "my-room-graphql"
+//   | "my-room-three"
+//   | "my-room-pixi"
+//   | "my-room-python"
+//   | "my-room-flutter"
+//   | "my-room-aws";
 export type IMyRoomObject = {
-  name: IMyRoomObjectNames;
+  name: string;
   position: [number, number, number];
   rotation: [number, number, number];
   scale?: [number, number, number];
@@ -49,19 +48,12 @@ export interface IPlayer {
   pantsColor: string;
   myRoom: IMyRoom;
 }
+
 // 모든 플레이어들
 export const PlayersAtom = atom<IPlayer[]>({
   key: "PlayersAtom",
   default: [],
 });
-
-// // 현재 로그인 여부(내가 기본 맵까지 접속했는가
-// export const IsLoginAtom = atom({
-//   key: "IsLoginAtom",
-//   default: false,
-// });
-
-// 내 player정보
 
 // 내 socket 정보
 export const MeAtom = atom<IPlayer>({
@@ -131,17 +123,20 @@ export const ExitNoticeAtom = atom<INotice | undefined>({
 });
 
 export type TMaps = "GROUND" | "MY_ROOM" | "MINI_GAME";
+
 // 현재 있는 맵 정보
 export const CurrentMapAtom = atom<TMaps>({
   key: "CurrentMapAtom",
   default: "GROUND",
 });
 
+// 마이룸 입장 팝업 유저 아이디 정보
 export const CurrentMyRoomPopupPlayerIdAtom = atom<string | undefined>({
   key: "CurrentMyRoomPopupPlayerIdAtom",
   default: undefined,
 });
 
+// 현재 들어가있는 마이룸의 주인 유저 정보
 export const CurrentMyRoomPlayerAtom = atom<IPlayer | undefined>({
   key: "CurrentMyRoomPlayerAtom",
   default: undefined,
@@ -152,6 +147,8 @@ interface PlayGroundStructureBoundingBox {
   box: { max: Vector3; min: Vector3 };
   position: Vector3;
 }
+
+// 운동장에 배치된 오브젝트들의 경계선 정보
 export const PlayGroundStructuresBoundingBoxAtom = atom<
   PlayGroundStructureBoundingBox[]
 >({
@@ -159,6 +156,7 @@ export const PlayGroundStructuresBoundingBoxAtom = atom<
   default: [],
 });
 
+// 운동장에 배치된 오브젝트들의 경계선 꼭짓점 정보
 export const PlayerGroundStructuresFloorPlaneCornersSelector = selector({
   key: "PlayerGroundStructuresFloorPlaneCornersSelector",
   get: ({ get }) => {
@@ -197,11 +195,13 @@ export interface IPlacedMyRoomObject {
 }
 
 // TODO 가구 배치하기
+//  현재 배치중인 기술스택박스 이름
 export const CurrentPlacingMyRoomSkillAtom = atom<string | undefined>({
   key: "CurrentPlacingMyRoomSkillAtom",
   default: undefined,
 });
 
+// 현재 배치중인 가구 이름
 export const CurrentPlacingMyRoomFurnitureAtom = atom<string | undefined>({
   key: "CurrentPlacingMyRoomFurnitureAtom",
   default: undefined,
@@ -213,6 +213,7 @@ export interface ICurrentPlacingMyRoomMemo {
   timestamp: string;
 }
 
+// 현재 배치중인 메모 정보
 export const CurrentPlacingMyRoomMemoAtom = atom<
   ICurrentPlacingMyRoomMemo | undefined
 >({
@@ -228,6 +229,7 @@ export interface IPlacedMyRoomMemos {
   rotation: [number, number, number];
 }
 
+// 현재 팝업에 띄워진 메모 정보
 export const CurrentSelectedMemoAtom = atom<
   ICurrentPlacingMyRoomMemo | undefined
 >({
@@ -235,26 +237,31 @@ export const CurrentSelectedMemoAtom = atom<
   default: undefined,
 });
 
+// 미니게임(사격게임) 관련
 export const IsMiniGameStartedAtom = atom<boolean>({
   key: "IsMiniGameStartedAtom",
   default: false,
 });
 
+// 현재 남은 총알 개수
 export const BulletCountAtom = atom({
   key: "BulletCountAtom",
   default: 15,
 });
 
+// 현재 맞춘 표적 수
 export const HitCountAtom = atom({
   key: "HitCountAtom",
   default: 0,
 });
 
+// 현재 미니게임이 끝났는지 여부
 export const IsMiniGameClearedAtom = atom({
   key: " IsMiniGameClearedAtom",
   default: false,
 });
 
+// 현재 발사된 총의 남은 쿨타임
 export const CoolTimeAtom = atom<number | undefined>({
   key: "CoolTimeAtom",
   default: undefined,

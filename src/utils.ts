@@ -1,9 +1,5 @@
 import { Scene, Vector3 } from "three";
-import {
-  IMyRoom,
-  IMyRoomObject,
-  IMyRoomObjectNames,
-} from "./store/PlayersAtom";
+import { IMyRoom, IMyRoomObject } from "./store/PlayersAtom";
 
 export const isValidText = (text: string | undefined) => {
   return Boolean(text && text.trim() !== "");
@@ -36,7 +32,7 @@ export const getMyRoomObjects = (scene: Scene, currentObjectName?: string) => {
     child.traverse((obj) => {
       if (obj.name.includes("my-room")) {
         const myRoomObject: IMyRoomObject = {
-          name: obj.name as IMyRoomObjectNames,
+          name: obj.name,
           position: [obj.position.x, obj.position.y, obj.position.z],
           rotation: [obj.rotation.x, obj.rotation.y, obj.rotation.z],
           authorNickname: obj.userData.authorNickname,
