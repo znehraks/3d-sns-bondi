@@ -5,7 +5,7 @@ export const MyRoomLeftWall = () => {
       name="my-room-left-wall"
       castShadow
       receiveShadow
-      position-x={-2.5}
+      position-x={-myRoomSize / 2}
       position-y={0}
       position-z={0}
     >

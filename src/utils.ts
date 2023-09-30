@@ -1,4 +1,4 @@
-import { Scene, Vector3 } from "three";
+import { Camera, Scene, Vector3 } from "three";
 import { IMyRoom, IMyRoomObject } from "./store/PlayersAtom";
 
 export const isValidText = (text: string | undefined) => {
@@ -24,6 +24,22 @@ export const calculateThreePosition = ({
     x: (clientX / window.innerWidth) * 2 - 1,
     y: -(clientY / window.innerHeight) * 2 + 1,
   };
+};
+
+interface IGetClientPosition {
+  position: Vector3;
+  camera: Camera;
+}
+export const getClientPosition = ({ position, camera }: IGetClientPosition) => {
+  position.project(camera);
+
+  // 스크린 좌표를 클라이언트 좌표로 변환
+  const widthHalf = window.innerWidth / 2;
+  const heightHalf = window.innerHeight / 2;
+  const x = position.x * widthHalf + widthHalf;
+  const y = -(position.y * heightHalf) + heightHalf;
+
+  return { x, y };
 };
 
 export const getMyRoomObjects = (scene: Scene, currentObjectName?: string) => {

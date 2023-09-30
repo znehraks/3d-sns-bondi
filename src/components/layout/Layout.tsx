@@ -7,6 +7,7 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import {
   CurrentMapAtom,
   CurrentMyRoomPlayerAtom,
+  CurrentSelectedMyRoomObjectAtom,
   IsLoadCompletedAtom,
   MeAtom,
 } from "../../store/PlayersAtom";
@@ -18,10 +19,14 @@ import { Memo } from "../gameInterfaces/myRoom/Memo";
 import { Crosshair } from "../gameInterfaces/miniGame/Crosshair";
 import { ObjectInteraction } from "../gameInterfaces/ground/ObjectInteraction";
 import { MiniGameLayout } from "../gameInterfaces/miniGame/MiniGameLayout";
+import { SelectedObjectMenuBar } from "../gameInterfaces/myRoom/SelectedObjectMenuBar";
 
 export const Layout = ({ children }: { children: ReactNode }) => {
   const [isLoadCompleted] = useRecoilState(IsLoadCompletedAtom);
   const currentMap = useRecoilValue(CurrentMapAtom);
+  const currentSelectedMyRoomObject = useRecoilValue(
+    CurrentSelectedMyRoomObjectAtom
+  );
   const [currentMyRoomPlayer] = useRecoilState(CurrentMyRoomPlayerAtom);
   const me = useRecoilValue(MeAtom);
   return (
@@ -31,18 +36,24 @@ export const Layout = ({ children }: { children: ReactNode }) => {
 
       {isLoadCompleted && (
         <>
-          {currentMap === "MY_ROOM" && <MyRoomToolBar />}
-          {currentMap === "MINI_GAME" && <MiniGameLayout />}
           <ObjectInteraction />
           <Notice />
           <SideBar />
-          {currentMap !== "MINI_GAME" && <ChatArea />}
           <Minimap />
+          <Memo />
+          <Crosshair />
+
           {currentMap !== "MY_ROOM" &&
             currentMyRoomPlayer &&
             me?.id !== currentMyRoomPlayer?.id && <Popup />}
-          <Memo />
-          <Crosshair />
+          {currentMap !== "MINI_GAME" && <ChatArea />}
+
+          {currentMap === "MY_ROOM" && <MyRoomToolBar />}
+          {currentMap === "MY_ROOM" && currentSelectedMyRoomObject && (
+            <SelectedObjectMenuBar />
+          )}
+
+          {currentMap === "MINI_GAME" && <MiniGameLayout />}
         </>
       )}
       <Footer />

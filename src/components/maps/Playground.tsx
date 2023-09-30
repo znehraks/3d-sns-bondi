@@ -193,8 +193,6 @@ export const Playground = () => {
       )}
       {currentMap === "MY_ROOM" && (
         <Suspense fallback={<Loader />}>
-          <directionalLight castShadow intensity={0.6} position={[0, 5, 5]} />
-          <spotLight castShadow intensity={8} position={[-1, 5, -1]} />
           <MyRoom />
         </Suspense>
       )}

@@ -1,9 +1,29 @@
-import { IMyRoomObject } from "../../../../store/PlayersAtom";
+import { useEffect } from "react";
+import {
+  CurrentSelectedMyRoomObjectAtom,
+  IMyRoomObject,
+} from "../../../../store/PlayersAtom";
 import { MyRoomPlacedFurniture } from "./MyRoomPlacedFurniture";
 import { MyRoomPlacedMemo } from "./MyRoomPlacedMemo";
 import { MyRoomPlacedSkillBox } from "./MyRoomPlacedSkillBox";
+import { useThree } from "@react-three/fiber";
+import { useRecoilState } from "recoil";
 
 export const MyRoomElements = ({ object }: { object: IMyRoomObject }) => {
+  const three = useThree();
+  const [, setCurrentSelectedMyRoomObject] = useRecoilState(
+    CurrentSelectedMyRoomObjectAtom
+  );
+  useEffect(() => {
+    const discardPopup = () => {
+      setCurrentSelectedMyRoomObject(undefined);
+    };
+
+    three.gl.domElement.addEventListener("pointerdown", discardPopup);
+    return () => {
+      three.gl.domElement.removeEventListener("pointerdown", discardPopup);
+    };
+  }, [setCurrentSelectedMyRoomObject, three.gl.domElement]);
   if (object.name.includes("my-room-memo")) {
     return (
       <MyRoomPlacedMemo
@@ -41,6 +61,14 @@ export const MyRoomElements = ({ object }: { object: IMyRoomObject }) => {
       />
     );
 
-  // return <GsapTest object={object} />;
   return null;
+
+  // return <GsapTest object={object} />;
+  // return (
+  //   <mesh>
+  //     <boxGeometry />
+  //     <meshStandardMaterial />
+  //     <Outlines thickness={0.05} color="lime" />
+  //   </mesh>
+  // );
 };

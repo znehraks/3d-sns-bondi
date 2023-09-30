@@ -8,11 +8,13 @@ import {
   CurrentMyRoomPlayerAtom,
   CurrentPlacingMyRoomMemoAtom,
   CurrentPlacingMyRoomFurnitureAtom,
+  CurrentSelectedMyRoomObjectAtom,
 } from "../../../store/PlayersAtom";
 
 import { MyRoomElements } from "./elements";
 import { MyRoomMemoPlaceMode } from "./placeMode/MyRoomMemoPlaceMode";
 import { MyRoomFurniturePlaceMode } from "./placeMode/MyRoomFurniturePlaceMode";
+import { MyRoomObjectRotationMode } from "./rotationMode/MyRoomObjectRotationMode";
 
 export const MyRoom = () => {
   const currentPlacingMyRoomSkill = useRecoilValue(
@@ -24,6 +26,10 @@ export const MyRoom = () => {
   );
   const currentPlacingMyRoomMemo = useRecoilValue(CurrentPlacingMyRoomMemoAtom);
 
+  const currentSelectedMyRoomObject = useRecoilValue(
+    CurrentSelectedMyRoomObjectAtom
+  );
+
   const currentMyRoomPlayer = useRecoilValue(CurrentMyRoomPlayerAtom);
 
   return (
@@ -33,6 +39,8 @@ export const MyRoom = () => {
         return <MyRoomElements key={object.name} object={object} />;
       })}
 
+      <directionalLight castShadow intensity={1} position={[0, 10, 10]} />
+      <spotLight castShadow intensity={8} position={[-1, 10, -1]} />
       {/* 기본 바닥, 벽 */}
       <MyRoomFloor />
       <MyRoomLeftWall />
@@ -50,6 +58,9 @@ export const MyRoom = () => {
         />
       )}
       {currentPlacingMyRoomMemo && <MyRoomMemoPlaceMode />}
+
+      {/* 변형모드 */}
+      {currentSelectedMyRoomObject && <MyRoomObjectRotationMode />}
     </>
   );
 };

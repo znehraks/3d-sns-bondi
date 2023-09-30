@@ -237,6 +237,18 @@ export const CurrentSelectedMemoAtom = atom<
   default: undefined,
 });
 
+interface ICurrentSelectedMyRoomObject {
+  name: string;
+  clientPosition: { x: number; y: number };
+}
+export const CurrentSelectedMyRoomObjectAtom = atom<
+  ICurrentSelectedMyRoomObject | undefined
+>({
+  key: "CurrentSelectedMyRoomObjectAtom",
+  default: undefined,
+});
+
+//! 미니게임
 // 미니게임(사격게임) 관련
 export const IsMiniGameStartedAtom = atom<boolean>({
   key: "IsMiniGameStartedAtom",

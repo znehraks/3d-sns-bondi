@@ -7,7 +7,7 @@ export const MyRoomRightWall = () => {
       castShadow
       receiveShadow
       position-y={0}
-      position-z={-2.5}
+      position-z={-myRoomSize / 2}
     >
       <boxGeometry args={[myRoomSize, myRoomSize, 0.05]} />
       <meshStandardMaterial color={"pink"} />

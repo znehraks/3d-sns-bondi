@@ -14,6 +14,7 @@ import { useGLTF } from "@react-three/drei";
 const leftWallVector = new THREE.Vector3(1, 0, 0);
 const rightWallVector = new THREE.Vector3(0, 0, 1);
 const floorVector = new THREE.Vector3(0, 1, 0);
+const positionVector = new THREE.Vector3();
 
 // 가구 배치하기
 export const MyRoomFurniturePlaceMode = ({
@@ -42,6 +43,8 @@ export const MyRoomFurniturePlaceMode = ({
     });
     const boundingBox = new THREE.Box3().setFromObject(scene);
     const handlePointerMove = (e: PointerEvent) => {
+      if (!ref.current) return;
+      ref.current.visible = true;
       const { clientX, clientY } = e;
       const { x, y } = calculateThreePosition({ clientX, clientY });
       const rayCaster = new THREE.Raycaster();
@@ -52,12 +55,14 @@ export const MyRoomFurniturePlaceMode = ({
       intersect.normal?.clone();
       let roomTouched = false;
       let xOffset = 0;
-      const yOffset = -2.5 - boundingBox.min.y;
+      const yOffset = -myRoomSize / 2 - boundingBox.min.y;
       let zOffset = 0;
       if (!intersect.normal) return;
 
       const width = boundingBox.max.x - boundingBox.min.x;
       const depth = boundingBox.max.z - boundingBox.min.z;
+
+      console.log("intersect", intersect);
 
       // 현재 rayCaster에 잡힌 첫번째 오브젝트의 법선벡터와 3축의 벡터가 평행하다면 각 축에 맞는 offset을 더해준다.
       if (
@@ -96,9 +101,12 @@ export const MyRoomFurniturePlaceMode = ({
           yOffset,
           intersect.point.z + zOffset
         );
+        positionVector.copy(ref.current?.position.clone());
       }
     };
+
     const handlePointerUp = () => {
+      console.log("ref.current", ref.current);
       if (!currentPlacingMyRoomFurniture) return;
       const myRoomObjects = getMyRoomObjects(
         threeScene,
@@ -111,11 +119,7 @@ export const MyRoomFurniturePlaceMode = ({
             ...myRoomObjects,
             {
               name: `my-room-${currentPlacingMyRoomFurniture}`,
-              position: [
-                ref.current!.position.x,
-                ref.current!.position.y,
-                ref.current!.position.z,
-              ],
+              position: [positionVector.x, positionVector.y, positionVector.z],
               rotation: [
                 ref.current!.rotation.x,
                 ref.current!.rotation.y,
@@ -134,6 +138,7 @@ export const MyRoomFurniturePlaceMode = ({
     gl.domElement.addEventListener("pointermove", handlePointerMove);
     gl.domElement.addEventListener("pointerup", handlePointerUp);
     return () => {
+      positionVector.set(0, 0, 0);
       gl.domElement.removeEventListener("pointermove", handlePointerMove);
       gl.domElement.removeEventListener("pointerup", handlePointerUp);
     };
@@ -148,5 +153,12 @@ export const MyRoomFurniturePlaceMode = ({
     currentMyRoomPlayer?.id,
   ]);
 
-  return <primitive name="placing" ref={ref} object={scene.clone()} />;
+  return (
+    <primitive
+      visible={false}
+      name="placing"
+      ref={ref}
+      object={scene.clone()}
+    />
+  );
 };
