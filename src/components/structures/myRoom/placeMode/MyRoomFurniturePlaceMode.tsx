@@ -15,9 +15,6 @@ const leftWallVector = new THREE.Vector3(1, 0, 0);
 const rightWallVector = new THREE.Vector3(0, 0, 1);
 const floorVector = new THREE.Vector3(0, 1, 0);
 
-const bedYOffset = 0.5;
-const deskYOffset = 1;
-
 // 가구 배치하기
 export const MyRoomFurniturePlaceMode = ({
   currentPlacingMyRoomFurniture,
@@ -55,13 +52,7 @@ export const MyRoomFurniturePlaceMode = ({
       intersect.normal?.clone();
       let roomTouched = false;
       let xOffset = 0;
-      let yOffset = -2.5;
-      if (currentPlacingMyRoomFurniture === "furniture-Bed") {
-        yOffset += bedYOffset;
-      }
-      if (currentPlacingMyRoomFurniture === "furniture-Standing Desk") {
-        yOffset += deskYOffset;
-      }
+      const yOffset = -2.5 - boundingBox.min.y;
       let zOffset = 0;
       if (!intersect.normal) return;
 

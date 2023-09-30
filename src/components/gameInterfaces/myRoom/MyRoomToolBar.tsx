@@ -35,14 +35,14 @@ const skills = [
 
 // 가구 배치
 const furnitures = [
-  "furniture-Bed",
-  "furniture-Bookcase with Books",
-  "furniture-Chair",
-  "furniture-Coat Rack Standing",
-  "furniture-Couch Small",
-  "furniture-Gaming Computer",
-  "furniture-Office Chair",
-  "furniture-Standing Desk",
+  "furniture-bed",
+  "furniture-bookcase",
+  "furniture-chair",
+  "furniture-coatRack",
+  "furniture-couch",
+  "furniture-gamingComputer",
+  "furniture-officeChair",
+  "furniture-standingDesk",
 ];
 
 export const MyRoomToolBar = () => {
@@ -114,7 +114,7 @@ export const MyRoomToolBar = () => {
                       });
                       setOpenedDropdownIndex(undefined);
                     }}
-                    src={`/images/furnitures/${furniture}.webp`}
+                    src={`/images/furnitures/${furniture}.png`}
                   ></ToolBarDropdownItem>
                 ))}
               </ToolBarBtnDropdown>
