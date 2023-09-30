@@ -248,6 +248,12 @@ export const CurrentSelectedMyRoomObjectAtom = atom<
   default: undefined,
 });
 
+//  현재 회전중인 가구
+export const CurrentRotationingMyRoomObjectAtom = atom<string | undefined>({
+  key: "CurrentRotationingMyRoomObjectAtom",
+  default: undefined,
+});
+
 //! 미니게임
 // 미니게임(사격게임) 관련
 export const IsMiniGameStartedAtom = atom<boolean>({

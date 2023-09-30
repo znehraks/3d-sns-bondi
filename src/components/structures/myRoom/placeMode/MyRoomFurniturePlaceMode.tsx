@@ -62,8 +62,6 @@ export const MyRoomFurniturePlaceMode = ({
       const width = boundingBox.max.x - boundingBox.min.x;
       const depth = boundingBox.max.z - boundingBox.min.z;
 
-      console.log("intersect", intersect);
-
       // 현재 rayCaster에 잡힌 첫번째 오브젝트의 법선벡터와 3축의 벡터가 평행하다면 각 축에 맞는 offset을 더해준다.
       if (
         1 - Math.abs(intersect.normal.clone().dot(floorVector)) < 0.1 &&
@@ -106,7 +104,6 @@ export const MyRoomFurniturePlaceMode = ({
     };
 
     const handlePointerUp = () => {
-      console.log("ref.current", ref.current);
       if (!currentPlacingMyRoomFurniture) return;
       const myRoomObjects = getMyRoomObjects(
         threeScene,

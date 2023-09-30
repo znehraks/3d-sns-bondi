@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import {
+  CurrentRotationingMyRoomObjectAtom,
   CurrentSelectedMyRoomObjectAtom,
   IMyRoomObject,
 } from "../../../../store/PlayersAtom";
@@ -14,16 +15,25 @@ export const MyRoomElements = ({ object }: { object: IMyRoomObject }) => {
   const [, setCurrentSelectedMyRoomObject] = useRecoilState(
     CurrentSelectedMyRoomObjectAtom
   );
+
+  const [, setCurrentRotationingMyRoomObject] = useRecoilState(
+    CurrentRotationingMyRoomObjectAtom
+  );
   useEffect(() => {
     const discardPopup = () => {
       setCurrentSelectedMyRoomObject(undefined);
+      setCurrentRotationingMyRoomObject(undefined);
     };
 
     three.gl.domElement.addEventListener("pointerdown", discardPopup);
     return () => {
       three.gl.domElement.removeEventListener("pointerdown", discardPopup);
     };
-  }, [setCurrentSelectedMyRoomObject, three.gl.domElement]);
+  }, [
+    setCurrentRotationingMyRoomObject,
+    setCurrentSelectedMyRoomObject,
+    three.gl.domElement,
+  ]);
   if (object.name.includes("my-room-memo")) {
     return (
       <MyRoomPlacedMemo

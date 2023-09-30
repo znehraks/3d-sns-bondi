@@ -8,7 +8,7 @@ import {
   CurrentMyRoomPlayerAtom,
   CurrentPlacingMyRoomMemoAtom,
   CurrentPlacingMyRoomFurnitureAtom,
-  CurrentSelectedMyRoomObjectAtom,
+  CurrentRotationingMyRoomObjectAtom,
 } from "../../../store/PlayersAtom";
 
 import { MyRoomElements } from "./elements";
@@ -26,8 +26,8 @@ export const MyRoom = () => {
   );
   const currentPlacingMyRoomMemo = useRecoilValue(CurrentPlacingMyRoomMemoAtom);
 
-  const currentSelectedMyRoomObject = useRecoilValue(
-    CurrentSelectedMyRoomObjectAtom
+  const currentRotationingMyRoomObject = useRecoilValue(
+    CurrentRotationingMyRoomObjectAtom
   );
 
   const currentMyRoomPlayer = useRecoilValue(CurrentMyRoomPlayerAtom);
@@ -60,7 +60,7 @@ export const MyRoom = () => {
       {currentPlacingMyRoomMemo && <MyRoomMemoPlaceMode />}
 
       {/* 변형모드 */}
-      {currentSelectedMyRoomObject && <MyRoomObjectRotationMode />}
+      {currentRotationingMyRoomObject && <MyRoomObjectRotationMode />}
     </>
   );
 };

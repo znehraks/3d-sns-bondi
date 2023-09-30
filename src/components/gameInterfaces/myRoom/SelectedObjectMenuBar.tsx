@@ -1,6 +1,7 @@
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   CurrentPlacingMyRoomFurnitureAtom,
+  CurrentRotationingMyRoomObjectAtom,
   CurrentSelectedMyRoomObjectAtom,
 } from "../../../store/PlayersAtom";
 import styled from "styled-components";
@@ -13,6 +14,10 @@ export const SelectedObjectMenuBar = () => {
   );
   const [, setCurrentPlacingMyRoomFurniture] = useRecoilState(
     CurrentPlacingMyRoomFurnitureAtom
+  );
+
+  const [, setCurrentRotationingMyRoomObject] = useRecoilState(
+    CurrentRotationingMyRoomObjectAtom
   );
 
   useEffect(() => {
@@ -33,7 +38,13 @@ export const SelectedObjectMenuBar = () => {
       >
         이동
       </Menu>
-      <Menu>회전</Menu>
+      <Menu
+        onClick={() => {
+          setCurrentRotationingMyRoomObject(currentSelectedMyRoomObject?.name);
+        }}
+      >
+        회전
+      </Menu>
     </MenuBarWrapper>
   );
 };
