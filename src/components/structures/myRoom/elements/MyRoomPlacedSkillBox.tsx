@@ -7,7 +7,7 @@ export const MyRoomPlacedSkillBox = ({
 }: {
   placedMyRoomSkill: IPlacedMyRoomObject;
 }) => {
-  const texture = useTexture(`/images/${placedMyRoomSkill.name}.png`);
+  const texture = useTexture(`/images/${placedMyRoomSkill.name}.webp`);
   return (
     <mesh
       castShadow

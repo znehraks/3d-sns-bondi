@@ -29,7 +29,7 @@ export const MyRoomFurniturePlaceMode = ({
   const [placedMyRoomSkills, setPlacedMyRoomSkills] = useRecoilState(
     PlacedMyRoomSkillsAtom
   );
-  const texture = useTexture(`/images/${currentPlacingMyRoomSkill}.png`);
+  const texture = useTexture(`/images/${currentPlacingMyRoomSkill}.webp`);
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
   texture.repeat.x = 1;

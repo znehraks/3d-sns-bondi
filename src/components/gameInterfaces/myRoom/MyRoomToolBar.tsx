@@ -16,13 +16,20 @@ const skills = [
   "typescript",
   "react",
   "next",
+  "threejs",
   "node",
-  "graphql",
-  "three",
   "pixi",
+  "nestjs",
   "python",
-  "flutter",
   "aws",
+  "django",
+  "flutter",
+  "go",
+  "graphql",
+  "kotlin",
+  "mongodb",
+  "mysql",
+  "swift",
 ];
 
 // 가구 배치
@@ -77,7 +84,7 @@ export const MyRoomToolBar = () => {
                       });
                       setOpenedDropdownIndex(undefined);
                     }}
-                    src={`/images/${skill}.png`}
+                    src={`/images/${skill}.webp`}
                   ></ToolBarDropdownItem>
                 ))}
               </ToolBarBtnDropdown>
@@ -94,7 +101,7 @@ export const MyRoomToolBar = () => {
                       });
                       setOpenedDropdownIndex(undefined);
                     }}
-                    src={`/images/${skill}.png`}
+                    src={`/images/${skill}.webp`}
                   ></ToolBarDropdownItem>
                 ))}
               </ToolBarBtnDropdown>

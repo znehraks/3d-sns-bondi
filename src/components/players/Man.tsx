@@ -10,12 +10,14 @@ import { useFrame, useGraph, useThree } from "@react-three/fiber";
 import { GLTF, SkeletonUtils } from "three-stdlib";
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
+  CurrentMapAtom,
   CurrentMyRoomPlayerAtom,
   IPlayer,
   MeAtom,
   PlayerGroundStructuresFloorPlaneCornersSelector,
 } from "../../store/PlayersAtom";
 import { calculateMinimapPosition } from "../../utils";
+import gsap from "gsap";
 
 interface IMan {
   player?: IPlayer;
@@ -32,6 +34,7 @@ export function Man({
   position,
 }: IMan) {
   const playerId = player?.id;
+  const currentMap = useRecoilValue(CurrentMapAtom);
   const [, setCurrentMyRoomPlayer] = useRecoilState(CurrentMyRoomPlayerAtom);
   const playerGroundStructuresFloorPlaneCorners = useRecoilValue(
     PlayerGroundStructuresFloorPlaneCornersSelector
@@ -45,7 +48,7 @@ export function Man({
   const point = document.getElementById(`player-point-${playerId}`);
   const objectInteractionDiv = document.getElementById("object-interaction");
 
-  const group = useRef<THREE.Group>(null);
+  const playerRef = useRef<THREE.Group>(null);
   const threeScene = useThree((three) => three.scene);
   const nicknameBillboard = threeScene.getObjectByName(
     `nickname-billboard-${playerId}`
@@ -64,7 +67,34 @@ export function Man({
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const nodes = objectMap.nodes as any;
   const [animation, setAnimation] = useState("CharacterArmature|Idle");
-  const { actions } = useAnimations(animations, group);
+  const { actions } = useAnimations(animations, playerRef);
+
+  useEffect(() => {
+    if (!playerRef.current) return;
+    if (playerId && currentMap === "GROUND") {
+      gsap.fromTo(
+        playerRef.current.position,
+        {
+          duration: 2,
+          y: -2,
+          ease: "linear",
+        },
+        {
+          y: 0,
+        }
+      );
+      gsap.fromTo(
+        playerRef.current.rotation,
+        {
+          duration: 2,
+          x: 0,
+        },
+        {
+          x: Math.PI * 2,
+        }
+      );
+    }
+  }, [currentMap, playerId]);
 
   useEffect(() => {
     actions[animation]?.reset().fadeIn(0.5).play();
@@ -76,22 +106,22 @@ export function Man({
 
   // const tempVec3 = new THREE.Vector3();
   useFrame(({ camera }) => {
-    if (!group.current) return;
-    if (group.current.position.distanceTo(position) > 0.1) {
-      const direction = group.current.position
+    if (!playerRef.current) return;
+    if (playerRef.current.position.distanceTo(position) > 0.1) {
+      const direction = playerRef.current.position
         .clone()
         .sub(position)
         .normalize()
         .multiplyScalar(0.04);
-      group.current.position.sub(direction);
-      group.current.lookAt(position);
+      playerRef.current.position.sub(direction);
+      playerRef.current.lookAt(position);
       // api.position.copy(group.current.position);
       // api.quaternion.copy(group.current.quaternion);
 
       if (point) {
         point.style.transform = `translate(
-          ${calculateMinimapPosition(group.current.position).x}px,
-          ${calculateMinimapPosition(group.current.position).y}px
+          ${calculateMinimapPosition(playerRef.current.position).x}px,
+          ${calculateMinimapPosition(playerRef.current.position).y}px
           )`;
       }
 
@@ -101,17 +131,17 @@ export function Man({
     }
     if (nicknameBillboard) {
       nicknameBillboard.position.set(
-        group.current.position.x,
-        group.current.position.y + 2,
-        group.current.position.z
+        playerRef.current.position.x,
+        playerRef.current.position.y + 2,
+        playerRef.current.position.z
       );
       nicknameBillboard.lookAt(10000, 10000, 10000);
     }
     if (chatText) {
       chatText.position.set(
-        group.current.position.x + 1,
-        group.current.position.y + 3,
-        group.current.position.z
+        playerRef.current.position.x + 1,
+        playerRef.current.position.y + 3,
+        playerRef.current.position.z
       );
       if (
         Number(new Date()) - Number(new Date(chatText.userData.timestamp)) >
@@ -129,19 +159,19 @@ export function Man({
       me?.id === playerId
     ) {
       camera.position.set(
-        group.current.position.x + 12,
-        group.current.position.y + 12,
-        group.current.position.z + 12
+        playerRef.current.position.x + 12,
+        playerRef.current.position.y + 12,
+        playerRef.current.position.z + 12
       );
-      camera.lookAt(group.current.position);
+      camera.lookAt(playerRef.current.position);
 
       const currentCloseStructure =
         playerGroundStructuresFloorPlaneCorners.find((structure) => {
           return (
-            group.current!.position.x < structure.corners[0].x &&
-            group.current!.position.x > structure.corners[2].x &&
-            group.current!.position.z < structure.corners[0].z &&
-            group.current!.position.z > structure.corners[2].z
+            playerRef.current!.position.x < structure.corners[0].x &&
+            playerRef.current!.position.x > structure.corners[2].x &&
+            playerRef.current!.position.z < structure.corners[0].z &&
+            playerRef.current!.position.z > structure.corners[2].z
           );
         });
       if (currentCloseStructure) {
@@ -150,9 +180,9 @@ export function Man({
           objectInteractionDiv.style.display = "block";
           camera.lookAt(currentCloseStructure.position);
           camera.position.set(
-            group.current.position.x + 6,
-            group.current.position.y + 6,
-            group.current.position.z + 6
+            playerRef.current.position.x + 6,
+            playerRef.current.position.y + 6,
+            playerRef.current.position.z + 6
           );
         }
       } else {
@@ -166,7 +196,7 @@ export function Man({
   return (
     <>
       <group
-        ref={group}
+        ref={playerRef}
         position={memoizedPosition}
         dispose={null}
         name={playerId ?? ""}
