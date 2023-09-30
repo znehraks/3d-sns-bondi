@@ -1,39 +1,16 @@
+import { useGLTF } from "@react-three/drei";
 import { IMyRoomObject } from "../../../../store/PlayersAtom";
-import { MyRoomBed } from "./MyRoomBed";
-import { MyRoomChair } from "./MyRoomChair";
-import { MyRoomStandingDesk } from "./MyRoomDesk";
+import { MyRoomPlacedFurniture } from "./MyRoomPlacedFurniture";
 import { MyRoomPlacedMemo } from "./MyRoomPlacedMemo";
 import { MyRoomPlacedSkillBox } from "./MyRoomPlacedSkillBox";
 
 export const MyRoomElements = ({ object }: { object: IMyRoomObject }) => {
-  if (object.name === "my-room-bed") {
-    return <MyRoomBed position={object.position} rotation={object.rotation} />;
-  }
-  if (object.name === "my-room-chair") {
-    return (
-      <MyRoomChair position={object.position} rotation={object.rotation} />
-    );
-  }
-  if (object.name === "my-room-floor") {
-    return null;
-  }
-  if (object.name === "my-room-left-wall") {
-    return null;
-  }
-  if (object.name === "my-room-right-wall") {
-    return null;
-  }
-  if (object.name === "my-room-desk") {
-    return (
-      <MyRoomStandingDesk
-        position={object.position}
-        rotation={object.rotation}
-      />
-    );
-  }
+  const { scene } = useGLTF("/models/furniture-Couch Small.glb");
+  console.log("whatthefucl", scene);
   if (object.name.includes("my-room-memo")) {
     return (
       <MyRoomPlacedMemo
+        key={object.name}
         placedMyRoomMemo={{
           authorNickname: object.authorNickname ?? "",
           position: object.position,
@@ -44,52 +21,28 @@ export const MyRoomElements = ({ object }: { object: IMyRoomObject }) => {
       />
     );
   }
-  return (
-    <MyRoomPlacedSkillBox
-      placedMyRoomSkill={{
-        position: object.position,
-        name: object.name.split("-")[2],
-      }}
-    />
-  );
-  //   if (object.name === "my-room-html") {
-  //     return null;
-  //   }
-  //   if (object.name === "my-room-css") {
-  //     return null;
-  //   }
-  //   if (object.name === "my-room-javascript") {
-  //     return null;
-  //   }
-  //   if (object.name === "my-room-typescript") {
-  //     return null;
-  //   }
-  //   if (object.name === "my-room-react") {
-  //     return null;
-  //   }
-  //   if (object.name === "my-room-next") {
-  //     return null;
-  //   }
-  //   if (object.name === "my-room-node") {
-  //     return null;
-  //   }
-  //   if (object.name === "my-room-graphql") {
-  //     return null;
-  //   }
-  //   if (object.name === "my-room-three") {
-  //     return null;
-  //   }
-  //   if (object.name === "my-room-pixi") {
-  //     return null;
-  //   }
-  //   if (object.name === "my-room-python") {
-  //     return null;
-  //   }
-  //   if (object.name === "my-room-flutter") {
-  //     return null;
-  //   }
-  //   if (object.name === "my-room-aws") {
-  //     return null;
-  //   }
+  if (object.name.includes("my-room-skill"))
+    return (
+      <MyRoomPlacedSkillBox
+        key={object.name}
+        placedMyRoomSkill={{
+          position: object.position,
+          name: `skill-${object.name.split("-")[3]}`,
+        }}
+      />
+    );
+
+  if (object.name.includes("my-room-furniture"))
+    return (
+      <MyRoomPlacedFurniture
+        key={object.name}
+        placedMyRoomFurniture={{
+          position: object.position,
+          name: `furniture-${object.name.split("-")[3]}`,
+        }}
+      />
+    );
+
+  // return <GsapTest object={object} />;
   return null;
 };

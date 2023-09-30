@@ -44,9 +44,9 @@ export const ClientSocketControls = () => {
     };
 
     const handlePlayers = (value: IPlayer[]) => {
-      console.log("value", value);
       setPlayers(value);
       const newMe = value.find((p) => p && me && p?.id === me?.id);
+      console.log("newMe", newMe);
       if (newMe) {
         setMe(newMe);
       }

@@ -18,7 +18,7 @@ import { MyRoom } from "../structures/myRoom";
 import { GroundElements } from "../structures/ground";
 import _ from "lodash";
 import { MiniGame } from "../structures/miniGame";
-import { GsapTest } from "../test/GsapTest";
+// import { GsapTest } from "../test/GsapTest";
 
 export const Playground = () => {
   // const backgroundTexture = useTexture("./images/scene_map.jpeg");
@@ -33,8 +33,6 @@ export const Playground = () => {
 
   const camera = useThree((three) => three.camera);
 
-  const scene = useThree((three) => three.scene);
-  console.log("scene", scene);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controls = useRef<any>(null);
 
@@ -64,12 +62,7 @@ export const Playground = () => {
       camera.lookAt(0, 0, 0);
       return;
     }
-    console.log(4);
   }, [camera, camera.position, currentMap]);
-
-  console.log("players", players);
-  console.log("controls", controls);
-  console.log("camera", camera);
 
   const reversedChats = useMemo(() => {
     return _.uniqBy([...chats].reverse(), "senderId");
@@ -103,7 +96,7 @@ export const Playground = () => {
 
       {currentMap === "GROUND" && (
         <Suspense fallback={<Loader />}>
-          <GsapTest />
+          {/* <GsapTest /> */}
           <directionalLight
             castShadow
             intensity={10}

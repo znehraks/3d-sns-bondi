@@ -13,8 +13,6 @@ export const CubeMan = () => {
   //   );
   const { scene, animations } = useGLTF(`/models/Steve.glb`);
   const { actions } = useAnimations(animations, group);
-  console.log(scene);
-  console.log(animations);
 
   useFrame(() => {
     actions[

@@ -7,33 +7,43 @@ import {
   CurrentMyRoomPlayerAtom,
   MeAtom,
   CurrentPlacingMyRoomMemoAtom,
+  CurrentPlacingMyRoomFurnitureAtom,
 } from "../../../store/PlayersAtom";
 import { isValidText } from "../../../utils";
 const skills = [
-  "html",
-  "css",
-  "javascript",
-  "typescript",
-  "react",
-  "next",
-  "threejs",
-  "node",
-  "pixi",
-  "nestjs",
-  "python",
-  "aws",
-  "django",
-  "flutter",
-  "go",
-  "graphql",
-  "kotlin",
-  "mongodb",
-  "mysql",
-  "swift",
+  "skill-html",
+  "skill-css",
+  "skill-javascript",
+  "skill-typescript",
+  "skill-react",
+  "skill-next",
+  "skill-threejs",
+  "skill-node",
+  "skill-pixi",
+  "skill-nestjs",
+  "skill-python",
+  "skill-aws",
+  "skill-django",
+  "skill-flutter",
+  "skill-go",
+  "skill-graphql",
+  "skill-kotlin",
+  "skill-mongodb",
+  "skill-mysql",
+  "skill-swift",
 ];
 
 // 가구 배치
-const furnitures = ["의자", "침대", "책상"];
+const furnitures = [
+  "furniture-Bed",
+  "furniture-Bookcase with Books",
+  "furniture-Chair",
+  "furniture-Coat Rack Standing",
+  "furniture-Couch Small",
+  "furniture-Gaming Computer",
+  "furniture-Office Chair",
+  "furniture-Standing Desk",
+];
 
 export const MyRoomToolBar = () => {
   const [openedDropdownIndex, setOpenedDropdownIndex] = useState<number>();
@@ -42,6 +52,9 @@ export const MyRoomToolBar = () => {
   const me = useRecoilValue(MeAtom);
   const [, setCurrentPlacingMyRoomSkill] = useRecoilState(
     CurrentPlacingMyRoomSkillAtom
+  );
+  const [, setCurrentPlacingMyRoomFurniture] = useRecoilState(
+    CurrentPlacingMyRoomFurnitureAtom
   );
   const [, setCurrentPlacingMyRoomMemo] = useRecoilState(
     CurrentPlacingMyRoomMemoAtom
@@ -84,24 +97,24 @@ export const MyRoomToolBar = () => {
                       });
                       setOpenedDropdownIndex(undefined);
                     }}
-                    src={`/images/${skill}.webp`}
+                    src={`/images/skills/${skill}.webp`}
                   ></ToolBarDropdownItem>
                 ))}
               </ToolBarBtnDropdown>
             )}
             {openedDropdownIndex === 1 && (
               <ToolBarBtnDropdown>
-                {furnitures.map((skill) => (
+                {furnitures.map((furniture) => (
                   <ToolBarDropdownItem
-                    key={skill}
+                    key={furniture}
                     onClick={() => {
-                      setCurrentPlacingMyRoomSkill((prev) => {
-                        if (prev === skill) return undefined;
-                        return skill;
+                      setCurrentPlacingMyRoomFurniture((prev) => {
+                        if (prev === furniture) return undefined;
+                        return furniture;
                       });
                       setOpenedDropdownIndex(undefined);
                     }}
-                    src={`/images/${skill}.webp`}
+                    src={`/images/furnitures/${furniture}.webp`}
                   ></ToolBarDropdownItem>
                 ))}
               </ToolBarBtnDropdown>

@@ -4,7 +4,9 @@ import { useEffect, useRef, useState } from "react";
 import { Mesh } from "three";
 import { a } from "@react-spring/three";
 
-export const GsapTest = () => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export const GsapTest = ({ object }: any) => {
+  console.log("object", object);
   const [isPop, setIsPop] = useState(false);
   const cubeRef = useRef<Mesh>(null);
 

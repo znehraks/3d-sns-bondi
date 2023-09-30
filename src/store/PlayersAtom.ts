@@ -209,8 +209,8 @@ export const CurrentPlacingMyRoomFurnitureAtom = atom<string | undefined>({
   default: undefined,
 });
 
-export const PlacedMyRoomFurnitures = atom<IPlacedMyRoomObject[]>({
-  key: "PlacedMyRoomFurnitures",
+export const PlacedMyRoomFurnituresAtom = atom<IPlacedMyRoomObject[]>({
+  key: "PlacedMyRoomFurnituresAtom",
   default: [],
 });
 

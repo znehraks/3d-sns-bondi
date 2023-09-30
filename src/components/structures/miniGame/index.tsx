@@ -266,8 +266,6 @@ export const MiniGame = () => {
   const perpendicularVector = new Vector3();
   const quaterinion = new Quaternion();
 
-  console.log("cooltimeProgress", cooltimeProgress);
-
   useFrame(() => {
     if (coolTime) {
       if (Date.now() - coolTime >= COOL_TIME) {

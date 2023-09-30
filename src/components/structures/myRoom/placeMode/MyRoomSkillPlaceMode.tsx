@@ -15,7 +15,7 @@ const leftWallVector = new THREE.Vector3(1, 0, 0);
 const rightWallVector = new THREE.Vector3(0, 0, 1);
 const floorVector = new THREE.Vector3(0, 1, 0);
 
-export const MyRoomPlaceMode = ({
+export const MyRoomSkillPlaceMode = ({
   currentPlacingMyRoomSkill,
 }: {
   currentPlacingMyRoomSkill: string;
@@ -28,7 +28,9 @@ export const MyRoomPlaceMode = ({
   const [placedMyRoomSkills, setPlacedMyRoomSkills] = useRecoilState(
     PlacedMyRoomSkillsAtom
   );
-  const texture = useTexture(`/images/${currentPlacingMyRoomSkill}.webp`);
+  const texture = useTexture(
+    `/images/skills/${currentPlacingMyRoomSkill}.webp`
+  );
   texture.wrapS = THREE.RepeatWrapping;
   texture.wrapT = THREE.RepeatWrapping;
   texture.repeat.x = 1;

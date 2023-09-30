@@ -24,9 +24,6 @@ export const TargetMesh = ({
     onCollide: (e) => {
       if (!ref.current) return;
       if (e.contact.bj.name === "bullet") {
-        console.log("충 돌");
-        console.log(e);
-        console.log("e.contact.contactPoint", e.contact.contactPoint);
         setHitCount((prev) => prev + 1);
         const timeout = setTimeout(() => {
           ref.current!.visible = false;
