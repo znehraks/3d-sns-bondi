@@ -24,7 +24,7 @@ export const Memo = () => {
       <MemoBottomContainer>
         <MemoAuthor>작성자: {currentSelectedMemo.authorNickname}</MemoAuthor>
         <MemoTime>
-          {dayjs(currentSelectedMemo.timestamp).format("YYYY-MM-DD, hh:mm")}
+          {dayjs(currentSelectedMemo.timestamp).format("YYYY-MM-DD, hh:mm:ss")}
         </MemoTime>
       </MemoBottomContainer>
     </MemoWrapper>

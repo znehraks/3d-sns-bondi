@@ -5,8 +5,7 @@ import { MyRoomPlacedMemo } from "./MyRoomPlacedMemo";
 import { MyRoomPlacedSkillBox } from "./MyRoomPlacedSkillBox";
 
 export const MyRoomElements = ({ object }: { object: IMyRoomObject }) => {
-  const { scene } = useGLTF("/models/furniture-Couch Small.glb");
-  console.log("whatthefucl", scene);
+  useGLTF("/models/furniture-Couch Small.glb");
   if (object.name.includes("my-room-memo")) {
     return (
       <MyRoomPlacedMemo

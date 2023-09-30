@@ -1,4 +1,6 @@
-export const colorCandidates = [
+import _ from "lodash";
+
+export const colorCandidates = _.uniq([
   "#007fff",
   "#7fff00",
   "#ff007f",
@@ -41,7 +43,7 @@ export const colorCandidates = [
   "#0018a8",
   "#e6e6c4",
   "#eeb422",
-];
+]);
 
 export const myRoomSize = 5;
 export const myRoomSkillBoxSize = 5 / 20;

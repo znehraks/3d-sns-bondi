@@ -2,9 +2,8 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import {
   CurrentMyRoomPlayerAtom,
   CurrentPlacingMyRoomMemoAtom,
-  PlacedMyRoomMemosAtom,
 } from "../../../../store/PlayersAtom";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 import { calculateThreePosition, getMyRoomObjects } from "../../../../utils";
@@ -16,12 +15,10 @@ const rightWallVector = new THREE.Vector3(0, 0, 1);
 const floorVector = new THREE.Vector3(0, 1, 0);
 
 export const MyRoomMemoPlaceMode = () => {
-  const [isFinished, setIsFinished] = useState(false);
   const { scene, gl, camera } = useThree();
   const currentMyRoomPlayer = useRecoilValue(CurrentMyRoomPlayerAtom);
   const [currentPlacingMyRoomMemo, setCurrentPlacingMyRoomMemo] =
     useRecoilState(CurrentPlacingMyRoomMemoAtom);
-  const [, setPlacedMyRoomMemos] = useRecoilState(PlacedMyRoomMemosAtom);
 
   const ref = useRef<THREE.Mesh>(null);
   useEffect(() => {
@@ -128,27 +125,34 @@ export const MyRoomMemoPlaceMode = () => {
     };
     const handlePointerUp = () => {
       if (!currentPlacingMyRoomMemo) return;
-      setPlacedMyRoomMemos((prev) => [
-        ...prev,
+      const myRoomObjects = getMyRoomObjects(scene);
+      // `my-room-memo-${placedMyRoomMemo.authorNickname}-${placedMyRoomMemo.timestamp}`
+      socket.emit(
+        "myRoomChange",
         {
-          text: currentPlacingMyRoomMemo.text,
-          authorNickname: currentPlacingMyRoomMemo.authorNickname,
-          timestamp: currentPlacingMyRoomMemo.timestamp,
-          position: [
-            ref.current!.position.x,
-            ref.current!.position.y,
-            ref.current!.position.z,
-          ],
-          rotation: [
-            ref.current!.rotation.x,
-            ref.current!.rotation.y,
-            ref.current!.rotation.z,
+          objects: [
+            ...myRoomObjects,
+            {
+              name: `my-room-memo-${currentPlacingMyRoomMemo.authorNickname}-${currentPlacingMyRoomMemo.timestamp}`,
+              text: currentPlacingMyRoomMemo.text,
+              authorNickname: currentPlacingMyRoomMemo.authorNickname,
+              timestamp: currentPlacingMyRoomMemo.timestamp,
+              position: [
+                ref.current!.position.x,
+                ref.current!.position.y,
+                ref.current!.position.z,
+              ],
+              rotation: [
+                ref.current!.rotation.x,
+                ref.current!.rotation.y,
+                ref.current!.rotation.z,
+              ],
+            },
           ],
         },
-      ]);
-      setIsFinished(true);
-
-      // socket.emit 하기 배치했음을 알려야함
+        currentMyRoomPlayer?.id
+      );
+      setCurrentPlacingMyRoomMemo(undefined);
     };
 
     gl.domElement.addEventListener("pointermove", handlePointerMove);
@@ -159,30 +163,12 @@ export const MyRoomMemoPlaceMode = () => {
     };
   }, [
     camera,
+    currentMyRoomPlayer?.id,
     currentPlacingMyRoomMemo,
     gl.domElement,
     scene,
     scene.children,
-    setPlacedMyRoomMemos,
-  ]);
-
-  useEffect(() => {
-    if (isFinished) {
-      const myRoomObjects = getMyRoomObjects(scene);
-      setCurrentPlacingMyRoomMemo(undefined);
-      setPlacedMyRoomMemos([]);
-      socket.emit(
-        "myRoomChange",
-        { objects: myRoomObjects },
-        currentMyRoomPlayer?.id
-      );
-    }
-  }, [
-    currentMyRoomPlayer?.id,
-    isFinished,
-    scene,
     setCurrentPlacingMyRoomMemo,
-    setPlacedMyRoomMemos,
   ]);
 
   return (

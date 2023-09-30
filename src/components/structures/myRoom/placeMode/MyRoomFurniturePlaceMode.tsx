@@ -1,9 +1,6 @@
 import { useRecoilState } from "recoil";
-import {
-  CurrentPlacingMyRoomFurnitureAtom,
-  PlacedMyRoomFurnituresAtom,
-} from "../../../../store/PlayersAtom";
-import { useEffect, useRef, useState } from "react";
+import { CurrentPlacingMyRoomFurnitureAtom } from "../../../../store/PlayersAtom";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 import { calculateThreePosition, getMyRoomObjects } from "../../../../utils";
@@ -21,13 +18,9 @@ export const MyRoomFurniturePlaceMode = ({
 }: {
   currentPlacingMyRoomFurniture: string;
 }) => {
-  const [isFinished, setIsFinished] = useState(false);
   const { scene: threeScene, gl, camera } = useThree();
   const [, setCurrentPlacingMyRoomFurniture] = useRecoilState(
     CurrentPlacingMyRoomFurnitureAtom
-  );
-  const [placedMyRoomFurnitures, setPlacedMyRoomFurnitures] = useRecoilState(
-    PlacedMyRoomFurnituresAtom
   );
   const { scene } = useGLTF(`/models/${currentPlacingMyRoomFurniture}.glb`);
 
@@ -100,19 +93,29 @@ export const MyRoomFurniturePlaceMode = ({
       }
     };
     const handlePointerUp = () => {
-      setPlacedMyRoomFurnitures((prev) => [
-        ...prev.filter((item) => item.name !== currentPlacingMyRoomFurniture),
-        {
-          name: currentPlacingMyRoomFurniture,
-          position: [
-            ref.current!.position.x,
-            ref.current!.position.y,
-            ref.current!.position.z,
-          ],
-        },
-      ]);
-
-      setIsFinished(true);
+      const myRoomObjects = getMyRoomObjects(
+        threeScene,
+        `my-room-${currentPlacingMyRoomFurniture}`
+      );
+      socket.emit("myRoomChange", {
+        objects: [
+          ...myRoomObjects,
+          {
+            name: `my-room-${currentPlacingMyRoomFurniture}`,
+            position: [
+              ref.current!.position.x,
+              ref.current!.position.y,
+              ref.current!.position.z,
+            ],
+            rotation: [
+              ref.current!.rotation.x,
+              ref.current!.rotation.y,
+              ref.current!.rotation.z,
+            ],
+          },
+        ],
+      });
+      setCurrentPlacingMyRoomFurniture(undefined);
 
       // socket.emit 하기 배치했음을 알려야함
     };
@@ -130,26 +133,8 @@ export const MyRoomFurniturePlaceMode = ({
     threeScene,
     threeScene.children,
     setCurrentPlacingMyRoomFurniture,
-    setPlacedMyRoomFurnitures,
     scene,
   ]);
 
-  useEffect(() => {
-    if (isFinished) {
-      const myRoomObjects = getMyRoomObjects(threeScene);
-      console.log("myRoomObjects", myRoomObjects);
-      setCurrentPlacingMyRoomFurniture(undefined);
-      setPlacedMyRoomFurnitures([]);
-      console.log("here?");
-      socket.emit("myRoomChange", { objects: myRoomObjects });
-    }
-  }, [
-    currentPlacingMyRoomFurniture,
-    isFinished,
-    placedMyRoomFurnitures,
-    threeScene,
-    setCurrentPlacingMyRoomFurniture,
-    setPlacedMyRoomFurnitures,
-  ]);
   return <primitive visible name="placing" ref={ref} object={scene} />;
 };

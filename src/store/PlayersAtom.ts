@@ -189,29 +189,21 @@ export const PlayerGroundStructuresFloorPlaneCornersSelector = selector({
   },
 });
 
+export interface IPlacedMyRoomObject {
+  name: string;
+  position: [number, number, number];
+  scale?: [number, number, number];
+}
+
+// TODO 가구 배치하기
 export const CurrentPlacingMyRoomSkillAtom = atom<string | undefined>({
   key: "CurrentPlacingMyRoomSkillAtom",
   default: undefined,
 });
 
-export interface IPlacedMyRoomObject {
-  name: string;
-  position: [number, number, number];
-}
-export const PlacedMyRoomSkillsAtom = atom<IPlacedMyRoomObject[]>({
-  key: "PlacedMyRoomSkillsAtom",
-  default: [],
-});
-
-// TODO 가구 배치하기
 export const CurrentPlacingMyRoomFurnitureAtom = atom<string | undefined>({
   key: "CurrentPlacingMyRoomFurnitureAtom",
   default: undefined,
-});
-
-export const PlacedMyRoomFurnituresAtom = atom<IPlacedMyRoomObject[]>({
-  key: "PlacedMyRoomFurnituresAtom",
-  default: [],
 });
 
 export interface ICurrentPlacingMyRoomMemo {
@@ -234,11 +226,6 @@ export interface IPlacedMyRoomMemos {
   position: [number, number, number];
   rotation: [number, number, number];
 }
-
-export const PlacedMyRoomMemosAtom = atom<IPlacedMyRoomMemos[]>({
-  key: "PlacedMyRoomMemosAtom",
-  default: [],
-});
 
 export const CurrentSelectedMemoAtom = atom<
   ICurrentPlacingMyRoomMemo | undefined

@@ -1,9 +1,6 @@
 import { useRecoilState } from "recoil";
-import {
-  CurrentPlacingMyRoomSkillAtom,
-  PlacedMyRoomSkillsAtom,
-} from "../../../../store/PlayersAtom";
-import { useEffect, useRef, useState } from "react";
+import { CurrentPlacingMyRoomSkillAtom } from "../../../../store/PlayersAtom";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { useThree } from "@react-three/fiber";
 import { calculateThreePosition, getMyRoomObjects } from "../../../../utils";
@@ -20,13 +17,9 @@ export const MyRoomSkillPlaceMode = ({
 }: {
   currentPlacingMyRoomSkill: string;
 }) => {
-  const [isFinished, setIsFinished] = useState(false);
   const { scene, gl, camera } = useThree();
   const [, setCurrentPlacingMyRoomSkill] = useRecoilState(
     CurrentPlacingMyRoomSkillAtom
-  );
-  const [placedMyRoomSkills, setPlacedMyRoomSkills] = useRecoilState(
-    PlacedMyRoomSkillsAtom
   );
   const texture = useTexture(
     `/images/skills/${currentPlacingMyRoomSkill}.webp`
@@ -135,19 +128,30 @@ export const MyRoomSkillPlaceMode = ({
       }
     };
     const handlePointerUp = () => {
-      setPlacedMyRoomSkills((prev) => [
-        ...prev.filter((item) => item.name !== currentPlacingMyRoomSkill),
-        {
-          name: currentPlacingMyRoomSkill,
-          position: [
-            ref.current!.position.x,
-            ref.current!.position.y,
-            ref.current!.position.z,
-          ],
-        },
-      ]);
-
-      setIsFinished(true);
+      const myRoomObjects = getMyRoomObjects(
+        scene,
+        `my-room-${currentPlacingMyRoomSkill}`
+      );
+      socket.emit("myRoomChange", {
+        objects: [
+          ...myRoomObjects,
+          {
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            name: `my-room-${currentPlacingMyRoomSkill}`,
+            position: [
+              ref.current!.position.x,
+              ref.current!.position.y,
+              ref.current!.position.z,
+            ],
+            rotation: [
+              ref.current!.rotation.x,
+              ref.current!.rotation.y,
+              ref.current!.rotation.z,
+            ],
+          },
+        ],
+      });
+      setCurrentPlacingMyRoomSkill(undefined);
 
       // socket.emit 하기 배치했음을 알려야함
     };
@@ -165,25 +169,9 @@ export const MyRoomSkillPlaceMode = ({
     scene,
     scene.children,
     setCurrentPlacingMyRoomSkill,
-    setPlacedMyRoomSkills,
     texture,
   ]);
 
-  useEffect(() => {
-    if (isFinished) {
-      const myRoomObjects = getMyRoomObjects(scene);
-      setCurrentPlacingMyRoomSkill(undefined);
-      setPlacedMyRoomSkills([]);
-      socket.emit("myRoomChange", { objects: myRoomObjects });
-    }
-  }, [
-    currentPlacingMyRoomSkill,
-    isFinished,
-    placedMyRoomSkills,
-    scene,
-    setCurrentPlacingMyRoomSkill,
-    setPlacedMyRoomSkills,
-  ]);
   return (
     <instancedMesh>
       <mesh name="placing" ref={ref}>

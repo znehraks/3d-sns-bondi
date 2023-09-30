@@ -8,8 +8,8 @@ export const MyRoomPlacedFurniture = ({
 }: {
   placedMyRoomFurniture: IPlacedMyRoomObject;
 }) => {
-  console.log("placedMyRoomFurniture", placedMyRoomFurniture);
   const modeling = useGLTF(`/models/${placedMyRoomFurniture.name}.glb`);
+
   const [isLoaded, setIsLoaded] = useState(false);
   useEffect(() => {
     modeling.scene.traverse((obj) => {
@@ -26,8 +26,8 @@ export const MyRoomPlacedFurniture = ({
         name={`my-room-${placedMyRoomFurniture.name}`}
         object={modeling.scene}
         // position={placedMyRoomFurniture.position}
-        scale={[10, 10, 10]}
-        position={[0, 0, 0]}
+        scale={placedMyRoomFurniture.scale ?? [1, 1, 1]}
+        position={placedMyRoomFurniture.position}
       />
     );
   return null;

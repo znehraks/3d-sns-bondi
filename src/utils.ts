@@ -30,7 +30,7 @@ export const calculateThreePosition = ({
   };
 };
 
-export const getMyRoomObjects = (scene: Scene) => {
+export const getMyRoomObjects = (scene: Scene, currentObjectName?: string) => {
   const myRoomObjects: IMyRoom["objects"] = [];
   scene.children.forEach((child) =>
     child.traverse((obj) => {
@@ -47,5 +47,5 @@ export const getMyRoomObjects = (scene: Scene) => {
       }
     })
   );
-  return myRoomObjects;
+  return myRoomObjects.filter((obj) => obj.name !== currentObjectName);
 };
