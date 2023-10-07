@@ -1,6 +1,6 @@
 import { RecoilRoot } from "recoil";
 import { ClientSocketControls } from "./components/utilComponents/ClientSocketControls";
-import { Content } from "./components/Content";
+import { Content } from "./components/content/Content";
 
 function App() {
   return (
