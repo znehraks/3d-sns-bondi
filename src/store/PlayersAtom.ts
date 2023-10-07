@@ -254,6 +254,12 @@ export const CurrentRotationingMyRoomObjectAtom = atom<string | undefined>({
   default: undefined,
 });
 
+// 현재 회전된 각
+export const CurrentRotationAtom = atom<number | undefined>({
+  key: "CurrentRotationAtom",
+  default: undefined,
+});
+
 //! 미니게임
 // 미니게임(사격게임) 관련
 export const IsMiniGameStartedAtom = atom<boolean>({
