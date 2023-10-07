@@ -9,6 +9,7 @@ import { useEffect, useRef } from "react";
 
 export const SelectedObjectMenuBar = () => {
   const ref = useRef<HTMLDivElement>(null);
+
   const currentSelectedMyRoomObject = useRecoilValue(
     CurrentSelectedMyRoomObjectAtom
   );
@@ -30,17 +31,30 @@ export const SelectedObjectMenuBar = () => {
   }, [currentSelectedMyRoomObject]);
 
   return (
-    <MenuBarWrapper ref={ref}>
+    <MenuBarWrapper
+      ref={ref}
+      className={currentSelectedMyRoomObject ? "visible" : "invisible"}
+    >
       <Menu
         onClick={() => {
-          setCurrentPlacingMyRoomFurniture(currentSelectedMyRoomObject?.name);
+          setCurrentPlacingMyRoomFurniture((prev) => {
+            if (prev === currentSelectedMyRoomObject?.name) {
+              return undefined;
+            }
+            return currentSelectedMyRoomObject?.name;
+          });
         }}
       >
         이동
       </Menu>
       <Menu
         onClick={() => {
-          setCurrentRotationingMyRoomObject(currentSelectedMyRoomObject?.name);
+          setCurrentRotationingMyRoomObject((prev) => {
+            if (prev === currentSelectedMyRoomObject?.name) {
+              return undefined;
+            }
+            return currentSelectedMyRoomObject?.name;
+          });
         }}
       >
         회전
@@ -65,6 +79,12 @@ const MenuBarWrapper = styled.div`
   justify-content: space-evenly;
   align-items: center;
   border-radius: 10px;
+  &.visible {
+    display: flex;
+  }
+  &.invisible {
+    display: none;
+  }
 `;
 
 const Menu = styled.button`

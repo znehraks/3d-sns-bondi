@@ -22,17 +22,27 @@ export const MyRoomObjectRotationMode = () => {
     if (!target) return;
     setCurrentTarget(target);
   }, [currentRotationingMyRoomObject, three.scene]);
-  console.log("currentRotationingMyRoomObject", currentRotationingMyRoomObject);
   if (currentTarget) {
     return (
       <>
         <Circle
+          name="outer-circle"
           position={currentTarget.position}
           position-y={-myRoomSize / 2 + 0.1}
           rotation-x={-Math.PI / 2}
           args={[2]}
         >
           <meshStandardMaterial transparent color={0xffffff} opacity={0.9} />
+        </Circle>
+
+        <Circle
+          name="inner-circle"
+          position={currentTarget.position}
+          position-y={-myRoomSize / 2 + 0.2}
+          rotation-x={-Math.PI / 2}
+          args={[1]}
+        >
+          <meshStandardMaterial transparent color={"aqua"} opacity={0.9} />
         </Circle>
       </>
     );

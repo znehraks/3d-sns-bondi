@@ -7,7 +7,6 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import {
   CurrentMapAtom,
   CurrentMyRoomPlayerAtom,
-  CurrentSelectedMyRoomObjectAtom,
   IsLoadCompletedAtom,
   MeAtom,
 } from "../../../store/PlayersAtom";
@@ -20,13 +19,12 @@ import { Crosshair } from "./canvasUserInterfaces/miniGame/Crosshair";
 import { ObjectInteraction } from "./canvasUserInterfaces/ground/ObjectInteraction";
 import { MiniGameUI } from "./canvasUserInterfaces/miniGame/MiniGameUI";
 import { SelectedObjectMenuBar } from "./canvasUserInterfaces/myRoom/SelectedObjectMenuBar";
+import { Tooltip } from "./canvasUserInterfaces/myRoom/Tooltip";
 
 export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   const [isLoadCompleted] = useRecoilState(IsLoadCompletedAtom);
   const currentMap = useRecoilValue(CurrentMapAtom);
-  const currentSelectedMyRoomObject = useRecoilValue(
-    CurrentSelectedMyRoomObjectAtom
-  );
+
   const [currentMyRoomPlayer] = useRecoilState(CurrentMyRoomPlayerAtom);
   const me = useRecoilValue(MeAtom);
   return (
@@ -41,16 +39,22 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
           <SideBar />
           <Minimap />
           <Memo />
-
-          {currentMap !== "MY_ROOM" &&
-            currentMyRoomPlayer &&
-            me?.id !== currentMyRoomPlayer?.id && <Popup />}
-
           {currentMap !== "MINI_GAME" && <ChatArea />}
 
-          {currentMap === "MY_ROOM" && <MyRoomToolBar />}
-          {currentMap === "MY_ROOM" && currentSelectedMyRoomObject && (
-            <SelectedObjectMenuBar />
+          {currentMap === "GROUND" && (
+            <>
+              {currentMyRoomPlayer && me?.id !== currentMyRoomPlayer?.id && (
+                <Popup />
+              )}
+            </>
+          )}
+
+          {currentMap === "MY_ROOM" && (
+            <>
+              <MyRoomToolBar />
+              <SelectedObjectMenuBar />
+              <Tooltip />
+            </>
           )}
 
           {currentMap === "MINI_GAME" && (
