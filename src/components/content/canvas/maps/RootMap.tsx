@@ -1,10 +1,10 @@
 import { useRecoilState, useRecoilValue } from "recoil";
 import {
   CharacterSelectFinishedAtom,
-  ChatsAtom,
   CurrentMapAtom,
   PlayerGroundStructuresFloorPlaneCornersSelector,
   PlayersAtom,
+  RecentChatsSelector,
 } from "../../../../store/PlayersAtom";
 import { Man } from "./players/Man";
 import {
@@ -17,13 +17,12 @@ import {
 } from "@react-three/drei";
 // import { PlayStructure } from "../structures/ground/PlayStructure";
 import { useThree } from "@react-three/fiber";
-import { Suspense, useEffect, useMemo, useRef } from "react";
+import { Suspense, useEffect, useRef } from "react";
 import { CharacterInit } from "../../lobby/CharacterInit";
 import { Loader } from "../../loader/Loader";
 import { Vector3 } from "three";
 import { MyRoom } from "./structures/myRoom";
 import { GroundElements } from "./structures/ground";
-import _ from "lodash";
 import { MiniGame } from "./structures/miniGame";
 import gsap from "gsap";
 // import { GsapTest } from "../test/GsapTest";
@@ -31,7 +30,7 @@ import gsap from "gsap";
 export const RootMap = () => {
   // const backgroundTexture = useTexture("./images/scene_map.jpeg");
   const [currentMap] = useRecoilState(CurrentMapAtom);
-  const chats = useRecoilValue(ChatsAtom);
+  const recentChats = useRecoilValue(RecentChatsSelector);
   const [characterSelectFinished] = useRecoilState(CharacterSelectFinishedAtom);
   const playerGroundStructuresFloorPlaneCorners = useRecoilValue(
     PlayerGroundStructuresFloorPlaneCornersSelector
@@ -49,6 +48,7 @@ export const RootMap = () => {
   //   scene.background = backgroundTexture;
   // }, [backgroundTexture, scene]);
 
+  console.log("recentChats", recentChats);
   useEffect(() => {
     if (currentMap === "GROUND") {
       document.exitPointerLock();
@@ -87,10 +87,6 @@ export const RootMap = () => {
       return;
     }
   }, [camera, camera.position, currentMap]);
-
-  const reversedChats = useMemo(() => {
-    return _.uniqBy([...chats].reverse(), "senderId");
-  }, [chats]);
 
   return (
     <>
@@ -182,7 +178,7 @@ export const RootMap = () => {
                   </>
                 );
               })}
-              {reversedChats.map((chat) => {
+              {/* {reversedChats.map((chat) => {
                 const player = players
                   .filter((p) => p.id === chat.senderId)
                   ?.at(-1);
@@ -210,7 +206,7 @@ export const RootMap = () => {
                     </Text>
                   </>
                 );
-              })}
+              })} */}
             </>
           )}
         </Suspense>

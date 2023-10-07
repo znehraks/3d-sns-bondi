@@ -1,3 +1,4 @@
+import _ from "lodash";
 import { atom, selector } from "recoil";
 import { Vector3 } from "three";
 
@@ -99,10 +100,19 @@ export interface IChat {
   timestamp: string;
 }
 
-// 채팅 정보
+// 모든 채팅 정보
 export const ChatsAtom = atom<IChat[]>({
   key: "ChatsAtom",
   default: [],
+});
+
+// 말풍선을 위한 유저별 최신 채팅 내용 정보
+export const RecentChatsSelector = selector({
+  key: "RecentChatsSelector",
+  get: ({ get }) => {
+    const chats = get(ChatsAtom);
+    return _.uniqBy([...chats].reverse(), "senderId");
+  },
 });
 
 export interface INotice {

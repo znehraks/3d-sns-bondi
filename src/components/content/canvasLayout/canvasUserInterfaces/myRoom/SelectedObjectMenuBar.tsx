@@ -24,7 +24,6 @@ export const SelectedObjectMenuBar = () => {
 
   const [, setCurrentRotation] = useRecoilState(CurrentRotationAtom);
 
-  console.log("currentRotationingMyRoomObject", currentRotationingMyRoomObject);
   useEffect(() => {
     if (!ref.current) return;
     if (!currentSelectedMyRoomObject) return;

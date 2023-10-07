@@ -16,7 +16,10 @@ import {
   MeAtom,
   PlayerGroundStructuresFloorPlaneCornersSelector,
 } from "../../../../../store/PlayersAtom";
-import { calculateMinimapPosition } from "../../../../../utils";
+import {
+  calculateMinimapPosition,
+  getClientPosition,
+} from "../../../../../utils";
 import gsap from "gsap";
 
 interface IMan {
@@ -49,7 +52,7 @@ export function Man({
   const objectInteractionDiv = document.getElementById("object-interaction");
 
   const playerRef = useRef<THREE.Group>(null);
-  const threeScene = useThree((three) => three.scene);
+  const { scene: threeScene } = useThree();
   const nicknameBillboard = threeScene.getObjectByName(
     `nickname-billboard-${playerId}`
   );
@@ -95,6 +98,7 @@ export function Man({
       actions[animation]?.fadeOut(0.5);
     };
   }, [actions, animation]);
+
   // const clock = new THREE.Clock();
 
   // const tempVec3 = new THREE.Vector3();
@@ -184,6 +188,17 @@ export function Man({
           objectInteractionDiv.style.display = "none";
         }
       }
+    }
+
+    const chatBubble = document.getElementById(`chat-bubble-${player?.id}`);
+    if (chatBubble) {
+      const clientPosition = getClientPosition({
+        position: memoizedPosition,
+        camera,
+      });
+      chatBubble.style.transform = `translate(${clientPosition.x + 100}px, ${
+        clientPosition.y - 200
+      }px)`;
     }
   });
   return (

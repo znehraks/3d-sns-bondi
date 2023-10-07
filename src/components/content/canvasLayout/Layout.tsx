@@ -9,6 +9,7 @@ import {
   CurrentMyRoomPlayerAtom,
   IsLoadCompletedAtom,
   MeAtom,
+  RecentChatsSelector,
 } from "../../../store/PlayersAtom";
 import { Notice } from "./canvasUserInterfaces/common/Notice";
 import { Minimap } from "./canvasUserInterfaces/ground/Minimap";
@@ -20,11 +21,13 @@ import { ObjectInteraction } from "./canvasUserInterfaces/ground/ObjectInteracti
 import { MiniGameUI } from "./canvasUserInterfaces/miniGame/MiniGameUI";
 import { SelectedObjectMenuBar } from "./canvasUserInterfaces/myRoom/SelectedObjectMenuBar";
 import { Tooltip } from "./canvasUserInterfaces/myRoom/Tooltip";
+import { ChatBubble } from "./canvasUserInterfaces/common/ChatBubble";
 
 export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   const [isLoadCompleted] = useRecoilState(IsLoadCompletedAtom);
   const currentMap = useRecoilValue(CurrentMapAtom);
 
+  const chats = useRecoilValue(RecentChatsSelector);
   const [currentMyRoomPlayer] = useRecoilState(CurrentMyRoomPlayerAtom);
   const me = useRecoilValue(MeAtom);
   return (
@@ -39,7 +42,14 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
           <SideBar />
           <Minimap />
           <Memo />
-          {currentMap !== "MINI_GAME" && <ChatArea />}
+          {currentMap !== "MINI_GAME" && (
+            <>
+              <ChatArea />
+              {chats.map((chat) => (
+                <ChatBubble senderId={chat.senderId} text={chat.text} />
+              ))}
+            </>
+          )}
 
           {currentMap === "GROUND" && (
             <>
