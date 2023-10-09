@@ -80,11 +80,14 @@ export const MyRoomPlacedFurniture = ({
         }}
         name={`my-room-${placedMyRoomFurniture.name}`}
         object={scene.clone()}
-        scale={placedMyRoomFurniture.scale ?? [1, 1, 1]}
         position={placedMyRoomFurniture.position}
+        rotation={placedMyRoomFurniture.rotation}
       />
       {outlineMeshInfo && (
-        <mesh position={outlineMeshInfo.position}>
+        <mesh
+          position={outlineMeshInfo.position}
+          rotation={placedMyRoomFurniture.rotation}
+        >
           <boxGeometry
             args={[
               outlineMeshInfo.width * 1.1,

@@ -201,7 +201,7 @@ export const PlayerGroundStructuresFloorPlaneCornersSelector = selector({
 export interface IPlacedMyRoomObject {
   name: string;
   position: [number, number, number];
-  scale?: [number, number, number];
+  rotation?: [number, number, number];
 }
 
 // TODO 가구 배치하기

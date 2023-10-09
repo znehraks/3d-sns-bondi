@@ -65,7 +65,7 @@ export const MyRoomElements = ({ object }: { object: IMyRoomObject }) => {
         key={object.name}
         placedMyRoomFurniture={{
           position: object.position,
-          scale: object.scale,
+          rotation: object.rotation,
           name: `furniture-${object.name.split("-")[3]}`,
         }}
       />

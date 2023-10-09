@@ -14,7 +14,7 @@ import {
 import { MyRoomElements } from "./elements";
 import { MyRoomMemoPlaceMode } from "./placeMode/MyRoomMemoPlaceMode";
 import { MyRoomFurniturePlaceMode } from "./placeMode/MyRoomFurniturePlaceMode";
-import { MyRoomObjectRotationMode } from "./rotationMode/MyRoomObjectRotationMode";
+import { MyRoomFurnitureRotationMode } from "./rotationMode/MyRoomFurnitureRotationMode";
 
 export const MyRoom = () => {
   const currentPlacingMyRoomSkill = useRecoilValue(
@@ -73,7 +73,7 @@ export const MyRoom = () => {
       {currentPlacingMyRoomMemo && <MyRoomMemoPlaceMode />}
 
       {/* 변형모드 */}
-      {currentRotationingMyRoomObject && <MyRoomObjectRotationMode />}
+      {currentRotationingMyRoomObject && <MyRoomFurnitureRotationMode />}
     </>
   );
 };

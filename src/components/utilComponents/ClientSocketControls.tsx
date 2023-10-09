@@ -54,6 +54,10 @@ export const ClientSocketControls = () => {
         (p) => p && currentMyRoomPlayer && p?.id === currentMyRoomPlayer?.id
       );
       console.log("currentMyRoomUpdated", currentMyRoomUpdated);
+      console.log(
+        "bed ===>",
+        currentMyRoomUpdated?.myRoom.objects.at(-1)?.rotation
+      );
       if (currentMyRoomUpdated) {
         setCurrentMyRoomPlayer(currentMyRoomUpdated);
       }
