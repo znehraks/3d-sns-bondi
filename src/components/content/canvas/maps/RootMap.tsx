@@ -141,6 +141,13 @@ export const RootMap = () => {
               {players.map((player) => {
                 return (
                   <>
+                    <ChatBubble
+                      key={player.id}
+                      player={player}
+                      chat={recentChats.find(
+                        (recentChat) => recentChat.senderId === player.id
+                      )}
+                    />
                     <NicknameBoard player={player} />
                     <Man
                       player={player}
@@ -158,15 +165,6 @@ export const RootMap = () => {
                   </>
                 );
               })}
-              {players.map((player) => (
-                <ChatBubble
-                  key={player.id}
-                  player={player}
-                  chat={recentChats.find(
-                    (recentChat) => recentChat.senderId === player.id
-                  )}
-                />
-              ))}
             </>
           )}
         </Suspense>
