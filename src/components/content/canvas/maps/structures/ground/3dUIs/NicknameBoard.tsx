@@ -6,7 +6,7 @@ export const NicknameBoard = ({ player }: { player: IPlayer }) => {
     <Billboard
       position={[
         player.position[0],
-        player.position[1] + 2,
+        player.position[1] + 3.5,
         player.position[2],
       ]}
       name={`nickname-billboard-${player.id}`}

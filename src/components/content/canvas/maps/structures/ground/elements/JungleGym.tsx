@@ -11,7 +11,7 @@ export const JungleGym = () => {
   const [, setPlayGroundStructuresBoundingBox] = useRecoilState(
     PlayGroundStructuresBoundingBoxAtom
   );
-  const position = useMemo(() => new Vector3(-6, 0, 3), []);
+  const position = useMemo(() => new Vector3(-12, 0, 6), []);
   useEffect(() => {
     scene.traverse((mesh) => {
       mesh.castShadow = true;
@@ -45,7 +45,7 @@ export const JungleGym = () => {
     <primitive
       visible
       name={name}
-      scale={scale}
+      scale={[scale, scale, scale]}
       position={position}
       object={scene}
     />

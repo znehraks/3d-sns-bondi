@@ -6,20 +6,21 @@ import {
   PlayersAtom,
   RecentChatsSelector,
 } from "../../../../store/PlayersAtom";
-import { Man } from "./players/Man";
 import { Line, OrbitControls, useGLTF, useTexture } from "@react-three/drei";
 // import { PlayStructure } from "../structures/ground/PlayStructure";
 import { useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useRef } from "react";
 import { CharacterInit } from "../../lobby/CharacterInit";
 import { Loader } from "../../loader/Loader";
-import { Vector3 } from "three";
 import { MyRoom } from "./structures/myRoom";
 import { GroundElements } from "./structures/ground";
 import { MiniGame } from "./structures/miniGame";
 import gsap from "gsap";
 import { NicknameBoard } from "./structures/ground/3dUIs/NicknameBoard";
 import { ChatBubble } from "./structures/ground/3dUIs/ChatBubble";
+import { Man } from "./players/NewMan";
+import { Vector3 } from "three";
+import { characterGlbNameCandidates } from "../../../../data/constants";
 // import { GsapTest } from "../test/GsapTest";
 
 export const RootMap = () => {
@@ -37,11 +38,6 @@ export const RootMap = () => {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controls = useRef<any>(null);
-
-  // useEffect(() => {
-  //   backgroundTexture.mapping = EquirectangularReflectionMapping;
-  //   scene.background = backgroundTexture;
-  // }, [backgroundTexture, scene]);
 
   console.log("recentChats", recentChats);
   useEffect(() => {
@@ -71,8 +67,6 @@ export const RootMap = () => {
         }
       );
 
-      // camera.position.set(14, 14, 14);
-      // controls.current.target.set(0, 0, 0);
       return;
     }
 
@@ -89,14 +83,6 @@ export const RootMap = () => {
         name="ambientLight"
         intensity={currentMap === "GROUND" ? 5 : 0.5}
       />
-
-      {/* <PositionalAudio
-        position={[0, 0, 0]}
-        autoplay
-        url="/bgm.mp3"
-        distance={1000}
-        loop
-      /> */}
 
       {currentMap !== "MINI_GAME" && (
         <OrbitControls
@@ -158,9 +144,11 @@ export const RootMap = () => {
                           player.position[2]
                         )
                       }
-                      hairColor={player.hairColor}
-                      shirtColor={player.shirtColor}
-                      pantsColor={player.pantsColor}
+                      currentGlbName={
+                        characterGlbNameCandidates[
+                          player.selectedCharacterGlbNameIndex
+                        ]
+                      }
                     />
                   </>
                 );
@@ -169,11 +157,7 @@ export const RootMap = () => {
           )}
         </Suspense>
       )}
-      {currentMap === "MY_ROOM" && (
-        <Suspense fallback={<Loader />}>
-          <MyRoom />
-        </Suspense>
-      )}
+      {currentMap === "MY_ROOM" && <MyRoom />}
       {currentMap === "MINI_GAME" && <MiniGame />}
     </>
   );

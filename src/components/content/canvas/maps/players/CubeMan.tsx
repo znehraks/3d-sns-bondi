@@ -3,14 +3,8 @@ import { useFrame } from "@react-three/fiber";
 import { useRef } from "react";
 import * as THREE from "three";
 
-// export const CubeMan = ({ modelingType }: { modelingType: string }) => {
 export const CubeMan = () => {
   const group = useRef<THREE.Group>(null);
-  //   const { scene, animations } = useGLTF(
-  //     `/models/${
-  //       modelingType === "man" ? "Cube Guy Character" : "Cube Woman Character"
-  //     }.glb`
-  //   );
   const { scene, animations } = useGLTF(`/models/Steve.glb`);
   const { actions } = useAnimations(animations, group);
 
@@ -21,3 +15,5 @@ export const CubeMan = () => {
   });
   return <primitive ref={group} object={scene}></primitive>;
 };
+
+useGLTF.preload("/models/Steve.glb");

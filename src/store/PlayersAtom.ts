@@ -44,9 +44,7 @@ export interface IPlayer {
   nickname: string;
   jobPosition: string;
   position: [number, number, number];
-  hairColor: string;
-  shirtColor: string;
-  pantsColor: string;
+  selectedCharacterGlbNameIndex: number;
   myRoom: IMyRoom;
 }
 
@@ -68,22 +66,10 @@ export const CharacterSelectFinishedAtom = atom({
   default: false, //false가 기본값이나 개발 시 번거로움으로 인해 true로 디폴드 세팅함
 });
 
-// 내 캐릭터의 머리 색
-export const HairColorAtom = atom<string>({
-  key: "HairColorAtom",
-  default: "white",
-});
-
-// 내 캐릭터의 상의 색
-export const ShirtColorAtom = atom<string>({
-  key: "ShirtColorAtom",
-  default: "white",
-});
-
-// 내 캐릭터의 하의 색
-export const PantsColorAtom = atom<string>({
-  key: "PantsColorAtom",
-  default: "white",
+// 현재 선택된 캐릭터 종류
+export const SelectedCharacterGlbNameIndexAtom = atom<number>({
+  key: "SelectedCharacterGlbNameIndexAtom",
+  default: 0,
 });
 
 // 초기 모델링 로드가 완료되었는가 여부

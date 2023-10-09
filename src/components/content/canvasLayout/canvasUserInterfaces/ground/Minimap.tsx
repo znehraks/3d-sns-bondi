@@ -18,7 +18,7 @@ export const Minimap = () => {
         <PlayerPoint
           key={p.id}
           id={`player-point-${p.id}`}
-          className={p.id === me.id ? "me-point" : "other-point"}
+          className={p.id === me?.id ? "me-point" : "other-point"}
         />
       ))}
     </MinimapWrapper>

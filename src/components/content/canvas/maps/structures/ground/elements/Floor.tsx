@@ -1,6 +1,7 @@
 import { socket } from "../../../../../../../sockets/clientSocket";
 import { useLoader } from "@react-three/fiber";
 import { RepeatWrapping, Texture, TextureLoader } from "three";
+import { groundMapSize } from "../../../../../../../data/constants";
 
 export const Floor = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -20,7 +21,7 @@ export const Floor = () => {
         socket.emit("move", [e.point.x, 0, e.point.z]);
       }}
     >
-      <planeGeometry args={[30, 30]} />
+      <planeGeometry args={[groundMapSize, groundMapSize]} />
       <meshStandardMaterial map={sandTexture} />
     </mesh>
   );

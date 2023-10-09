@@ -29,15 +29,15 @@ export const ChatBubble = ({
       visible={visible}
       position={[
         player.position[0],
-        player.position[1] + 2.5,
+        player.position[1] + 4,
         player.position[2],
       ]}
       name={`chat-bubble-billboard-${player.id}`}
     >
       <Text
         font={"/NotoSansKR-Regular.ttf"}
-        fontSize={0.15}
-        color={me.id === player.id ? 0x007bff : 0x222222}
+        fontSize={0.3}
+        color={me.id === player.id ? 0x004acc : 0x222222}
       >
         {chat?.text.length > 30
           ? `"${chat?.text.slice(0, 30)}..."`

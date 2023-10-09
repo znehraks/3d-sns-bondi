@@ -13,7 +13,7 @@ export function PlayStructure() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const { scene } = useGLTF("/models/Play Structure.glb") as any;
 
-  const position = useMemo(() => new Vector3(0, 3.4, -20), []);
+  const position = useMemo(() => new Vector3(0, 3.5, -10), []);
   useEffect(() => {
     scene.traverse((mesh: Mesh) => {
       mesh.castShadow = true;
@@ -39,5 +39,13 @@ export function PlayStructure() {
       );
     }
   }, [position, scene, scene.children, setPlayGroundStructuresBoundingBox]);
-  return <primitive name={name} scale={3} position={position} object={scene} />;
+  return (
+    <primitive
+      name={name}
+      scale={[3, 3, 3]}
+      position={[-10, 3.5, -15]}
+      rotation={[0, -Math.PI / 2, 0]}
+      object={scene}
+    />
+  );
 }

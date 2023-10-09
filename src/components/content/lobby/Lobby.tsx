@@ -1,42 +1,24 @@
 import { styled } from "styled-components";
-import { useCallback, useMemo, useState } from "react";
+import { useState } from "react";
 import { STEPS } from "../../../data/constants";
 import { isValidText } from "../../../utils";
 import { socket } from "../../../sockets/clientSocket";
-import { SetterOrUpdater, useRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import {
   CharacterSelectFinishedAtom,
-  HairColorAtom,
-  PantsColorAtom,
-  ShirtColorAtom,
+  SelectedCharacterGlbNameIndexAtom,
 } from "../../../store/PlayersAtom";
 import { MainCanvas } from "../canvas/MainCanvas";
-import { colorCandidates } from "../../../data/constants";
 
 export const Lobby = () => {
   const [currentStep, setCurrentStep] = useState<STEPS>(STEPS.NICK_NAME);
   const [tempNickname, setTempNickname] = useState<string | undefined>();
   const [tempJobPosition, setTempJobPosition] = useState<string | undefined>();
+  const [selectedCharacterGlbNameIndex, setSelectedCharacterGlbNameIndex] =
+    useRecoilState(SelectedCharacterGlbNameIndexAtom);
 
-  const [hairColor, setHairColor] = useRecoilState(HairColorAtom);
-  const [shirtColor, setShirtColor] = useRecoilState(ShirtColorAtom);
-  const [pantsColor, setPantsColor] = useRecoilState(PantsColorAtom);
-
-  const [isFinished, setIsFinished] = useState(false);
   const [, setCharacterSelectFinished] = useRecoilState(
     CharacterSelectFinishedAtom
-  );
-
-  const colorCandidatesMemo = useMemo(() => colorCandidates, []);
-
-  const handleClickColorRound = useCallback(
-    (set: SetterOrUpdater<string>) => (color: string) => () => {
-      if (!isFinished) {
-        setIsFinished(true);
-      }
-      set(color);
-    },
-    [isFinished]
   );
 
   if (!socket) return null;
@@ -105,88 +87,38 @@ export const Lobby = () => {
       )}
       {currentStep === STEPS.CHARACTER && (
         <>
-          <LoginTitle>패디에서 사용할 내 아바타를 꾸밀 시간이에요.</LoginTitle>
+          <LoginTitle>패디에서 사용할 내 아바타를 고를 시간이에요.</LoginTitle>
           <CharacterCanvasContainer>
             <CharacterTuningWrapper>
               <CharacterCanvasWrapper>
                 <MainCanvas />
               </CharacterCanvasWrapper>
-              <CharaterTuningZone>
-                <CharacterTuningPartsContainer>
-                  <div>헤어스타일</div>
-                  <div>
-                    {colorCandidatesMemo.map((color) => (
-                      <div>
-                        <ColorRound
-                          key={color}
-                          selected={color === hairColor}
-                          onClick={handleClickColorRound(setHairColor)(color)}
-                          color={color}
-                        ></ColorRound>
-                      </div>
-                    ))}
-                  </div>
-                </CharacterTuningPartsContainer>
-                <CharacterTuningPartsContainer>
-                  <div>티셔츠 색상</div>
-                  <div>
-                    {colorCandidatesMemo.map((color) => (
-                      <div>
-                        <ColorRound
-                          key={color}
-                          selected={color === shirtColor}
-                          onClick={handleClickColorRound(setShirtColor)(color)}
-                          color={color}
-                        ></ColorRound>
-                      </div>
-                    ))}
-                  </div>
-                </CharacterTuningPartsContainer>
-                <CharacterTuningPartsContainer>
-                  <div>바지 색상</div>{" "}
-                  <div>
-                    {colorCandidatesMemo.map((color) => (
-                      <div>
-                        <ColorRound
-                          key={color}
-                          selected={color === pantsColor}
-                          onClick={handleClickColorRound(setPantsColor)(color)}
-                          color={color}
-                        ></ColorRound>
-                      </div>
-                    ))}
-                  </div>
-                </CharacterTuningPartsContainer>
-              </CharaterTuningZone>
             </CharacterTuningWrapper>
 
             <NextBtn
-              disabled={!isFinished}
-              className={isFinished ? "valid" : "disabled"}
+              className={
+                !tempNickname || !tempJobPosition ? "disabled" : "valid"
+              }
               onClick={() => {
                 if (!tempNickname || !tempJobPosition) return;
-                setCharacterSelectFinished(true);
                 socket.emit("initialize", {
                   tempNickname,
                   tempJobPosition,
-                  hairColor,
-                  shirtColor,
-                  pantsColor,
+                  selectedCharacterGlbNameIndex,
                   myRoom: { object: [] },
                 });
+                setCharacterSelectFinished(true);
               }}
               onKeyUp={(e) => {
                 if (!tempNickname || !tempJobPosition) return;
                 if (e.key === "enter") {
-                  setCharacterSelectFinished(true);
                   socket.emit("initialize", {
                     tempNickname,
                     tempJobPosition,
-                    hairColor,
-                    shirtColor,
-                    pantsColor,
+                    selectedCharacterGlbNameIndex,
                     myRoom: { object: [] },
                   });
+                  setCharacterSelectFinished(true);
                 }
               }}
             >
@@ -194,6 +126,18 @@ export const Lobby = () => {
               {/* 애니메이션 추가로 필요한 것들 더 담기 */}이 모습으로
               진행할래요.
             </NextBtn>
+
+            <PrevBtn
+              onClick={() => {
+                setSelectedCharacterGlbNameIndex((prev) => {
+                  if (prev === undefined) return 1;
+                  if (prev === 2) return 0;
+                  return prev + 1;
+                });
+              }}
+            >
+              다른 캐릭터도 볼래요
+            </PrevBtn>
             <PrevBtn
               onClick={() => {
                 setCurrentStep((prev) => prev - 1);
@@ -250,76 +194,6 @@ const CharacterCanvasWrapper = styled.div`
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
-`;
-
-const CharaterTuningZone = styled.div`
-  flex: 1;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  align-items: flex-start;
-  gap: 20px;
-`;
-
-const CharacterTuningPartsContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  flex: 1;
-  font-size: 24px;
-  overflow-y: hidden;
-
-  & > div:first-of-type {
-    padding: 0px 5px;
-    font-size: 22px;
-    font-weight: 600;
-    color: #6e6e6e;
-  }
-  & > div:nth-of-type(2) {
-    padding: 4px;
-    height: 100%;
-    overflow-y: scroll;
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    grid-column-start: initial;
-    gap: 10px;
-    // 파이어폭스 스크롤 스타일
-    scrollbar-width: "thin";
-    &::-webkit-scrollbar {
-      width: 4px;
-      height: 4px;
-    }
-    &::-webkit-scrollbar-thumb {
-      outline: none;
-      border-radius: 8px;
-      background-color: #ececec;
-    }
-    &::-webkit-scrollbar-track {
-      /* background-color: red; */
-    }
-    & > div {
-      height: 48px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-
-      // ColorRound
-    }
-  }
-`;
-
-const ColorRound = styled.div<{ color: string; selected?: boolean }>`
-  background-color: ${(props) => props.color};
-  width: 42px;
-  height: 42px;
-  border-radius: 50%;
-  box-shadow: ${(props) =>
-    props.selected ? "2px 2px 2px 2px #033333;" : " 2px 2px 2px 2px #6aaddd;"};
-  cursor: pointer;
-  &:hover {
-    box-shadow: 2px 2px 2px 2px #4aaddd;
-  }
 `;
 
 const Input = styled.input`

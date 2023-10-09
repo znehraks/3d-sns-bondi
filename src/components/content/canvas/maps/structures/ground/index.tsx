@@ -2,17 +2,17 @@ import { Floor } from "./elements/Floor";
 import { Swing } from "./elements/Swing";
 import { JungleGym } from "./elements/JungleGym";
 import { Slide } from "./elements/Slide";
-import { Suspense } from "react";
-import { Loader } from "../../../../loader/Loader";
 import { Cloud } from "@react-three/drei";
+import { PlayStructure } from "./elements/PlayStructure";
 
 export const GroundElements = () => {
   return (
-    <Suspense fallback={<Loader />}>
+    <>
       <Floor />
       <Swing />
       <Slide />
       <JungleGym />
+      <PlayStructure />
       <instancedMesh>
         <Cloud
           segments={100}
@@ -33,6 +33,6 @@ export const GroundElements = () => {
           color={"skyblue"}
         />
       </instancedMesh>
-    </Suspense>
+    </>
   );
 };

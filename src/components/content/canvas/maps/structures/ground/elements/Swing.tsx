@@ -48,7 +48,7 @@ export const Swing = () => {
     <primitive
       visible
       name={name}
-      scale={scale}
+      scale={[scale, scale, scale]}
       position={position}
       object={scene}
     />
