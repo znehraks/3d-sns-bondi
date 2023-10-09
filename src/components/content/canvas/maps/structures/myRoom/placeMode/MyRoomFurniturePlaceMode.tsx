@@ -84,6 +84,7 @@ export const MyRoomFurniturePlaceMode = ({
 
       const width = boundingBox.max.x - boundingBox.min.x;
       const depth = boundingBox.max.z - boundingBox.min.z;
+      //TODO 벽 충돌 계산 식을 다시 정해야함
 
       // 현재 rayCaster에 잡힌 첫번째 오브젝트의 법선벡터와 3축의 벡터가 평행하다면 각 축에 맞는 offset을 더해준다.
       if (
