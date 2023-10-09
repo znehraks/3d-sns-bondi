@@ -12,9 +12,9 @@ function App() {
 }
 
 export default App;
-
+// npx gltfjsx public/models/CubeGuyCharacter.glb -o src/components/Block3.jsx -r public
 {
-  /* <a href="https://www.freepik.com/free-photo/sand-texture-brown-sand-background-from-fine-sand-sand-background_1285000.htm#query=sand%20texture&position=4&from_view=keyword&track=ais">Image by tirachard</a> on Freepik */
+  // /* <a href="https://www.freepik.com/free-photo/sand-texture-brown-sand-background-from-fine-sand-sand-background_1285000.htm#query=sand%20texture&position=4&from_view=keyword&track=ais">Image by tirachard</a> on Freepik */
 }
 
 // Play Structure by Emmett “TawpShelf” Baber [CC-BY] via Poly Pizza

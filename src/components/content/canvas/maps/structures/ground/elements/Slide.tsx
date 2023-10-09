@@ -11,7 +11,7 @@ export const Slide = () => {
     PlayGroundStructuresBoundingBoxAtom
   );
   const { scene } = useGLTF("/models/Slide.glb");
-  const position = useMemo(() => new Vector3(7, 0, -8), []);
+  const position = useMemo(() => new Vector3(9, 0, -10), []);
   useEffect(() => {
     scene.traverse((mesh) => {
       mesh.castShadow = true;
@@ -39,5 +39,14 @@ export const Slide = () => {
     }
   }, [position, scene, setPlayGroundStructuresBoundingBox]);
 
-  return <primitive visible name={name} position={position} object={scene} />;
+  return (
+    <primitive
+      visible
+      name={name}
+      scale={1.5}
+      position={position}
+      rotation-y={Math.PI / 10}
+      object={scene}
+    />
+  );
 };

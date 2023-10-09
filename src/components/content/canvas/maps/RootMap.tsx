@@ -2,11 +2,10 @@ import { useRecoilState, useRecoilValue } from "recoil";
 import {
   CharacterSelectFinishedAtom,
   CurrentMapAtom,
-  PlayerGroundStructuresFloorPlaneCornersSelector,
   PlayersAtom,
   RecentChatsSelector,
 } from "../../../../store/PlayersAtom";
-import { Line, OrbitControls, useGLTF, useTexture } from "@react-three/drei";
+import { OrbitControls, useGLTF, useTexture } from "@react-three/drei";
 // import { PlayStructure } from "../structures/ground/PlayStructure";
 import { useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useRef } from "react";
@@ -29,9 +28,6 @@ export const RootMap = () => {
   const [currentMap] = useRecoilState(CurrentMapAtom);
   const recentChats = useRecoilValue(RecentChatsSelector);
   const [characterSelectFinished] = useRecoilState(CharacterSelectFinishedAtom);
-  const playerGroundStructuresFloorPlaneCorners = useRecoilValue(
-    PlayerGroundStructuresFloorPlaneCornersSelector
-  );
 
   const [players] = useRecoilState(PlayersAtom);
 
@@ -115,7 +111,7 @@ export const RootMap = () => {
           {characterSelectFinished && (
             <>
               <GroundElements />
-              {playerGroundStructuresFloorPlaneCorners?.map((corner) => {
+              {/* {playerGroundStructuresFloorPlaneCorners?.map((corner) => {
                 return (
                   <Line
                     key={corner.name}
@@ -123,7 +119,7 @@ export const RootMap = () => {
                     points={corner.corners.map((c) => [c.x, 0.01, c.z])}
                   />
                 );
-              })}
+              })} */}
 
               {players.map((player) => {
                 return (
