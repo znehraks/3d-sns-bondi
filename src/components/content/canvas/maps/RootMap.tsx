@@ -187,6 +187,10 @@ export const RootMap = () => {
   );
 };
 
+useGLTF.preload("/models/CubeGuyCharacter.glb");
+useGLTF.preload("/models/CubeWomanCharacter.glb");
+useGLTF.preload("/models/Steve.glb");
+
 useGLTF.preload("/models/furniture-bed.glb");
 useGLTF.preload("/models/furniture-bookcase.glb");
 useGLTF.preload("/models/furniture-chair.glb");

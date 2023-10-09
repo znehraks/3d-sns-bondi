@@ -58,7 +58,7 @@ export const MyRoomMemoPlaceMode = () => {
       if (1 - Math.abs(intersect.normal.clone().dot(floorVector)) < 0.1) {
         ref.current.rotation.x = -Math.PI / 2;
         roomTouched = true;
-        yOffset = 0.01;
+        yOffset = 0.02;
         if (intersect.point.x < -(myRoomSize / 2 - myRoomMemoBoxSize[0] / 2)) {
           xOffset += Math.abs(
             intersect.point.x + (myRoomSize / 2 + myRoomMemoBoxSize[0] / 2)
@@ -83,7 +83,7 @@ export const MyRoomMemoPlaceMode = () => {
       if (1 - Math.abs(intersect.normal.clone().dot(leftWallVector)) < 0.1) {
         ref.current.rotation.y = -Math.PI / 2;
         roomTouched = true;
-        xOffset = 0.01;
+        xOffset = 0.02;
         if (intersect.point.y < -(myRoomSize / 2 - myRoomMemoBoxSize[1] / 2)) {
           yOffset += Math.abs(
             intersect.point.y + (myRoomSize / 2 + myRoomMemoBoxSize[1] / 2)
@@ -107,7 +107,7 @@ export const MyRoomMemoPlaceMode = () => {
       }
       if (1 - Math.abs(intersect.normal.clone().dot(rightWallVector)) < 0.1) {
         roomTouched = true;
-        zOffset = 0.01;
+        zOffset = 0.02;
         if (intersect.point.x < -(myRoomSize / 2 - myRoomMemoBoxSize[0] / 2)) {
           xOffset += Math.abs(
             intersect.point.x + (myRoomSize / 2 + myRoomMemoBoxSize[0] / 2)
