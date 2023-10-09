@@ -52,7 +52,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
           {currentMap === "MY_ROOM" && (
             <>
               <MyRoomToolBar />
-              <SelectedObjectMenuBar />
+              {currentMyRoomPlayer?.id === me.id && <SelectedObjectMenuBar />}
               <Tooltip />
             </>
           )}

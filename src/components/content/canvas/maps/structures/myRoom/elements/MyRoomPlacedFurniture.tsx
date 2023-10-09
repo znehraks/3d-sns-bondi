@@ -1,13 +1,15 @@
 import { useGLTF } from "@react-three/drei";
 import {
+  CurrentMyRoomPlayerAtom,
   CurrentSelectedMyRoomObjectAtom,
   IPlacedMyRoomObject,
+  MeAtom,
 } from "../../../../../../../store/PlayersAtom";
 import { useEffect, useState } from "react";
 import { Box3, Vector3 } from "three";
 import { useThree } from "@react-three/fiber";
 import { getClientPosition } from "../../../../../../../utils";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { myRoomSize } from "../../../../../../../data/constants";
 
 // 일일이 모델링을 불러와놓고 사용하기
@@ -16,6 +18,8 @@ export const MyRoomPlacedFurniture = ({
 }: {
   placedMyRoomFurniture: IPlacedMyRoomObject;
 }) => {
+  const me = useRecoilValue(MeAtom);
+  const currentMyRoomPlayer = useRecoilValue(CurrentMyRoomPlayerAtom);
   const three = useThree();
   const [currentSelectedMyRoomObject, setCurrentSelectedMyRoomObject] =
     useRecoilState(CurrentSelectedMyRoomObjectAtom);
@@ -64,6 +68,7 @@ export const MyRoomPlacedFurniture = ({
     <>
       <primitive
         onClick={() => {
+          if (me.id !== currentMyRoomPlayer?.id) return;
           const { x, y } = getClientPosition({
             position: new Vector3(
               placedMyRoomFurniture.position[0],
