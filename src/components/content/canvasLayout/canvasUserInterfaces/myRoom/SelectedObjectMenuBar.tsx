@@ -40,6 +40,7 @@ export const SelectedObjectMenuBar = () => {
     >
       <Menu
         onClick={() => {
+          setCurrentRotationingMyRoomObject(undefined);
           setCurrentPlacingMyRoomFurniture((prev) => {
             if (prev === currentSelectedMyRoomObject?.name) {
               return undefined;
@@ -53,6 +54,7 @@ export const SelectedObjectMenuBar = () => {
       <Menu
         onClick={(e) => {
           e.stopPropagation();
+          setCurrentPlacingMyRoomFurniture(undefined);
           setCurrentRotationingMyRoomObject((prev) => {
             if (prev === currentSelectedMyRoomObject?.name) {
               return undefined;

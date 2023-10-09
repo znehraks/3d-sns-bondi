@@ -39,7 +39,9 @@ export const MyRoomFurniturePlaceMode = ({
   const { scene } = useGLTF(`/models/${currentPlacingMyRoomFurniture}.glb`);
 
   const ref = useRef<THREE.Mesh>(null);
-
+  const currentObject = threeScene
+    .getObjectByName(`my-room-${currentPlacingMyRoomFurniture}`)
+    ?.clone();
   useEffect(() => {
     if (!ref.current) return;
     if (!scene) return;
@@ -120,12 +122,15 @@ export const MyRoomFurniturePlaceMode = ({
           yOffset,
           intersect.point.z + zOffset
         );
+
+        ref.current?.rotation.set(0, currentObject?.rotation.y ?? 0, 0);
         positionVector.copy(ref.current?.position.clone());
       }
     };
 
     const handlePointerUp = () => {
       if (!currentPlacingMyRoomFurniture) return;
+
       const myRoomObjects = getMyRoomObjects(
         threeScene,
         `my-room-${currentPlacingMyRoomFurniture}`
@@ -139,9 +144,9 @@ export const MyRoomFurniturePlaceMode = ({
               name: `my-room-${currentPlacingMyRoomFurniture}`,
               position: [positionVector.x, positionVector.y, positionVector.z],
               rotation: [
-                ref.current!.rotation.x,
-                ref.current!.rotation.y,
-                ref.current!.rotation.z,
+                0,
+                currentObject?.rotation.y ?? ref.current!.rotation.y,
+                0,
               ],
             },
           ],
@@ -167,6 +172,7 @@ export const MyRoomFurniturePlaceMode = ({
     setCurrentPlacingMyRoomFurniture,
     scene,
     currentMyRoomPlayer?.id,
+    currentObject?.rotation.y,
   ]);
 
   return (
