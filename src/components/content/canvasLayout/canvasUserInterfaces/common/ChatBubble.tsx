@@ -1,28 +1,24 @@
 import { useEffect, useState } from "react";
 import styled from "styled-components";
 
-export const ChatBubble = ({
-  senderId,
-  text,
-}: {
-  senderId: string;
-  text: string;
-}) => {
+export const ChatBubble = ({ senderId }: { senderId: string }) => {
   const [visible, setVisible] = useState(true);
 
-  useEffect(() => {
-    setVisible(true);
-    const timeout = setTimeout(() => {
-      setVisible(false);
-    }, 5000);
+  // useEffect(() => {
+  //   setVisible(true);
+  //   const timeout = setTimeout(() => {
+  //     setVisible(false);
+  //   }, 5000);
 
-    return () => {
-      clearTimeout(timeout);
-    };
-  }, [text]);
+  //   return () => {
+  //     clearTimeout(timeout);
+  //   };
+  // }, []);
 
   return visible ? (
-    <ChatBubbleWrapper id={`chat-bubble-${senderId}`}>{text}</ChatBubbleWrapper>
+    <ChatBubbleWrapper id={`chat-bubble-${senderId}`}>
+      {senderId}
+    </ChatBubbleWrapper>
   ) : null;
 };
 

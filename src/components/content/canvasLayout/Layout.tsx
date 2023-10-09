@@ -9,7 +9,7 @@ import {
   CurrentMyRoomPlayerAtom,
   IsLoadCompletedAtom,
   MeAtom,
-  RecentChatsSelector,
+  PlayersAtom,
 } from "../../../store/PlayersAtom";
 import { Notice } from "./canvasUserInterfaces/common/Notice";
 import { Minimap } from "./canvasUserInterfaces/ground/Minimap";
@@ -27,7 +27,7 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
   const [isLoadCompleted] = useRecoilState(IsLoadCompletedAtom);
   const currentMap = useRecoilValue(CurrentMapAtom);
 
-  const chats = useRecoilValue(RecentChatsSelector);
+  const players = useRecoilValue(PlayersAtom);
   const [currentMyRoomPlayer] = useRecoilState(CurrentMyRoomPlayerAtom);
   const me = useRecoilValue(MeAtom);
   return (
@@ -45,8 +45,8 @@ export const CanvasLayout = ({ children }: { children: ReactNode }) => {
           {currentMap !== "MINI_GAME" && (
             <>
               <ChatArea />
-              {chats.map((chat) => (
-                <ChatBubble senderId={chat.senderId} text={chat.text} />
+              {players.map((player) => (
+                <ChatBubble key={player.id} senderId={player.id} />
               ))}
             </>
           )}
