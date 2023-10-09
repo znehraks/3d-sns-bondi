@@ -7,14 +7,7 @@ import {
   RecentChatsSelector,
 } from "../../../../store/PlayersAtom";
 import { Man } from "./players/Man";
-import {
-  Billboard,
-  Line,
-  OrbitControls,
-  Text,
-  useGLTF,
-  useTexture,
-} from "@react-three/drei";
+import { Line, OrbitControls, useGLTF, useTexture } from "@react-three/drei";
 // import { PlayStructure } from "../structures/ground/PlayStructure";
 import { useThree } from "@react-three/fiber";
 import { Suspense, useEffect, useRef } from "react";
@@ -25,6 +18,8 @@ import { MyRoom } from "./structures/myRoom";
 import { GroundElements } from "./structures/ground";
 import { MiniGame } from "./structures/miniGame";
 import gsap from "gsap";
+import { NicknameBoard } from "./structures/ground/3dUIs/NicknameBoard";
+import { ChatBubble } from "./structures/ground/3dUIs/ChatBubble";
 // import { GsapTest } from "../test/GsapTest";
 
 export const RootMap = () => {
@@ -146,22 +141,7 @@ export const RootMap = () => {
               {players.map((player) => {
                 return (
                   <>
-                    <Billboard
-                      position={[
-                        player.position[0],
-                        player.position[1] + 2,
-                        player.position[2],
-                      ]}
-                      name={`nickname-billboard-${player.id}`}
-                    >
-                      <Text
-                        font={"/NotoSansKR-Regular.ttf"}
-                        fontSize={0.25}
-                        color={0x000000}
-                      >
-                        {`${player.nickname}[${player.jobPosition}]`}
-                      </Text>
-                    </Billboard>
+                    <NicknameBoard player={player} />
                     <Man
                       player={player}
                       position={
@@ -178,35 +158,15 @@ export const RootMap = () => {
                   </>
                 );
               })}
-              {/* {reversedChats.map((chat) => {
-                const player = players
-                  .filter((p) => p.id === chat.senderId)
-                  ?.at(-1);
-
-                if (!player) return null;
-                return (
-                  <>
-                    <Text
-                      name={`chat-text-${player.id}`}
-                      rotation-y={Math.PI / 4}
-                      position={[
-                        player.position[0] + 1,
-                        player.position[1] + 3,
-                        player.position[2],
-                      ]}
-                      font={"/NotoSansKR-Regular.ttf"}
-                      fontSize={0.2}
-                      fillOpacity={2}
-                      color={0x33df3f}
-                      overflowWrap="break-word"
-                      maxWidth={1.6}
-                      userData={{ timestamp: chat.timestamp }}
-                    >
-                      {`${chat.text}`}
-                    </Text>
-                  </>
-                );
-              })} */}
+              {players.map((player) => (
+                <ChatBubble
+                  key={player.id}
+                  player={player}
+                  chat={recentChats.find(
+                    (recentChat) => recentChat.senderId === player.id
+                  )}
+                />
+              ))}
             </>
           )}
         </Suspense>

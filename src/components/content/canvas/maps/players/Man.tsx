@@ -49,10 +49,12 @@ export function Man({
   const objectInteractionDiv = document.getElementById("object-interaction");
 
   const playerRef = useRef<THREE.Group>(null);
-  const dummyRef = useRef<THREE.Mesh>(null);
   const { scene: threeScene } = useThree();
   const nicknameBillboard = threeScene.getObjectByName(
     `nickname-billboard-${playerId}`
+  );
+  const chatBuubleBoard = threeScene.getObjectByName(
+    `chat-bubble-billboard-${playerId}`
   );
 
   const me = useRecoilValue(MeAtom);
@@ -102,7 +104,6 @@ export function Man({
 
   useFrame(({ camera }) => {
     if (!playerRef.current) return;
-    if (!dummyRef.current) return;
     if (playerRef.current.position.distanceTo(position) > 0.1) {
       const direction = playerRef.current.position
         .clone()
@@ -111,11 +112,6 @@ export function Man({
         .multiplyScalar(0.04);
       playerRef.current.position.sub(direction);
       playerRef.current.lookAt(position);
-
-      dummyRef.current.position.sub(direction);
-      dummyRef.current.lookAt(position);
-      // api.position.copy(group.current.position);
-      // api.quaternion.copy(group.current.quaternion);
 
       if (point) {
         point.style.transform = `translate(
@@ -135,6 +131,14 @@ export function Man({
         playerRef.current.position.z
       );
       nicknameBillboard.lookAt(10000, 10000, 10000);
+    }
+    if (chatBuubleBoard) {
+      chatBuubleBoard.position.set(
+        playerRef.current.position.x,
+        playerRef.current.position.y + 2.5,
+        playerRef.current.position.z
+      );
+      chatBuubleBoard.lookAt(10000, 10000, 10000);
     }
 
     if (
