@@ -19,12 +19,11 @@ import {
 import { calculateMinimapPosition } from "../../../../../utils";
 import gsap from "gsap";
 
-interface IMan {
+interface IPlayerProps {
   player?: IPlayer;
   position: THREE.Vector3;
-  currentGlbName: string;
 }
-export function Man({ player, position, currentGlbName }: IMan) {
+export function Kid({ player, position }: IPlayerProps) {
   const playerId = player?.id;
   const currentMap = useRecoilValue(CurrentMapAtom);
   const [, setCurrentMyRoomPlayer] = useRecoilState(CurrentMyRoomPlayerAtom);
@@ -51,76 +50,11 @@ export function Man({ player, position, currentGlbName }: IMan) {
 
   const me = useRecoilValue(MeAtom);
 
-  const {
-    scene: manScene,
-    materials: manMaterials,
-    animations: manAnim,
-  } = useGLTF(`/models/CubeGuyCharacter.glb`) as GLTF & {
+  const { scene, materials, animations } = useGLTF(
+    `/models/Steve.glb`
+  ) as GLTF & {
     materials: { [key: string]: THREE.MeshStandardMaterial };
   };
-  const {
-    scene: womanScene,
-    materials: womanMaterials,
-    animations: womanAnim,
-  } = useGLTF(`/models/CubeWomanCharacter.glb`) as GLTF & {
-    materials: { [key: string]: THREE.MeshStandardMaterial };
-  };
-  const {
-    scene: steveScene,
-    materials: steveMaterials,
-    animations: steveAnim,
-  } = useGLTF(`/models/Steve.glb`) as GLTF & {
-    materials: { [key: string]: THREE.MeshStandardMaterial };
-  };
-
-  const {
-    scene,
-    materials,
-    animations,
-  }: {
-    scene: THREE.Group;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    materials: any;
-    animations: THREE.AnimationClip[];
-  } = useMemo(() => {
-    switch (currentGlbName) {
-      case "CubeGuyCharacter":
-        return {
-          scene: manScene,
-          materials: manMaterials,
-          animations: manAnim,
-        };
-      case "CubeWomanCharacter":
-        return {
-          scene: womanScene,
-          materials: womanMaterials,
-          animations: womanAnim,
-        };
-      case "Steve":
-        return {
-          scene: steveScene,
-          materials: steveMaterials,
-          animations: steveAnim,
-        };
-      default:
-        return {
-          scene: manScene,
-          materials: manMaterials,
-          animations: manAnim,
-        };
-    }
-  }, [
-    currentGlbName,
-    manAnim,
-    manMaterials,
-    manScene,
-    steveAnim,
-    steveMaterials,
-    steveScene,
-    womanAnim,
-    womanMaterials,
-    womanScene,
-  ]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const clone = useMemo(() => SkeletonUtils.clone(scene), []);
@@ -170,6 +104,7 @@ export function Man({ player, position, currentGlbName }: IMan) {
   // const tempVec3 = new THREE.Vector3();
 
   useFrame(({ camera }) => {
+    if (!player) return;
     if (!playerRef.current) return;
     if (playerRef.current.position.distanceTo(position) > 0.1) {
       const direction = playerRef.current.position

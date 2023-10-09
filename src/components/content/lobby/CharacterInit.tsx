@@ -1,24 +1,21 @@
 import { OrbitControls } from "@react-three/drei";
-import { Man } from "../canvas/maps/players/NewMan";
-import { useEffect, useMemo, useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useThree } from "@react-three/fiber";
 import { Vector3 } from "three";
 import { useRecoilValue } from "recoil";
 import { SelectedCharacterGlbNameIndexAtom } from "../../../store/PlayersAtom";
-import { characterGlbNameCandidates } from "../../../data/constants";
+import { Man } from "../canvas/maps/player/Man";
+import { Woman } from "../canvas/maps/player/Woman";
+import { Kid } from "../canvas/maps/player/Kid";
 // import { CubeMan } from "./players/CubeMan";
 // import { CubeWoman } from "./players/CubeWoman";
 
 export const CharacterInit = () => {
   const camera = useThree((three) => three.camera);
-  const selectedCharacterGlbName = useRecoilValue(
+  const selectedCharacterGlbNameIndex = useRecoilValue(
     SelectedCharacterGlbNameIndexAtom
   );
 
-  console.log("selectedCharacterGlbName", selectedCharacterGlbName);
-  const currentGlbName = useMemo(() => {
-    return characterGlbNameCandidates[selectedCharacterGlbName ?? 0];
-  }, [selectedCharacterGlbName]);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controls = useRef<any>(null);
   useEffect(() => {
@@ -28,11 +25,16 @@ export const CharacterInit = () => {
   }, [camera.position]);
   return (
     <>
-      <Man
-        player={undefined}
-        position={new Vector3(0, 0, 0)}
-        currentGlbName={currentGlbName}
-      />
+      {selectedCharacterGlbNameIndex === 0 && (
+        <Man player={undefined} position={new Vector3(0, 0, 0)} />
+      )}
+      {selectedCharacterGlbNameIndex === 1 && (
+        <Woman player={undefined} position={new Vector3(0, 0, 0)} />
+      )}
+      {selectedCharacterGlbNameIndex === 2 && (
+        <Kid player={undefined} position={new Vector3(0, 0, 0)} />
+      )}
+
       <OrbitControls
         ref={controls}
         minDistance={1}

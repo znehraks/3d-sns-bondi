@@ -18,9 +18,10 @@ import { MiniGame } from "./structures/miniGame";
 import gsap from "gsap";
 import { NicknameBoard } from "./structures/ground/3dUIs/NicknameBoard";
 import { ChatBubble } from "./structures/ground/3dUIs/ChatBubble";
-import { Man } from "./players/NewMan";
 import { Vector3 } from "three";
-import { characterGlbNameCandidates } from "../../../../data/constants";
+import { Man } from "./player/Man";
+import { Woman } from "./player/Woman";
+import { Kid } from "./player/Kid";
 // import { GsapTest } from "../test/GsapTest";
 
 export const RootMap = () => {
@@ -135,21 +136,44 @@ export const RootMap = () => {
                       )}
                     />
                     <NicknameBoard player={player} />
-                    <Man
-                      player={player}
-                      position={
-                        new Vector3(
-                          player.position[0],
-                          player.position[1],
-                          player.position[2]
-                        )
-                      }
-                      currentGlbName={
-                        characterGlbNameCandidates[
-                          player.selectedCharacterGlbNameIndex
-                        ]
-                      }
-                    />
+                    <>
+                      {player.selectedCharacterGlbNameIndex === 0 && (
+                        <Man
+                          player={player}
+                          position={
+                            new Vector3(
+                              player.position[0],
+                              player.position[1],
+                              player.position[2]
+                            )
+                          }
+                        />
+                      )}
+                      {player.selectedCharacterGlbNameIndex === 1 && (
+                        <Woman
+                          player={player}
+                          position={
+                            new Vector3(
+                              player.position[0],
+                              player.position[1],
+                              player.position[2]
+                            )
+                          }
+                        />
+                      )}
+                      {player.selectedCharacterGlbNameIndex === 2 && (
+                        <Kid
+                          player={player}
+                          position={
+                            new Vector3(
+                              player.position[0],
+                              player.position[1],
+                              player.position[2]
+                            )
+                          }
+                        />
+                      )}
+                    </>
                   </>
                 );
               })}
