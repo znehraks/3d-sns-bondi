@@ -44,7 +44,7 @@ export function Man({ player, position }: IPlayerProps) {
   const nicknameBillboard = threeScene.getObjectByName(
     `nickname-billboard-${playerId}`
   );
-  const chatBuubleBoard = threeScene.getObjectByName(
+  const chatBubbleBoard = threeScene.getObjectByName(
     `chat-bubble-billboard-${playerId}`
   );
 
@@ -136,13 +136,13 @@ export function Man({ player, position }: IPlayerProps) {
       );
       nicknameBillboard.lookAt(10000, 10000, 10000);
     }
-    if (chatBuubleBoard) {
-      chatBuubleBoard.position.set(
+    if (chatBubbleBoard) {
+      chatBubbleBoard.position.set(
         playerRef.current.position.x,
         playerRef.current.position.y + 4,
         playerRef.current.position.z
       );
-      chatBuubleBoard.lookAt(10000, 10000, 10000);
+      chatBubbleBoard.lookAt(10000, 10000, 10000);
     }
 
     if (
