@@ -2,6 +2,7 @@ import { Billboard, Text } from "@react-three/drei";
 import { IChat, IPlayer, MeAtom } from "../../../../../../../store/PlayersAtom";
 import { useEffect, useState } from "react";
 import { useRecoilValue } from "recoil";
+import { useAnimatedText } from "../../../../../../hooks/useAnimatedText";
 
 export const ChatBubble = ({
   player,
@@ -10,6 +11,12 @@ export const ChatBubble = ({
   player: IPlayer;
   chat: IChat | undefined;
 }) => {
+  const { displayText } = useAnimatedText(
+    (chat?.text.length ?? 0) > 30
+      ? `"${chat?.text.slice(0, 30)}..."`
+      : `"${chat?.text}"`,
+    true
+  );
   const me = useRecoilValue(MeAtom);
   const [visible, setVisible] = useState(true);
   // timestamp 비교해서 visible 변경
@@ -39,9 +46,7 @@ export const ChatBubble = ({
         fontSize={0.3}
         color={me.id === player.id ? 0x004acc : 0x222222}
       >
-        {chat?.text.length > 30
-          ? `"${chat?.text.slice(0, 30)}..."`
-          : `"${chat?.text}"`}
+        {displayText}
       </Text>
     </Billboard>
   );
