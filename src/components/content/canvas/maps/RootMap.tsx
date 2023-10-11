@@ -3,7 +3,7 @@ import {
   CharacterSelectFinishedAtom,
   CurrentMapAtom,
   PlayersAtom,
-  RecentChatsSelector,
+  RecentChatsAtom,
 } from "../../../../store/PlayersAtom";
 import { OrbitControls, useGLTF, useTexture } from "@react-three/drei";
 // import { PlayStructure } from "../structures/ground/PlayStructure";
@@ -26,7 +26,7 @@ import { Kid } from "./player/Kid";
 export const RootMap = () => {
   // const backgroundTexture = useTexture("./images/scene_map.jpeg");
   const [currentMap] = useRecoilState(CurrentMapAtom);
-  const recentChats = useRecoilValue(RecentChatsSelector);
+  const recentChats = useRecoilValue(RecentChatsAtom);
   const [characterSelectFinished] = useRecoilState(CharacterSelectFinishedAtom);
 
   const [players] = useRecoilState(PlayersAtom);

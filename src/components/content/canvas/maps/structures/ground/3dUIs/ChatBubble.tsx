@@ -1,7 +1,12 @@
 import { Billboard, Text } from "@react-three/drei";
-import { IChat, IPlayer, MeAtom } from "../../../../../../../store/PlayersAtom";
+import {
+  IChat,
+  IPlayer,
+  MeAtom,
+  RecentChatsAtom,
+} from "../../../../../../../store/PlayersAtom";
 import { useEffect, useState } from "react";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 import { useAnimatedText } from "../../../../../../hooks/useAnimatedText";
 
 export const ChatBubble = ({
@@ -11,6 +16,7 @@ export const ChatBubble = ({
   player: IPlayer;
   chat: IChat | undefined;
 }) => {
+  const setRecentChats = useSetRecoilState(RecentChatsAtom);
   const { displayText } = useAnimatedText(
     (chat?.text.length ?? 0) > 30
       ? `"${chat?.text.slice(0, 30)}..."`
@@ -23,12 +29,18 @@ export const ChatBubble = ({
   useEffect(() => {
     setVisible(true);
     const timeout = setTimeout(() => {
+      setRecentChats((prev) => {
+        return prev.filter(
+          (rc) =>
+            rc.timestamp !== chat?.timestamp && rc.senderId !== chat?.senderId
+        );
+      });
       setVisible(false);
     }, 5000);
     return () => {
       clearTimeout(timeout);
     };
-  }, [chat, chat?.timestamp]);
+  }, [chat, chat?.timestamp, setRecentChats]);
 
   if (!chat?.text) return null;
   return (

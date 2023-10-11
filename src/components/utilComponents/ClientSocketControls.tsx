@@ -10,13 +10,16 @@ import {
   IPlayer,
   MeAtom,
   PlayersAtom,
+  RecentChatsAtom,
 } from "../../store/PlayersAtom";
 import { socket } from "../../sockets/clientSocket";
+import _ from "lodash";
 
 export const ClientSocketControls = () => {
   const setPlayers = useSetRecoilState(PlayersAtom);
   const [me, setMe] = useRecoilState(MeAtom);
-  const setChats = useSetRecoilState(ChatsAtom);
+  const [chats, setChats] = useRecoilState(ChatsAtom);
+  const setRecentChats = useSetRecoilState(RecentChatsAtom);
   const setEnterNotice = useSetRecoilState(EnterNoticeAtom);
   const setExitNotice = useSetRecoilState(ExitNoticeAtom);
   const [currentMyRoomPlayer, setCurrentMyRoomPlayer] = useRecoilState(
@@ -74,6 +77,16 @@ export const ClientSocketControls = () => {
         ...prev,
         { senderId, senderNickname, senderJobPosition, text, timestamp },
       ]);
+
+      setRecentChats(
+        _.uniqBy(
+          [
+            ...chats,
+            { senderId, senderNickname, senderJobPosition, text, timestamp },
+          ].reverse(),
+          "senderId"
+        )
+      );
     };
 
     socket.on("connect", handleConnect);
@@ -93,6 +106,7 @@ export const ClientSocketControls = () => {
       socket.off("newText", handleNewText);
     };
   }, [
+    chats,
     currentMyRoomPlayer,
     currentMyRoomPlayer?.id,
     me,
@@ -103,6 +117,7 @@ export const ClientSocketControls = () => {
     setExitNotice,
     setMe,
     setPlayers,
+    setRecentChats,
   ]);
   return null;
 };
