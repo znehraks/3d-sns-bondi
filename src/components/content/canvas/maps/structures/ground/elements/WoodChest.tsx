@@ -32,16 +32,23 @@ export const WoodChest = () => {
       });
   }, []);
   return (
-    <primitive
-      onClick={(e: ThreeEvent<MouseEvent>) => {
-        e.stopPropagation();
-        // 키를 안가졌을 때는 키 가져오라고 보여주고, 키 가졌을땐 보물 획득
-      }}
-      ref={ref}
-      name={name}
-      scale={1}
-      position={position}
-      object={scene}
-    />
+    <>
+      <rectAreaLight
+        args={["yellow", 50, 5, 5]}
+        position={[position.x, 0, position.z]}
+        rotation-x={Math.PI / 2}
+      />
+      <primitive
+        onClick={(e: ThreeEvent<MouseEvent>) => {
+          e.stopPropagation();
+          // 키를 안가졌을 때는 키 가져오라고 보여주고, 키 가졌을땐 보물 획득
+        }}
+        ref={ref}
+        name={name}
+        scale={1}
+        position={position}
+        object={scene}
+      />
+    </>
   );
 };

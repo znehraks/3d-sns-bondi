@@ -4,14 +4,17 @@ import { PlayGroundStructuresBoundingBoxAtom } from "../../../../../../../../sto
 import { useRecoilState } from "recoil";
 import { Vector3 } from "three";
 import { useFrame } from "@react-three/fiber";
+import { useAnimatedText } from "../../../../../../../hooks/useAnimatedText";
 
 const name = "ground-npc-dinosaur";
+const text = "나는 무서운 육식 공룡이야..! 크아앙~   ";
 export const Dinosaur = () => {
+  const { displayText } = useAnimatedText(text);
   const [, setPlayGroundStructuresBoundingBox] = useRecoilState(
     PlayGroundStructuresBoundingBoxAtom
   );
   const { scene } = useGLTF("/models/CuteRedDino.glb");
-  const position = useMemo(() => new Vector3(0, 0, 0), []);
+  const position = useMemo(() => new Vector3(0, 0, -5), []);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const chatRef = useRef<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -36,14 +39,14 @@ export const Dinosaur = () => {
         position={[position.x, position.y + 4.5, position.z]}
       >
         <Text font={"/NotoSansKR-Regular.ttf"} fontSize={0.25} color={0x000000}>
-          {`"안녕 반가워!"`}
+          {displayText}
         </Text>
       </Billboard>
       <Billboard
         ref={nameRef}
         position={[position.x, position.y + 4, position.z]}
       >
-        <Text font={"/NotoSansKR-Regular.ttf"} fontSize={0.4} color={0xdd125a}>
+        <Text font={"/NotoSansKR-Regular.ttf"} fontSize={0.4} color={0xff71c2}>
           {`디노`}
         </Text>
       </Billboard>

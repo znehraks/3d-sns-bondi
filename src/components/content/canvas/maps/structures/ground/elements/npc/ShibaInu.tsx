@@ -1,15 +1,21 @@
-import { useAnimations, useGLTF } from "@react-three/drei";
+import { Billboard, Text, useAnimations, useGLTF } from "@react-three/drei";
 import { useEffect, useMemo, useRef } from "react";
 import { PlayGroundStructuresBoundingBoxAtom } from "../../../../../../../../store/PlayersAtom";
 import { useRecoilState } from "recoil";
 import { Mesh, Vector3 } from "three";
-import { ThreeEvent } from "@react-three/fiber";
+import { ThreeEvent, useFrame } from "@react-three/fiber";
 import gsap from "gsap";
+import { useAnimatedText } from "../../../../../../../hooks/useAnimatedText";
 
 const name = "ground-shiba-inu";
+const text = "멍멍! 내 고기가 어디갔지..?   ";
 export const ShibaInu = () => {
   const ref = useRef<Mesh>(null);
-
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const chatRef = useRef<any>(null);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const nameRef = useRef<any>(null);
+  const { displayText } = useAnimatedText(text);
   const [, setPlayGroundStructuresBoundingBox] = useRecoilState(
     PlayGroundStructuresBoundingBoxAtom
   );
@@ -47,20 +53,58 @@ export const ShibaInu = () => {
     };
   }, [actions, position, scene, setPlayGroundStructuresBoundingBox]);
 
+  useFrame(() => {
+    if (!ref.current) return;
+    if (chatRef.current) {
+      chatRef.current.position.set(
+        ref.current.position.x,
+        ref.current.position.y + 3.5,
+        ref.current.position.z
+      );
+      chatRef.current.lookAt(10000, 10000, 10000);
+    }
+    if (nameRef.current) {
+      nameRef.current.position.set(
+        ref.current.position.x,
+        ref.current.position.y + 3,
+        ref.current.position.z
+      );
+      nameRef.current.lookAt(10000, 10000, 10000);
+    }
+  });
+
   return (
-    <primitive
-      onClick={(e: ThreeEvent<MouseEvent>) => {
-        e.stopPropagation();
-        console.log("강아지와  대화하기");
-        // 눌렀을 때 카메라 각도 바뀌면서 좀비랑 대화하는 구도
-      }}
-      scale={0.7}
-      ref={ref}
-      visible
-      name={name}
-      position={position}
-      rotation-y={Math.PI / 1.5}
-      object={scene}
-    />
+    <>
+      <Billboard
+        ref={chatRef}
+        position={[position.x, position.y + 4.5, position.z]}
+      >
+        <Text font={"/NotoSansKR-Regular.ttf"} fontSize={0.25} color={0x000000}>
+          {displayText}
+        </Text>
+      </Billboard>
+      <Billboard
+        ref={nameRef}
+        position={[position.x, position.y + 4, position.z]}
+      >
+        <Text font={"/NotoSansKR-Regular.ttf"} fontSize={0.4} color={0xff71c2}>
+          {`댕댕이`}
+        </Text>
+      </Billboard>
+      <primitive
+        onClick={(e: ThreeEvent<MouseEvent>) => {
+          e.stopPropagation();
+          console.log("강아지와  대화하기");
+          // 눌렀을 때 카메라 각도 바뀌면서 좀비랑 대화하는 구도
+        }}
+        scale={0.7}
+        ref={ref}
+        visible
+        name={name}
+        position={position}
+        rotation-y={Math.PI / 1.5}
+        object={scene}
+      />
+    </>
   );
 };

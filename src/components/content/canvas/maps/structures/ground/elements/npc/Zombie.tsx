@@ -4,10 +4,14 @@ import { PlayGroundStructuresBoundingBoxAtom } from "../../../../../../../../sto
 import { useRecoilState } from "recoil";
 import { Mesh, Vector3 } from "three";
 import { ThreeEvent, useFrame } from "@react-three/fiber";
+import { useAnimatedText } from "../../../../../../../hooks/useAnimatedText";
 
 const name = "ground-npc-zombie";
+const text = "으으 오늘도 야근이라니...    ";
 export const Zombie = () => {
   const ref = useRef<Mesh>(null);
+  const { displayText } = useAnimatedText(text);
+
   const [, setPlayGroundStructuresBoundingBox] = useRecoilState(
     PlayGroundStructuresBoundingBoxAtom
   );
@@ -43,14 +47,14 @@ export const Zombie = () => {
         position={[position.x, position.y + 4.5, position.z]}
       >
         <Text font={"/NotoSansKR-Regular.ttf"} fontSize={0.25} color={0x000000}>
-          {`"으으 오늘도 야근이라니..."`}
+          {displayText}
         </Text>
       </Billboard>
       <Billboard
         ref={nameRef}
         position={[position.x, position.y + 4, position.z]}
       >
-        <Text font={"/NotoSansKR-Regular.ttf"} fontSize={0.4} color={0xdd125a}>
+        <Text font={"/NotoSansKR-Regular.ttf"} fontSize={0.4} color={0xff71c2}>
           {`야근 좀비`}
         </Text>
       </Billboard>
