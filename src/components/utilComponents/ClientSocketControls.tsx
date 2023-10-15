@@ -1,6 +1,7 @@
 import { useEffect } from "react";
-import { useRecoilState, useSetRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
 import {
+  AlreadyDisplayedRecentChatsAtom,
   ChatsAtom,
   CurrentMyRoomPlayerAtom,
   EnterNoticeAtom,
@@ -20,6 +21,9 @@ export const ClientSocketControls = () => {
   const [me, setMe] = useRecoilState(MeAtom);
   const [chats, setChats] = useRecoilState(ChatsAtom);
   const setRecentChats = useSetRecoilState(RecentChatsAtom);
+  const alreadyDisplayedRecentChats = useRecoilValue(
+    AlreadyDisplayedRecentChatsAtom
+  );
   const setEnterNotice = useSetRecoilState(EnterNoticeAtom);
   const setExitNotice = useSetRecoilState(ExitNoticeAtom);
   const [currentMyRoomPlayer, setCurrentMyRoomPlayer] = useRecoilState(
@@ -78,13 +82,22 @@ export const ClientSocketControls = () => {
         { senderId, senderNickname, senderJobPosition, text, timestamp },
       ]);
 
+      const uniqRecentChats = _.uniqBy(
+        [
+          ...chats,
+          { senderId, senderNickname, senderJobPosition, text, timestamp },
+        ].reverse(),
+        "senderId"
+      );
+
       setRecentChats(
-        _.uniqBy(
-          [
-            ...chats,
-            { senderId, senderNickname, senderJobPosition, text, timestamp },
-          ].reverse(),
-          "senderId"
+        uniqRecentChats.filter(
+          (chat) =>
+            !alreadyDisplayedRecentChats.some(
+              (alreadyChats) =>
+                alreadyChats.senderId === chat.senderId &&
+                alreadyChats.timestamp === chat.timestamp
+            )
         )
       );
     };
@@ -106,6 +119,7 @@ export const ClientSocketControls = () => {
       socket.off("newText", handleNewText);
     };
   }, [
+    alreadyDisplayedRecentChats,
     chats,
     currentMyRoomPlayer,
     currentMyRoomPlayer?.id,

@@ -104,6 +104,11 @@ export const RecentChatsAtom = atom<IChat[]>({
   default: [],
 });
 
+export const AlreadyDisplayedRecentChatsAtom = atom<IChat[]>({
+  key: "AlreadyDisplayedRecentChatsAtom",
+  default: [],
+});
+
 export interface INotice {
   nickname: IPlayer["nickname"];
   jobPosition: IPlayer["jobPosition"];

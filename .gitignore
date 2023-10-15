@@ -12,7 +12,7 @@ not_used
 dist
 dist-ssr
 *.local
-
+clientSocket.ts
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json

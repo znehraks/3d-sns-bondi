@@ -39,10 +39,8 @@ export const ShibaInu = () => {
       onUpdate: () => {
         const progress = animation.progress();
         if (Math.abs(progress) < 0.01) {
-          console.log("순 시작");
           ref.current?.lookAt(3, 0, 21);
         } else if (Math.abs(progress) > 0.99) {
-          console.log("역 시작");
           ref.current?.lookAt(-1, 0, 21);
         }
       },

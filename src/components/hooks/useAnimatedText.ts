@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 
-export const useAnimatedText = (text: string, once?: boolean) => {
+export const useAnimatedText = (
+  text: string,
+  once?: boolean,
+  callback?: () => void
+) => {
   const [displayText, setDisplayText] = useState("");
   const [currentIndex, setCurrentIndex] = useState(0);
   useEffect(() => {
@@ -15,8 +19,10 @@ export const useAnimatedText = (text: string, once?: boolean) => {
       // 텍스트가 모두 나타난 후에 currentIndex를 초기화하여 애니메이션을 반복합니다.
       setCurrentIndex(0);
       setDisplayText("");
+    } else {
+      callback?.();
     }
-  }, [currentIndex, displayText, once, text]);
+  }, [callback, currentIndex, displayText, once, text]);
 
   useEffect(() => {
     setCurrentIndex(0);
