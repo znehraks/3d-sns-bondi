@@ -69,11 +69,6 @@ export function Kid({ player, position }: IPlayerProps) {
 
   useEffect(() => {
     if (!playerRef.current) return;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    scene.traverse((mesh: any) => {
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
-    });
     if (me?.id === playerId && currentMap === "GROUND") {
       gsap.fromTo(
         playerRef.current.scale,
@@ -223,6 +218,8 @@ export function Kid({ player, position }: IPlayerProps) {
             <primitive object={nodes.Root} />
           </group>
           <skinnedMesh
+            castShadow
+            receiveShadow
             name="Character"
             geometry={nodes.Character.geometry}
             material={materials.Atlas}
