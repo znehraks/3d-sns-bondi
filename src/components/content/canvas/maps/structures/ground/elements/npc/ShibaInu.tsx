@@ -1,23 +1,36 @@
 import { Billboard, Text, useAnimations, useGLTF } from "@react-three/drei";
-import { useEffect, useMemo, useRef } from "react";
-import { PlayGroundStructuresBoundingBoxAtom } from "../../../../../../../../store/PlayersAtom";
+import { useEffect, useMemo, useRef, useState } from "react";
+import {
+  PlayGroundStructuresBoundingBoxAtom,
+  PlayerCompletedQuestsAtom,
+  PlayerInventoryAtom,
+} from "../../../../../../../../store/PlayersAtom";
 import { useRecoilState } from "recoil";
 import { Mesh, Vector3 } from "three";
-import { ThreeEvent, useFrame } from "@react-three/fiber";
+import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useAnimatedText } from "../../../../../../../hooks/useAnimatedText";
 
 const name = "ground-shiba-inu";
-const text = "멍멍! 내 고기가 어디갔지..?   ";
 export const ShibaInu = () => {
   const ref = useRef<Mesh>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const chatRef = useRef<any>(null);
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const nameRef = useRef<any>(null);
+  const [text, setText] = useState("멍멍! 내 고기가 어디갔지..?   ");
+
   const { displayText } = useAnimatedText(text);
+
+  const threeScene = useThree((three) => three.scene);
   const [, setPlayGroundStructuresBoundingBox] = useRecoilState(
     PlayGroundStructuresBoundingBoxAtom
+  );
+  const [playerInventory, setPlayerInventory] =
+    useRecoilState(PlayerInventoryAtom);
+
+  const [playerCompletedQuests, setPlayerCompletedQuests] = useRecoilState(
+    PlayerCompletedQuestsAtom
   );
   const { scene, animations } = useGLTF("/models/Shiba Inu.glb");
   const { actions } = useAnimations(animations, ref);
@@ -28,28 +41,52 @@ export const ShibaInu = () => {
       mesh.castShadow = true;
       mesh.receiveShadow = true;
     });
+    let animation: gsap.core.Tween;
+    if (playerCompletedQuests.includes("dog")) {
+      setText("멍멍! 고마워!   ");
+      actions["Walk"]?.stop();
+      actions["Eating"]?.play();
+      ref.current?.lookAt(3, 0, 21);
+      const steak = threeScene.getObjectByName("ground-steak");
+      if (steak) {
+        steak.visible = true;
+        steak?.position.set(
+          ref.current.position.x + 1,
+          0,
+          ref.current.position.z
+        );
+      }
+    } else {
+      actions["Walk"]?.play();
+      animation = gsap.to(ref.current.position, {
+        duration: 5,
+        yoyo: true,
+        repeat: -1,
+        x: 3,
+        ease: "linear",
+        onUpdate: () => {
+          const progress = animation.progress();
+          if (Math.abs(progress) < 0.01) {
+            ref.current?.lookAt(3, 0, 21);
+          } else if (Math.abs(progress) > 0.99) {
+            ref.current?.lookAt(-1, 0, 21);
+          }
+        },
+      });
+      animation.play();
+    }
 
-    actions["Walk"]?.play();
-    const animation = gsap.to(ref.current.position, {
-      duration: 5,
-      yoyo: true,
-      repeat: -1,
-      x: 3,
-      ease: "linear",
-      onUpdate: () => {
-        const progress = animation.progress();
-        if (Math.abs(progress) < 0.01) {
-          ref.current?.lookAt(3, 0, 21);
-        } else if (Math.abs(progress) > 0.99) {
-          ref.current?.lookAt(-1, 0, 21);
-        }
-      },
-    });
-    animation.play();
     return () => {
       animation.pause();
     };
-  }, [actions, position, scene, setPlayGroundStructuresBoundingBox]);
+  }, [
+    actions,
+    playerCompletedQuests,
+    position,
+    scene,
+    setPlayGroundStructuresBoundingBox,
+    threeScene,
+  ]);
 
   useFrame(() => {
     if (!ref.current) return;
@@ -92,8 +129,15 @@ export const ShibaInu = () => {
       <primitive
         onClick={(e: ThreeEvent<MouseEvent>) => {
           e.stopPropagation();
-          console.log("강아지와  대화하기");
-          // 눌렀을 때 카메라 각도 바뀌면서 좀비랑 대화하는 구도
+          if (playerInventory.includes("food")) {
+            alert("강아지에게 고기를 주었습니다. 강아지가 당신을 좋아합니다.");
+            setPlayerInventory((prev) =>
+              prev.filter((item) => item !== "food")
+            );
+            setPlayerCompletedQuests((prev) => [...prev, "dog"]);
+          } else {
+            alert("강아지에게 먹일 고기를 갖다주세요.");
+          }
         }}
         scale={0.7}
         ref={ref}

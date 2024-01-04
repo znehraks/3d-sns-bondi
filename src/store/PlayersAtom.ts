@@ -192,6 +192,16 @@ export const PlayerGroundStructuresFloorPlaneCornersSelector = selector({
   },
 });
 
+export const PlayerCompletedQuestsAtom = atom<string[]>({
+  key: "PlayerQuestsAtom",
+  default: [],
+});
+
+export const PlayerInventoryAtom = atom<string[]>({
+  key: "PlayerInventoryAtom",
+  default: [],
+});
+
 export interface IPlacedMyRoomObject {
   name: string;
   position: [number, number, number];

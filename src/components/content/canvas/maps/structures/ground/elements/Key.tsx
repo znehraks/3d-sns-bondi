@@ -1,10 +1,15 @@
 import { useGLTF } from "@react-three/drei";
 import { useEffect, useMemo, useRef } from "react";
-import { PlayGroundStructuresBoundingBoxAtom } from "../../../../../../../store/PlayersAtom";
-import { useRecoilState } from "recoil";
+import {
+  PlayGroundStructuresBoundingBoxAtom,
+  PlayerInventoryAtom,
+  PlayerCompletedQuestsAtom,
+} from "../../../../../../../store/PlayersAtom";
+import { useRecoilState, useRecoilValue } from "recoil";
 import { Mesh, Vector3 } from "three";
 import { ThreeEvent } from "@react-three/fiber";
 import gsap from "gsap";
+import { uniq } from "lodash";
 
 const name = "ground-key";
 export const Key = () => {
@@ -12,6 +17,11 @@ export const Key = () => {
   const [, setPlayGroundStructuresBoundingBox] = useRecoilState(
     PlayGroundStructuresBoundingBoxAtom
   );
+  const [playerInventory, setPlayerInventory] =
+    useRecoilState(PlayerInventoryAtom);
+
+  const playerCompletedQuests = useRecoilValue(PlayerCompletedQuestsAtom);
+
   const { scene } = useGLTF("/models/Key.glb");
   const position = useMemo(() => new Vector3(22, 1, -18), []);
   useEffect(() => {
@@ -28,6 +38,12 @@ export const Key = () => {
       });
   }, [position, scene, setPlayGroundStructuresBoundingBox]);
 
+  if (
+    playerCompletedQuests.includes("treasure") ||
+    playerInventory.includes("key")
+  ) {
+    return null;
+  }
   return (
     <>
       <rectAreaLight
@@ -38,6 +54,8 @@ export const Key = () => {
       <primitive
         onClick={(e: ThreeEvent<MouseEvent>) => {
           e.stopPropagation();
+          alert("열쇠를 얻었습니다!");
+          setPlayerInventory((prev) => uniq([...prev, "key"]));
         }}
         ref={ref}
         visible
