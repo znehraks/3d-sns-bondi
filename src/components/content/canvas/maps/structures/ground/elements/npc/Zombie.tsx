@@ -1,7 +1,6 @@
-import { Billboard, Text, useAnimations, useGLTF } from "@react-three/drei";
+import { useAnimations, useGLTF } from "@react-three/drei";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  PlayGroundStructuresBoundingBoxAtom,
   PlayerInventoryAtom,
   PlayerCompletedQuestsAtom,
 } from "../../../../../../../../store/PlayersAtom";
@@ -9,17 +8,13 @@ import { useRecoilState } from "recoil";
 import { Mesh, Vector3 } from "three";
 import { ThreeEvent, useFrame } from "@react-three/fiber";
 import { useAnimatedText } from "../../../../../../../hooks/useAnimatedText";
-import { NicknameBoard } from "../../3dUIs/NicknameBoard";
+import { Textboard } from "../../3dUIs/Textboard";
 
 const name = "ground-npc-zombie";
 export const Zombie = () => {
   const ref = useRef<Mesh>(null);
   const [text, setText] = useState("으으 오늘도 야근이라니...    ");
   const { displayText } = useAnimatedText(text);
-
-  const [, setPlayGroundStructuresBoundingBox] = useRecoilState(
-    PlayGroundStructuresBoundingBoxAtom
-  );
 
   const [playerInventory, setPlayerInventory] =
     useRecoilState(PlayerInventoryAtom);
@@ -47,6 +42,11 @@ export const Zombie = () => {
       ref.current.position.y + 4,
       ref.current.position.z
     );
+    chatRef.current.position.set(
+      ref.current.position.x,
+      ref.current.position.y + 4.5,
+      ref.current.position.z
+    );
     scene.traverse((mesh) => {
       mesh.castShadow = true;
       mesh.receiveShadow = true;
@@ -55,13 +55,7 @@ export const Zombie = () => {
     return () => {
       actions[currentAnimation]?.stop();
     };
-  }, [
-    actions,
-    currentAnimation,
-    position,
-    scene,
-    setPlayGroundStructuresBoundingBox,
-  ]);
+  }, [actions, currentAnimation, position, scene]);
 
   useFrame(() => {
     if (chatRef.current) chatRef.current.lookAt(10000, 10000, 10000);
@@ -84,15 +78,8 @@ export const Zombie = () => {
   });
   return (
     <>
-      <Billboard
-        ref={chatRef}
-        position={[position.x, position.y + 4.5, position.z]}
-      >
-        <Text font={"/NotoSansKR-Regular.ttf"} fontSize={0.25} color={0x000000}>
-          {displayText}
-        </Text>
-      </Billboard>
-      <NicknameBoard ref={nameRef} text="야근좀비" isNpc />
+      <Textboard ref={chatRef} text={displayText} />
+      <Textboard ref={nameRef} text="야근좀비" isNpc />
       <primitive
         onClick={(e: ThreeEvent<MouseEvent>) => {
           e.stopPropagation();

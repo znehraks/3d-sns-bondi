@@ -17,9 +17,7 @@ import { MiniGame } from "./structures/miniGame";
 import gsap from "gsap";
 import { ChatBubble } from "./structures/ground/3dUIs/ChatBubble";
 import { Vector3 } from "three";
-import { Man } from "./player/Man";
-import { Woman } from "./player/Woman";
-import { Kid } from "./player/Kid";
+import { Player } from "./player/Player";
 // import { GsapTest } from "../test/GsapTest";
 
 export const RootMap = () => {
@@ -129,44 +127,17 @@ export const RootMap = () => {
                         (recentChat) => recentChat.senderId === player.id
                       )}
                     />
-                    <>
-                      {player.selectedCharacterGlbNameIndex === 0 && (
-                        <Man
-                          player={player}
-                          position={
-                            new Vector3(
-                              player.position[0],
-                              player.position[1],
-                              player.position[2]
-                            )
-                          }
-                        />
-                      )}
-                      {player.selectedCharacterGlbNameIndex === 1 && (
-                        <Woman
-                          player={player}
-                          position={
-                            new Vector3(
-                              player.position[0],
-                              player.position[1],
-                              player.position[2]
-                            )
-                          }
-                        />
-                      )}
-                      {player.selectedCharacterGlbNameIndex === 2 && (
-                        <Kid
-                          player={player}
-                          position={
-                            new Vector3(
-                              player.position[0],
-                              player.position[1],
-                              player.position[2]
-                            )
-                          }
-                        />
-                      )}
-                    </>
+                    <Player
+                      key={player.id}
+                      player={player}
+                      position={
+                        new Vector3(
+                          player.position[0],
+                          player.position[1],
+                          player.position[2]
+                        )
+                      }
+                    />
                   </>
                 );
               })}

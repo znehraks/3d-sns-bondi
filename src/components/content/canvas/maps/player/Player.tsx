@@ -4,11 +4,12 @@ Command: npx gltfjsx@6.2.13 public/models/Hoodie Character.glb -o src/components
 */
 
 import { ThreeEvent } from "@react-three/fiber";
-import { NicknameBoard } from "../structures/ground/3dUIs/NicknameBoard";
+import { Textboard } from "../structures/ground/3dUIs/Textboard";
 import { usePlayer } from "./hooks/usePlayer";
 import { IPlayerProps } from "./interfaces";
 
-export function Man({ player, position, modelIndex }: IPlayerProps) {
+export function Player({ player, position, modelIndex: mIdx }: IPlayerProps) {
+  const modelIndex = mIdx ?? player!.selectedCharacterGlbNameIndex;
   const {
     me,
     nicknameRef,
@@ -21,13 +22,13 @@ export function Man({ player, position, modelIndex }: IPlayerProps) {
   } = usePlayer({
     player,
     position,
-    modelIndex: modelIndex ?? player!.selectedCharacterGlbNameIndex,
+    modelIndex,
   });
 
   return (
     <>
       {me && (
-        <NicknameBoard
+        <Textboard
           ref={nicknameRef}
           text={`${player?.nickname}${player?.jobPosition}`}
         />
@@ -58,7 +59,9 @@ export function Man({ player, position, modelIndex }: IPlayerProps) {
               receiveShadow
               name="Character"
               geometry={nodes.Character.geometry}
-              material={materials.Atlas}
+              material={
+                modelIndex === 1 ? materials["Atlas.001"] : materials.Atlas
+              }
               skeleton={nodes.Character.skeleton}
               rotation={[-Math.PI / 2, 0, 0]}
               scale={100}

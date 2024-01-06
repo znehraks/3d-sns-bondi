@@ -1,7 +1,6 @@
-import { Billboard, Text, useAnimations, useGLTF } from "@react-three/drei";
+import { useAnimations, useGLTF } from "@react-three/drei";
 import { useEffect, useMemo, useRef, useState } from "react";
 import {
-  PlayGroundStructuresBoundingBoxAtom,
   PlayerCompletedQuestsAtom,
   PlayerInventoryAtom,
 } from "../../../../../../../../store/PlayersAtom";
@@ -10,7 +9,7 @@ import { Mesh, Vector3 } from "three";
 import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useAnimatedText } from "../../../../../../../hooks/useAnimatedText";
-import { NicknameBoard } from "../../3dUIs/NicknameBoard";
+import { Textboard } from "../../3dUIs/Textboard";
 
 const name = "ground-shiba-inu";
 export const ShibaInu = () => {
@@ -24,9 +23,6 @@ export const ShibaInu = () => {
   const { displayText } = useAnimatedText(text);
 
   const threeScene = useThree((three) => three.scene);
-  const [, setPlayGroundStructuresBoundingBox] = useRecoilState(
-    PlayGroundStructuresBoundingBoxAtom
-  );
   const [playerInventory, setPlayerInventory] =
     useRecoilState(PlayerInventoryAtom);
 
@@ -85,14 +81,7 @@ export const ShibaInu = () => {
     return () => {
       animation.pause();
     };
-  }, [
-    actions,
-    playerCompletedQuests,
-    position,
-    scene,
-    setPlayGroundStructuresBoundingBox,
-    threeScene,
-  ]);
+  }, [actions, playerCompletedQuests, position, scene, threeScene]);
 
   useFrame(() => {
     if (!ref.current) return;
@@ -116,16 +105,8 @@ export const ShibaInu = () => {
 
   return (
     <>
-      <Billboard
-        ref={chatRef}
-        position={[position.x, position.y + 4.5, position.z]}
-      >
-        <Text font={"/NotoSansKR-Regular.ttf"} fontSize={0.25} color={0x000000}>
-          {displayText}
-        </Text>
-      </Billboard>
-
-      <NicknameBoard ref={nameRef} text="댕댕이" isNpc />
+      <Textboard ref={chatRef} text={displayText} />
+      <Textboard ref={nameRef} text="댕댕이" isNpc />
       <primitive
         onClick={(e: ThreeEvent<MouseEvent>) => {
           e.stopPropagation();
