@@ -36,7 +36,6 @@ export const RootMap = () => {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const controls = useRef<any>(null);
 
-  console.log("recentChats", recentChats);
   useEffect(() => {
     if (currentMap === "GROUND") {
       document.exitPointerLock();

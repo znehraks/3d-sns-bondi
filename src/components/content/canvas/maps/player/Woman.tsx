@@ -186,7 +186,6 @@ export function Woman({ player, position }: IPlayerProps) {
       position={memoizedPosition}
       name={playerId ?? ""}
       onClick={(e: ThreeEvent<MouseEvent>) => {
-        console.log("here?");
         e.stopPropagation();
         if (me?.id !== playerId) {
           setCurrentMyRoomPlayer(player);
