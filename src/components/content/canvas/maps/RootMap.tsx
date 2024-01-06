@@ -15,7 +15,6 @@ import { MyRoom } from "./structures/myRoom";
 import { GroundElements } from "./structures/ground";
 import { MiniGame } from "./structures/miniGame";
 import gsap from "gsap";
-import { NicknameBoard } from "./structures/ground/3dUIs/NicknameBoard";
 import { ChatBubble } from "./structures/ground/3dUIs/ChatBubble";
 import { Vector3 } from "three";
 import { Man } from "./player/Man";
@@ -130,7 +129,6 @@ export const RootMap = () => {
                         (recentChat) => recentChat.senderId === player.id
                       )}
                     />
-                    <NicknameBoard player={player} />
                     <>
                       {player.selectedCharacterGlbNameIndex === 0 && (
                         <Man

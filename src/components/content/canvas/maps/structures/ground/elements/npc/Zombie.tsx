@@ -9,6 +9,7 @@ import { useRecoilState } from "recoil";
 import { Mesh, Vector3 } from "three";
 import { ThreeEvent, useFrame } from "@react-three/fiber";
 import { useAnimatedText } from "../../../../../../../hooks/useAnimatedText";
+import { NicknameBoard } from "../../3dUIs/NicknameBoard";
 
 const name = "ground-npc-zombie";
 export const Zombie = () => {
@@ -40,6 +41,12 @@ export const Zombie = () => {
   );
 
   useEffect(() => {
+    if (!ref.current) return;
+    nameRef.current.position.set(
+      ref.current.position.x,
+      ref.current.position.y + 4,
+      ref.current.position.z
+    );
     scene.traverse((mesh) => {
       mesh.castShadow = true;
       mesh.receiveShadow = true;
@@ -85,14 +92,7 @@ export const Zombie = () => {
           {displayText}
         </Text>
       </Billboard>
-      <Billboard
-        ref={nameRef}
-        position={[position.x, position.y + 4, position.z]}
-      >
-        <Text font={"/NotoSansKR-Regular.ttf"} fontSize={0.4} color={0xff71c2}>
-          {`야근 좀비`}
-        </Text>
-      </Billboard>
+      <NicknameBoard ref={nameRef} text="야근좀비" isNpc />
       <primitive
         onClick={(e: ThreeEvent<MouseEvent>) => {
           e.stopPropagation();

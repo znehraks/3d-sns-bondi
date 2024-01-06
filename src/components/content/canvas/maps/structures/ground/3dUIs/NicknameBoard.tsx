@@ -1,19 +1,19 @@
 import { Billboard, Text } from "@react-three/drei";
-import { IPlayer } from "../../../../../../../store/PlayersAtom";
+import { Ref, forwardRef } from "react";
+import { Group } from "three";
 
-export const NicknameBoard = ({ player }: { player: IPlayer }) => {
-  return (
-    <Billboard
-      position={[
-        player.position[0],
-        player.position[1] + 3.5,
-        player.position[2],
-      ]}
-      name={`nickname-billboard-${player.id}`}
-    >
-      <Text font={"/NotoSansKR-Regular.ttf"} fontSize={0.25} color={0x000000}>
-        {`${player.nickname}[${player.jobPosition}]`}
-      </Text>
-    </Billboard>
-  );
-};
+export const NicknameBoard = forwardRef(
+  ({ text, isNpc }: { text: string; isNpc?: boolean }, ref: Ref<Group>) => {
+    return (
+      <Billboard ref={ref}>
+        <Text
+          font={"/NotoSansKR-Regular.ttf"}
+          fontSize={isNpc ? 0.4 : 0.25}
+          color={isNpc ? 0xff71c2 : 0x000000}
+        >
+          {text}
+        </Text>
+      </Billboard>
+    );
+  }
+);

@@ -10,6 +10,7 @@ import { Mesh, Vector3 } from "three";
 import { ThreeEvent, useFrame, useThree } from "@react-three/fiber";
 import gsap from "gsap";
 import { useAnimatedText } from "../../../../../../../hooks/useAnimatedText";
+import { NicknameBoard } from "../../3dUIs/NicknameBoard";
 
 const name = "ground-shiba-inu";
 export const ShibaInu = () => {
@@ -37,6 +38,11 @@ export const ShibaInu = () => {
   const position = useMemo(() => new Vector3(-1, 0, 21), []);
   useEffect(() => {
     if (!ref.current) return;
+    nameRef.current.position.set(
+      ref.current.position.x,
+      ref.current.position.y + 4,
+      ref.current.position.z
+    );
     scene.traverse((mesh) => {
       mesh.castShadow = true;
       mesh.receiveShadow = true;
@@ -118,14 +124,8 @@ export const ShibaInu = () => {
           {displayText}
         </Text>
       </Billboard>
-      <Billboard
-        ref={nameRef}
-        position={[position.x, position.y + 4, position.z]}
-      >
-        <Text font={"/NotoSansKR-Regular.ttf"} fontSize={0.4} color={0xff71c2}>
-          {`댕댕이`}
-        </Text>
-      </Billboard>
+
+      <NicknameBoard ref={nameRef} text="댕댕이" isNpc />
       <primitive
         onClick={(e: ThreeEvent<MouseEvent>) => {
           e.stopPropagation();

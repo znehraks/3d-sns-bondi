@@ -2,13 +2,15 @@ import { Billboard, Text, useGLTF } from "@react-three/drei";
 import { useEffect, useMemo, useRef } from "react";
 import { PlayGroundStructuresBoundingBoxAtom } from "../../../../../../../../store/PlayersAtom";
 import { useRecoilState } from "recoil";
-import { Vector3 } from "three";
+import { Mesh, Vector3 } from "three";
 import { useFrame } from "@react-three/fiber";
 import { useAnimatedText } from "../../../../../../../hooks/useAnimatedText";
+import { NicknameBoard } from "../../3dUIs/NicknameBoard";
 
 const name = "ground-npc-dinosaur";
 const text = "나는 무서운 육식 공룡이야..! 크아앙~   ";
 export const Dinosaur = () => {
+  const ref = useRef<Mesh>(null);
   const { displayText } = useAnimatedText(text);
   const [, setPlayGroundStructuresBoundingBox] = useRecoilState(
     PlayGroundStructuresBoundingBoxAtom
@@ -21,6 +23,12 @@ export const Dinosaur = () => {
   const nameRef = useRef<any>(null);
 
   useEffect(() => {
+    if (!ref.current) return;
+    nameRef.current.position.set(
+      ref.current.position.x,
+      ref.current.position.y + 4,
+      ref.current.position.z
+    );
     scene.traverse((mesh) => {
       mesh.castShadow = true;
       mesh.receiveShadow = true;
@@ -42,15 +50,9 @@ export const Dinosaur = () => {
           {displayText}
         </Text>
       </Billboard>
-      <Billboard
-        ref={nameRef}
-        position={[position.x, position.y + 4, position.z]}
-      >
-        <Text font={"/NotoSansKR-Regular.ttf"} fontSize={0.4} color={0xff71c2}>
-          {`디노`}
-        </Text>
-      </Billboard>
+      <NicknameBoard ref={nameRef} text="디노" isNpc />
       <primitive
+        ref={ref}
         visible
         name={name}
         scale={2}

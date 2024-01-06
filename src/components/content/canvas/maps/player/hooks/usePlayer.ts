@@ -1,57 +1,79 @@
-import { useEffect, useState } from "react";
-import { calculateMinimapPosition } from "../../../../../../utils";
-import { useAnimations } from "@react-three/drei";
-import { useFrame, useThree } from "@react-three/fiber";
-import { useRecoilValue } from "recoil";
+import * as THREE from "three";
+import { useEffect, useMemo, useRef, useState } from "react";
+import { useGLTF, useAnimations } from "@react-three/drei";
+import { useFrame, useGraph, useThree } from "@react-three/fiber";
+import { GLTF, SkeletonUtils } from "three-stdlib";
+import { useRecoilState, useRecoilValue } from "recoil";
 import {
   CurrentMapAtom,
+  CurrentMyRoomPlayerAtom,
   IPlayer,
   MeAtom,
   PlayerGroundStructuresFloorPlaneCornersSelector,
 } from "../../../../../../store/PlayersAtom";
-import * as THREE from "three";
+import { calculateMinimapPosition } from "../../../../../../utils";
 import gsap from "gsap";
-export const usePlayer = ({
-  player,
-  position,
-  scene,
-  playerRef,
-  animations,
-}: {
-  player: IPlayer | undefined;
+
+interface IUsePlayer {
+  player?: IPlayer;
   position: THREE.Vector3;
-  scene: THREE.Group<THREE.Object3DEventMap>;
-  animations: THREE.AnimationClip[];
-  playerRef: React.RefObject<THREE.Group<THREE.Object3DEventMap>>;
-}) => {
+  modelIndex: number;
+}
+export const usePlayer = ({ player, position, modelIndex }: IUsePlayer) => {
   const playerId = player?.id;
-  const me = useRecoilValue(MeAtom);
   const currentMap = useRecoilValue(CurrentMapAtom);
+  const [, setCurrentMyRoomPlayer] = useRecoilState(CurrentMyRoomPlayerAtom);
   const playerGroundStructuresFloorPlaneCorners = useRecoilValue(
     PlayerGroundStructuresFloorPlaneCornersSelector
   );
-  const { scene: threeScene } = useThree();
+  const nicknameRef = useRef<THREE.Group>(null);
 
+  const memoizedPosition = useMemo(
+    () => position,
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  );
   const point = document.getElementById(`player-point-${playerId}`);
   const objectInteractionDiv = document.getElementById("object-interaction");
 
-  const nicknameBillboard = threeScene.getObjectByName(
-    `nickname-billboard-${playerId}`
-  );
-  const chatBuubleBoard = threeScene.getObjectByName(
+  const playerRef = useRef<THREE.Group>(null);
+  const { scene: threeScene } = useThree();
+  const chatBubbleBoard = threeScene.getObjectByName(
     `chat-bubble-billboard-${playerId}`
   );
+
+  const me = useRecoilValue(MeAtom);
+
+  const { scene, materials, animations } = useGLTF(
+    (() => {
+      switch (modelIndex) {
+        case 0:
+          return `/models/CubeGuyCharacter.glb`;
+        case 1:
+          return `/models/CubeWomanCharacter.glb`;
+        case 2:
+          return `/models/Steve.glb`;
+        default:
+          return "";
+      }
+    })()
+  ) as GLTF & {
+    materials: { [key: string]: THREE.MeshStandardMaterial };
+  };
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const clone = useMemo(() => SkeletonUtils.clone(scene), []);
+  const objectMap = useGraph(clone);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const nodes = objectMap.nodes as any;
+
   const [animation, setAnimation] = useState(
     "CharacterArmature|CharacterArmature|CharacterArmature|Idle"
   );
   const { actions } = useAnimations(animations, playerRef);
+
   useEffect(() => {
     if (!playerRef.current) return;
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    scene.traverse((mesh: any) => {
-      mesh.castShadow = true;
-      mesh.receiveShadow = true;
-    });
     if (me?.id === playerId && currentMap === "GROUND") {
       gsap.fromTo(
         playerRef.current.scale,
@@ -68,7 +90,7 @@ export const usePlayer = ({
         }
       );
     }
-  }, [currentMap, me?.id, playerId, playerRef, scene]);
+  }, [currentMap, me?.id, nodes, playerId, scene]);
 
   useEffect(() => {
     actions[animation]?.reset().fadeIn(0.5).play();
@@ -106,28 +128,24 @@ export const usePlayer = ({
         "CharacterArmature|CharacterArmature|CharacterArmature|Idle"
       );
     }
-    if (nicknameBillboard) {
-      nicknameBillboard.position.set(
+    if (nicknameRef.current) {
+      nicknameRef.current.position.set(
         playerRef.current.position.x,
         playerRef.current.position.y + 3.5,
         playerRef.current.position.z
       );
-      nicknameBillboard.lookAt(10000, 10000, 10000);
+      nicknameRef.current.lookAt(10000, 10000, 10000);
     }
-    if (chatBuubleBoard) {
-      chatBuubleBoard.position.set(
+    if (chatBubbleBoard) {
+      chatBubbleBoard.position.set(
         playerRef.current.position.x,
         playerRef.current.position.y + 4,
         playerRef.current.position.z
       );
-      chatBuubleBoard.lookAt(10000, 10000, 10000);
+      chatBubbleBoard.lookAt(10000, 10000, 10000);
     }
 
-    if (
-      me?.id !== undefined &&
-      player?.id !== undefined &&
-      me?.id === playerId
-    ) {
+    if (me?.id === playerId) {
       camera.position.set(
         playerRef.current.position.x + 12,
         playerRef.current.position.y + 12,
@@ -163,4 +181,14 @@ export const usePlayer = ({
       }
     }
   });
+  return {
+    me,
+    nicknameRef,
+    playerRef,
+    memoizedPosition,
+    playerId,
+    nodes,
+    materials,
+    setCurrentMyRoomPlayer,
+  };
 };
