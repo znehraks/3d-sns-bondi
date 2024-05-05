@@ -1,7 +1,6 @@
 import { useGLTF } from "@react-three/drei";
 import { useEffect, useMemo, useRef } from "react";
 import {
-  PlayGroundStructuresBoundingBoxAtom,
   PlayerInventoryAtom,
   PlayerCompletedQuestsAtom,
 } from "../../../../../../../store/PlayersAtom";
@@ -13,9 +12,6 @@ import { ThreeEvent } from "@react-three/fiber";
 const name = "ground-wood-chest";
 export const WoodChest = () => {
   const ref = useRef<Mesh>(null);
-  const [, setPlayGroundStructuresBoundingBox] = useRecoilState(
-    PlayGroundStructuresBoundingBoxAtom
-  );
   const [playerInventory, setPlayerInventory] =
     useRecoilState(PlayerInventoryAtom);
   const [playerCompletedQuests, setPlayerCompletedQuests] = useRecoilState(
@@ -29,7 +25,7 @@ export const WoodChest = () => {
       mesh.castShadow = true;
       mesh.receiveShadow = true;
     });
-  }, [position, scene, setPlayGroundStructuresBoundingBox]);
+  }, [position, scene]);
 
   useEffect(() => {
     if (ref.current)

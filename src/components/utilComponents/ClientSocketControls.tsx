@@ -4,8 +4,8 @@ import {
   AlreadyDisplayedRecentChatsAtom,
   ChatsAtom,
   CurrentMyRoomPlayerAtom,
-  EnterNoticeAtom,
-  ExitNoticeAtom,
+  EnteredPlayerNoticeAtom,
+  ExitedPlayerNoticeAtom,
   IChat,
   INotice,
   IPlayer,
@@ -24,8 +24,8 @@ export const ClientSocketControls = () => {
   const alreadyDisplayedRecentChats = useRecoilValue(
     AlreadyDisplayedRecentChatsAtom
   );
-  const setEnterNotice = useSetRecoilState(EnterNoticeAtom);
-  const setExitNotice = useSetRecoilState(ExitNoticeAtom);
+  const setEnterNotice = useSetRecoilState(EnteredPlayerNoticeAtom);
+  const setExitNotice = useSetRecoilState(ExitedPlayerNoticeAtom);
   const [currentMyRoomPlayer, setCurrentMyRoomPlayer] = useRecoilState(
     CurrentMyRoomPlayerAtom
   );
@@ -51,6 +51,7 @@ export const ClientSocketControls = () => {
     };
 
     const handlePlayers = (value: IPlayer[]) => {
+      console.log(value)
       setPlayers(value);
       const newMe = value.find((p) => p && me && p?.id === me?.id);
       console.log("newMe", newMe);

@@ -115,14 +115,14 @@ export interface INotice {
 }
 
 // 입장 공지 정보
-export const EnterNoticeAtom = atom<INotice | undefined>({
-  key: "EnterNoticeAtom",
+export const EnteredPlayerNoticeAtom = atom<INotice | undefined>({
+  key: "EnteredPlayerNoticeAtom",
   default: undefined,
 });
 
 // 퇴장 공지 정보
-export const ExitNoticeAtom = atom<INotice | undefined>({
-  key: "ExitNoticeAtom",
+export const ExitedPlayerNoticeAtom = atom<INotice | undefined>({
+  key: "ExitedPlayerNoticeAtom",
   default: undefined,
 });
 

@@ -1,9 +1,6 @@
 import { useGLTF } from "@react-three/drei";
 import { useEffect, useMemo, useRef } from "react";
-import {
-  PlayGroundStructuresBoundingBoxAtom,
-  PlayerInventoryAtom,
-} from "../../../../../../../store/PlayersAtom";
+import { PlayerInventoryAtom } from "../../../../../../../store/PlayersAtom";
 import { useRecoilState } from "recoil";
 import { Mesh, Vector3 } from "three";
 import { ThreeEvent } from "@react-three/fiber";
@@ -12,9 +9,6 @@ import { uniq } from "lodash";
 const name = "ground-steak";
 export const Steak = () => {
   const ref = useRef<Mesh>(null);
-  const [, setPlayGroundStructuresBoundingBox] = useRecoilState(
-    PlayGroundStructuresBoundingBoxAtom
-  );
   const [, setPlayerInventory] = useRecoilState(PlayerInventoryAtom);
 
   const { scene } = useGLTF("/models/Steak.glb");
@@ -25,7 +19,7 @@ export const Steak = () => {
       mesh.castShadow = true;
       mesh.receiveShadow = true;
     });
-  }, [position, scene, setPlayGroundStructuresBoundingBox]);
+  }, [position, scene]);
 
   return (
     <primitive

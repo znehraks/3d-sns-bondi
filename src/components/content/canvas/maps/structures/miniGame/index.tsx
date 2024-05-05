@@ -21,8 +21,6 @@ import {
 const COOL_TIME = 2000;
 let movement = { forward: false, backward: false, left: false, right: false };
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-// 물리엔진으로 실제 총알을 날려서 처리
-// 총알이 날아간 후, 기존 메시는 없어지고, 새 총알 메시가 렌더 되어야 함
 export const MiniGame = () => {
   const [currentMap] = useRecoilState(CurrentMapAtom);
   const three = useThree();
@@ -42,33 +40,6 @@ export const MiniGame = () => {
 
   const crosshair = document.getElementById("crosshair");
   const cooltimeProgress = document.getElementById("cooltime-progress");
-
-  // const from = useMemo(
-  //   () => ({
-  //     scale: [1, 1, 1],
-  //     position: [0, 0, 0],
-  //     color: "red",
-  //   }),
-  //   []
-  // );
-  // const to = useMemo(
-  //   () => ({
-  //     scale: [2, 2, 2],
-  //     position: [2, 0, 0],
-  //     color: "blue",
-  //   }),
-  //   []
-  // );
-
-  // const [{ scale, position, color }] = useSpring(() => ({
-  //   from,
-  //   to,
-  //   config: {
-  //     duration: 2000,
-  //     easing: easings.easeInOutCubic,
-  //   },
-  //   loop: true,
-  // }));
 
   const randomShapes = useMemo(
     () =>
@@ -120,10 +91,6 @@ export const MiniGame = () => {
       const cameraDirection = new Vector3();
       three.camera.getWorldDirection(cameraDirection).multiplyScalar(100);
       api.velocity.copy(cameraDirection);
-      // api.applyImpulse(
-      //   [cameraDirection.x, cameraDirection.y, cameraDirection.z],
-      //   [0, 0, 0]
-      // );
       setBulletCount((prev) => prev - 1);
     },
     [setBulletCount, three.camera]
@@ -420,5 +387,4 @@ export const MiniGame = () => {
       </instancedMesh>
     </>
   );
-  3;
 };

@@ -1,14 +1,14 @@
 import { useRecoilState } from "recoil";
 import {
-  EnterNoticeAtom,
-  ExitNoticeAtom,
+  EnteredPlayerNoticeAtom,
+  ExitedPlayerNoticeAtom,
 } from "../../../../../store/PlayersAtom";
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 
 export const Notice = () => {
-  const [enteredPlayer, setEnteredPlayer] = useRecoilState(EnterNoticeAtom);
-  const [exitedPlayer, setExitedPlayer] = useRecoilState(ExitNoticeAtom);
+  const [enteredPlayer, setEnteredPlayer] = useRecoilState(EnteredPlayerNoticeAtom);
+  const [exitedPlayer, setExitedPlayer] = useRecoilState(ExitedPlayerNoticeAtom);
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {

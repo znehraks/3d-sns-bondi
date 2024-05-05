@@ -1,7 +1,6 @@
 import { useGLTF } from "@react-three/drei";
 import { useEffect, useMemo, useRef } from "react";
 import {
-  PlayGroundStructuresBoundingBoxAtom,
   PlayerInventoryAtom,
   PlayerCompletedQuestsAtom,
 } from "../../../../../../../store/PlayersAtom";
@@ -14,9 +13,6 @@ import { uniq } from "lodash";
 const name = "ground-key";
 export const Key = () => {
   const ref = useRef<Mesh>(null);
-  const [, setPlayGroundStructuresBoundingBox] = useRecoilState(
-    PlayGroundStructuresBoundingBoxAtom
-  );
   const [playerInventory, setPlayerInventory] =
     useRecoilState(PlayerInventoryAtom);
 
@@ -36,7 +32,7 @@ export const Key = () => {
         repeatDelay: 0,
         y: Math.PI * 6,
       });
-  }, [position, scene, setPlayGroundStructuresBoundingBox]);
+  }, [position, scene]);
 
   if (
     playerCompletedQuests.includes("treasure") ||
