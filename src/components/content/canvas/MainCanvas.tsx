@@ -3,10 +3,23 @@ import { RootMap } from "./maps/RootMap";
 import { useRecoilValue } from "recoil";
 import { CurrentMapAtom } from "../../../store/PlayersAtom";
 import { Physics } from "@react-three/cannon";
+import { useEffect, useState } from "react";
 
 export const MainCanvas = () => {
   const currentMap = useRecoilValue(CurrentMapAtom);
-  const aspectRatio = window.innerWidth / window.innerHeight;
+  const [aspectRatio, setAspectRatio] = useState(window.innerWidth / window.innerHeight);
+
+  useEffect(() => {
+    const onResize = () => {
+      setAspectRatio(window.innerWidth / window.innerHeight);
+    };
+
+    window.addEventListener("resize", onResize);
+
+    return () => {
+      window.removeEventListener("resize", onResize);
+    };
+  }, []);
   return (
     <Canvas
       id="canvas"
