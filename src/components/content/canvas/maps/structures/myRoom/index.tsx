@@ -1,5 +1,4 @@
 import { useRecoilValue } from "recoil";
-import { MyRoomSkillPlaceMode } from "./placeMode/MyRoomSkillPlaceMode";
 import { MyRoomFloor } from "./elements/MyRoomFloor";
 import { MyRoomLeftWall } from "./elements/MyRoomLeftWall";
 import { MyRoomRightWall } from "./elements/MyRoomRightWall";
@@ -10,10 +9,12 @@ import {
   CurrentPlacingMyRoomFurnitureAtom,
   CurrentRotationingMyRoomObjectAtom,
 } from "../../../../../../store/PlayersAtom";
-
 import { MyRoomElements } from "./elements";
-import { MyRoomMemoPlaceMode } from "./placeMode/MyRoomMemoPlaceMode";
-import { MyRoomFurniturePlaceMode } from "./placeMode/MyRoomFurniturePlaceMode";
+import {
+  MyRoomSkillPlaceMode,
+  MyRoomMemoPlaceMode,
+  MyRoomFurniturePlaceMode,
+} from "./placeMode/MyRoomPlaceMode";
 import { MyRoomFurnitureRotationMode } from "./rotationMode/MyRoomFurnitureRotationMode";
 
 export const MyRoom = () => {
